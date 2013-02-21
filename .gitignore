@@ -10,4 +10,5 @@ bin/*
 Debug/*
 Release/*
 .classpath
+.project
 .desktop
