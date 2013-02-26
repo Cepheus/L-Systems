@@ -12,3 +12,6 @@ Release/*
 .classpath
 .project
 .desktop
+
+# tmp Linux files
+*~

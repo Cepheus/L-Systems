@@ -1,4 +1,43 @@
 L-Systems
 =========
 
-Projet en binôme de Réalité Virtuelle sur les L-Systèmes
+This file describe the project L-System. You can export this file in HTML with [Markdown](http://daringfireball.net/projects/markdown/).
+
+
+I. Introduction
+===============
+
+This project is realized by Thomas NOGUER and Rémi DUCCESCHI, students in 5th year at Polytech'Tours.
+It is supervised by Dr Sébastien AUPETIT.
+
+The goal of this project is to interpret L-Systems grammar, generating words; and use JMonkey
+to create an animation based on the words generated (turtle interpretation or other).
+
+*THIS PROJECT IS ACTUALLY IN DEVELOPPEMENT*
+
+
+II. Presentation
+================
+
+
+III. Somethings
+===============
+
+
+IV. License
+===========
+
+this project is under GNU GPL v. 3.
+
+L-Systems is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+ 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see [http://www.gnu.org/licenses/].
