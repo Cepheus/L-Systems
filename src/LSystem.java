@@ -12,7 +12,9 @@ public class LSystem {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.print("Bonjour tortue !");
+		char eps = 'ε';
+		
+		System.out.print("Bonjour tortue !" + eps);
 
 	}
 
