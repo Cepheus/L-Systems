@@ -59,6 +59,24 @@ public interface Rule
 	public boolean apply (ListSymbols phrase);
 	
 	/**
+	 * Try to apply this rule on the given index of toBeModified.
+	 * phraseFromPreviousIteration is used for non context-free grammars. For the first calls, use call the function like
+	 * this: applyOnce(index, toBeModified.clone(), toBeModified);
+	 * <p>The returned value may be: </p>
+	 * <ul>
+	 * <li>0 if nothing has been changed</li>
+	 * <li>-1 if there has been one deletion (-3 for 3)</li>
+	 * <li>1 if a character has been changed</li>
+	 * <li>x if x characters have been inserted</li>
+	 * </ul>
+	 * @param index 
+	 * @param phraseFromPreviousIteration the phrase as it was on last iteration
+	 * @param toBeModified the phrase to work on
+	 * @return the offset of the next symbol not changed.
+	 */
+	public int applyOnce (int index, ListSymbols phraseFromPreviousIteration, ListSymbols toBeModified);
+	
+	/**
 	 * @return the probability for this rule to happen. It is 1 for determinist grammars.
 	 */
 	public int getProba ();

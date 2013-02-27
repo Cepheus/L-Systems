@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * 
  * @author xinouch
  */
-public class ListSymbols
+public class ListSymbols implements Cloneable
 {
 	/** List of the symbols */
 	private ArrayList<Symbol> symbols = new ArrayList<Symbol>();
@@ -32,6 +32,16 @@ public class ListSymbols
 	 */
 	public ListSymbols ()
 	{
+	}
+
+	@SuppressWarnings ("unchecked")
+	@Override
+	public ListSymbols clone ()
+	{
+		ListSymbols list = new ListSymbols();
+		list.setSymbols((ArrayList<Symbol>)symbols.clone());
+		
+		return list;
 	}
 
 	/**

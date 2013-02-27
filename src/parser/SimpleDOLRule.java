@@ -73,13 +73,33 @@ public class SimpleDOLRule implements Rule
 				{
 					phrase.set(i, postExpr.get(0));
 					for (int j = 1; j < sizej; j++)
-						phrase.add(i + 1, postExpr.get(j));
+						phrase.add(i + j, postExpr.get(j));
 					retour = true;
 				}
 			}
 		}
 
 		return retour;
+	}
+
+	@Override
+	public int applyOnce (int index, ListSymbols phraseFromPreviousIteration, ListSymbols toBeModified)
+	{
+		final int size = postExpr.size();
+		
+		if (toBeModified.get(index).getCharacter() != preExpr.getCharacter())
+			return 0;
+		
+		if (postExpr.get(0).getCharacter() == 'ε')
+		{
+			toBeModified.remove(index);
+			return -1;
+		}
+		
+		toBeModified.set(index, postExpr.get(0));
+		for (int i = 1; i < size; i++)
+			toBeModified.add(index + i, postExpr.get(i));
+		return size;
 	}
 
 	@Override
