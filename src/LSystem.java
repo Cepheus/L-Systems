@@ -33,7 +33,7 @@ public class LSystem {
 		g.setAxiome(axiome);
 		
 		Generator generator = new Generator(g);
-		generator.setTotalIt(6);
+		generator.setTotalIteration(6);
 		generator.generate();
 		System.out.println(generator.getLastGenerated());
 		System.out.println(generator.getGenerated());
@@ -61,7 +61,7 @@ public class LSystem {
 		g2.setAxiome(axiom);
 		
 		Generator generator2 = new Generator(g2);
-		generator2.setTotalIt(4);
+		generator2.setTotalIteration(4);
 		generator2.generate();
 		System.out.println(generator2.getLastGenerated());
 		System.out.println(generator2.getGenerated());

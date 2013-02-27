@@ -121,14 +121,6 @@ public class Generator
 	}
 
 	/**
-	 * @param generated the generated to set
-	 */
-	public void setGenerated (ListSymbols generated)
-	{
-		this.generated = generated;
-	}
-
-	/**
 	 * @return the lastGenerated
 	 */
 	public ListSymbols getLastGenerated ()
@@ -137,41 +129,27 @@ public class Generator
 	}
 
 	/**
-	 * @param lastGenerated the lastGenerated to set
-	 */
-	public void setLastGenerated (ListSymbols lastGenerated)
-	{
-		this.lastGenerated = lastGenerated;
-	}
-
-	/**
 	 * @return the actualIt
 	 */
-	public int getActualIt ()
+	public int getActualIteration ()
 	{
 		return actualIt;
 	}
 
 	/**
-	 * @param actualIt the actualIt to set
-	 */
-	public void setActualIt (int actualIt)
-	{
-		this.actualIt = actualIt;
-	}
-
-	/**
 	 * @return the totalIt
 	 */
-	public int getTotalIt ()
+	public int getTotalIteration ()
 	{
 		return totalIt;
 	}
 
 	/**
+	 * Chage the number total of iterations to do in the generation of the word.
+	 * Default is 3.
 	 * @param totalIt the totalIt to set
 	 */
-	public void setTotalIt (int totalIt)
+	public void setTotalIteration (int totalIt)
 	{
 		this.totalIt = totalIt;
 	}
