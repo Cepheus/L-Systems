@@ -1,0 +1,76 @@
+#
+# Example of a conf file to load grammars in L-System program
+#
+
+# first simple example of a grammar with 2 symbols: "a" and "b"
+# it is the same as the one discribed there:
+# https://fr.wikipedia.org/wiki/L-System#Exemple_1_:_l.27algue_de_Lindenmayer
+FIRST_EXAMPLE
+DOL
+{
+	V
+	{
+		a
+		b
+	}
+
+	AXIOM: a
+
+	RULES
+	{
+		a -> ab
+		b -> a
+	}
+}
+
+# Another simple example with interpretations
+# from: https://fr.wikipedia.org/wiki/L-System#Exemple_de_la_courbe_de_Koch
+SECOND_EXAMPLE
+DOL
+{
+	SYMBOLS
+	{
+		F: FORWARD # we precise the interpretation
+		+: TURNLEFT
+		-: TURNRIGHT
+	}
+
+	AXIOM: F
+	ANGLE: 90 # same as default, we could not write it
+
+	RULE
+	{
+		F -> F+F−F−F+F
+	}
+}
+
+# last example much more complicated
+# we use a stochastic non context-free L-System
+SCIOUSC
+SXL
+{
+	V # we have 3 symbols: a, b and c
+	{
+		a: FORWARD
+		b # we don't precise an interpretation, the program will ask us for one
+		c: ABOUTTURN
+	}
+
+	PHRASE: aabacc # here, we start with a sequence of symbols, so we don't use "AXIOM"
+
+	ANGLE: 20
+
+	RULES
+	{
+		a -> b
+		c < a -> c # has more priority than the first rule
+		aa > b -> bbb # when "aa", this rule has 50% probability to be applied, just like the previous one
+		aa < cc -> acb: 0.8
+		cc > aa -> ccc: 0.2 # when we see "cc", this rule has 20% to be applied, while the previous one hase 80%
+		bbbb -> ε # when "bbbb", we delete the 4 "b"
+	}
+}
+# an example of a run of this grammar is:
+# 0. aabacc
+# 1. bbbbbacb
+# 2. bbcb and it stay stable on this state

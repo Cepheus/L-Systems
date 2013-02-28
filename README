@@ -1,7 +1,9 @@
 L-Systems
 =========
 
-This file describe the project L-System. You can export this file in HTML with [Markdown](http://daringfireball.net/projects/markdown/).
+This file describe the project L-System. You can export this file in HTML with
+[Markdown](http://daringfireball.net/projects/markdown/) by executing the file "exportREADME2html.sh"
+in a Linux based system, with Markdown installed.
 
 
 I. Introduction
@@ -19,12 +21,244 @@ to create an animation based on the words generated (turtle interpretation or ot
 II. Presentation
 ================
 
+This project uses L-System grammars: it generates words from a given grammar and interprets these words
+to create a 2D / 3D scene (turtle interpretation or other).
 
-III. Somethings
+1. L-Systems
+------------
+
+A L-System is a specific grammar that differs from Chomsky's ones on how the rules are applied. In fact,
+in a L-System, all rules that can be apply on a word are applied in one go, whereas a Chomsky grammar
+will take X steps for X rules on the same word. See
+[Wikipedia](https://en.wikipedia.org/wiki/L-system) for more
+details.
+
+A L-System is defined by:
+
+- a list of symbols (aka V)
+- an axiome (composed of one symbol)
+- a list of rules
+- eventually an angle to set-up the turtle interpretation.
+
+There are 2 principle types of L-Systems that can be mixed-up whether they are context-free or not,
+determinist or not.
+
+### Determinism ###
+A L-System is determinist if a symbol, or a sequence of symbols, appear only once in the left-side of
+the rules. Otherwise, the system is stochastic. Here is a little example:
+
+Consider the following rules (V = {a, b})
+
+- a -> b
+- b -> a
+
+This grammar is determinist.
+
+Contrary, this grammar is stochastic (same V):
+
+- a -> b
+- a -> ab
+
+When we find "a" symbol, we don't know which rule to apply. So, we take one randomly (default is to
+have the same chance to take the first or the second one).
+
+### Context ###
+A context-free L-System (noted OL) is a grammar where the choice of a rule depends only on the current
+character. There are much easier than the context-dependent L-Systems. The writting of their rules is also
+simpler:
+
+- ab -> bbb
+
+In a dependent context L-System (noted XL), we have to specify a context that can be before or after the
+current symbol:
+
+- a < b -> bbb : to apply this rule, we must have met "a" symbol previously, and actually be on "b".
+- a > b -> aaa : to apply this rule, we must be on a "a" symbol, and a "b" must follow somewhere in the word.
+
+we can give a context before AND after:
+
+- bb < ab > aa -> "baba"
+
+Here, we transform the sequence "ab" in "baba" only if we previously met the sequence "bb" and the sequence
+"aa" follows somewhere after.
+
+*NOTE*: A context-dependent system may mix context-dependent rules with context-free rules. In this case, the
+context-dependent rules are tested first (priority for the context-dependent):
+
+- a -> b (1)
+- a > a -> b (2)
+
+(1) will be tested only if (2) is not applicable.
+
+### Notations ###
+
+We have seen that we can mix-up the 2 types of grammar. Here is how is identified a L-System:
+
+- DOL is a determinist context-free L-System
+- SOL is a stochastic context-free L-System
+- DXL is a determinist context-dependent L-System
+- SXL is a stochastic context-dependent L-System
+
+2. Interpretations
+------------------
+
+TODO: Présentation des différentes interprétations (succinct)
+
+
+III. HOWTO (how to make the program work???)
+==========
+
+Here is described how to interact with the program and how does it work
+(there will be in the future a real manual if we have the time (so there won't)).
+
+1. Load a L-System in the program
+---------------------------------
+
+The first thing to do is to give to the program a grammar and a word to work on
+in order to generate a sequence applying the rules of the given grammar on the word.
+
+This sequence will be interpreted by the system to generate a beautiful animation.
+
+### 1. With files ###
+
+You have to write a config file where you describe the grammar you want to use. We have seen
+that a L-System is described by a type (DOL, SOL, DXL or SXL), a list of symbols, a list of rules,
+an axiom and a optional angle. In the program, we also give a name to the grammars.
+
+Each of these will have to be written in the file. Let's see how it works.
+
+*NOTE*: an example file can be studied in the doc/ folder: grammars-example.txt. A example is also
+available at the end of this section.
+
+*NOTE*: You can add comments wherever you want in a conf file by preceding the comment with the
+character "#".
+
+*NOTE*: The following sections are in the order where they should appear in a conf file. For instance,
+the optional ANGLE definition must be after the AXIOME definition and before the RULES.
+
+#### 1. The name and the type ####
+To declare a grammar, you have to write the name and the type of the grammar. The grammar will be
+written between "{}":
+
+	NAME
+	TYPE
+	{
+		# ...
+	}
+
+#### 2. Symbols ####
+You have to write all the symbols the grammar will use, even if they don't appear in the rules.
+To do so, you need to declare a bloc "{}" called "V" or "SYMBOLS".
+
+A symbol is a simple character. Forbidden characters are: "{", "}", "\n", "\t", " " (space),
+"ε" (this one will be use in the rules). Each symbol must be declared on a new line.
+
+You can add a interpretation to a symbol by adding ": INTERPRETATION" after the character.
+INTERPRETATION must be one of the followings (basic order to the turtle interpretation):
+
+- FORWARD (make the turtle go forward)
+- TURNLEFT (turn the orientation of the turtle on the left)
+- TURNRIGHT (turn the orientation of the turtle on the left)
+- TURNUP (turn the orientation of the turtle up)
+- TURNDOWN (turn the orientation of the turtle down)
+- ROLLLEFT (make the turtle roll on the left)
+- ROLLRIGHT (make the turtle roll on the right)
+- ABOUTTURN (turn the orientation of the turtle by 180°)
+- SAVEPOSITION (save the current position and orientation of the turtle)
+- RESTOREPOSITION (restore the last saved position and orientation of the turtle)
+
+Here how to write it:
+
+	V | SYMBOLS
+	{
+		a[: INTERPRETATION]
+		# ...
+	}
+
+#### 3. The axiom ####
+In the program, the axiom can be a simple symbol, or a word made with the symbols previously
+described. If it is a simple symbol, the declaration must be preceded by "AXIOM:", otherwise
+you should use "PHRASE:".
+
+	AXIOM: a | PHRASE: abab
+
+#### 4. The Angle ####
+An angle can be given that will be used in the turtle interpretation for the symbols TURNXXX.
+You just have to put:
+
+	ANGLE: X
+
+Where X ∈ ⟦0;360⟧ (thx UTF-8!!!)
+
+If no angle is precised, the default value is 90°.
+
+#### 5. The rules ####
+The rules are seperated in 2: the left side (what may be replaced) and the right side (substitute),
+seperated by "->".
+
+	aa -> bb
+
+For the stochastic systems, you may add a probability that indicates the chance a rule have to be selected
+when several can be. If nothing is written, the rules have all the same probability to be selected.
+
+	aa -> bb[: X]
+
+Where X ∈ [0;1]
+
+The deletion is symbolized by a rule where the substitute (the right side) only contains the symbol "ε"
+(you can copy / paste it from here to put it in your file if needed):
+
+	aa -> ε[: X] # the probability can be given, like for the other rules
+
+Finally:
+
+	RULES
+	{
+		[S <] X [> T] -> Y[: Z]
+		# ...
+	}
+
+#### 6. Complete file ####
+Finally, this is what we get at the end:
+
+	NAME
+	TYPE
+	{
+		V | SYMBOLS
+		{
+			a[: INTERPRETATION]
+			# ...
+		}
+		
+		AXIOM: a | PHRASE: abab
+		
+		[ANGLE: X]
+		
+		RULES
+		{
+			[S <] X [> T] -> Y[: Z]
+			# ...
+		}
+	}
+
+You can successively write several grammars in the same file. The behavior of the program is not yet
+determined.
+
+
+### 2. In the program ###
+
+
+2. Choose an interpretation
+---------------------------
+
+
+IV. Something
 ===============
 
+TODO: write some things here
 
-IV. License
+
+V. License
 ===========
 
 this project is under GNU GPL v. 3.
@@ -40,4 +274,5 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see [http://www.gnu.org/licenses/].
+along with this program.  If not, see
+[http://www.gnu.org/licenses/](http://www.gnu.org/licenses/).
