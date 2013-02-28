@@ -1,7 +1,7 @@
 L-Systems
 =========
 
-This file describe the project L-System. You can export this file in HTML with [Markdown](http://daringfireball.net/projects/markdown/).
+This file describes the L-System project. You can export this file in HTML with [Markdown](http://daringfireball.net/projects/markdown/).
 
 
 I. Introduction
@@ -11,7 +11,7 @@ This project is realized by Thomas NOGUER and Rémi DUCCESCHI, students in 5th y
 It is supervised by Dr Sébastien AUPETIT.
 
 The goal of this project is to interpret L-Systems grammar, generating words; and use JMonkey
-to create an animation based on the words generated (turtle interpretation or other).
+to create an animation based on the generated words (turtle interpretation or other).
 
 *THIS PROJECT IS ACTUALLY IN DEVELOPPEMENT*
 
@@ -27,7 +27,7 @@ III. Somethings
 IV. License
 ===========
 
-this project is under GNU GPL v. 3.
+This project is under GNU GPL v. 3.
 
 L-Systems is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
