@@ -64,13 +64,14 @@ SXL
 	{
 		a -> b
 		c < a -> c # has more priority than the first rule
-		aa > b -> bbb # when "aa", this rule has 50% probability to be applied, just like the previous one
-		aa < cc -> acb: 0.8
-		cc > aa -> ccc: 0.2 # when we see "cc", this rule has 20% to be applied, while the previous one hase 80%
-		bbbb -> ε # when "bbbb", we delete the 4 "b"
+		a < a > b -> bbb # when "aa", this rule has 50% probability to be applied, just like the previous one
+		aa < c -> acb: 0.8
+		c > aa -> ccc: 0.2 # when we see "cc", this rule has 20% to be applied, while the previous one hase 80%
+		b > bbb -> ε # when "bbbb", we delete the 4 "b"
 	}
 }
 # an example of a run of this grammar is:
 # 0. aabacc
-# 1. bbbbbacb
-# 2. bbcb and it stay stable on this state
+# 1. bbbbbbacbacb
+# 2. bbcbbbbacbb
+# 3. cbcbb and it stay stable on this state

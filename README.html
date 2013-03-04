@@ -8,7 +8,7 @@
 
 <h1>L-Systems</h1>
 
-<p>This file describe the project L-System. You can export this file in HTML with
+<p>This file describes the L-System project. You can export this file in HTML with
 <a href="http://daringfireball.net/projects/markdown/">Markdown</a> by executing the file "exportREADME2html.sh"
 in a Linux based system, with Markdown installed.</p>
 
@@ -18,7 +18,7 @@ in a Linux based system, with Markdown installed.</p>
 It is supervised by Dr Sébastien AUPETIT.</p>
 
 <p>The goal of this project is to interpret L-Systems grammar, generating words; and use JMonkey
-to create an animation based on the words generated (turtle interpretation or other).</p>
+to create an animation based on the generated words (turtle interpretation or other).</p>
 
 <p><em>THIS PROJECT IS ACTUALLY IN DEVELOPPEMENT</em></p>
 
@@ -44,12 +44,14 @@ details.</p>
 <li>eventually an angle to set-up the turtle interpretation.</li>
 </ul>
 
+<p><em>NOTE</em>: In a rule, the left-part, what will be changed, must be a single symbol.</p>
+
 <p>There are 2 principle types of L-Systems that can be mixed-up whether they are context-free or not,
 determinist or not.</p>
 
 <h3>Determinism</h3>
 
-<p>A L-System is determinist if a symbol, or a sequence of symbols, appear only once in the left-side of
+<p>A L-System is determinist if a symbol, appear only once in the left-side of
 the rules. Otherwise, the system is stochastic. Here is a little example:</p>
 
 <p>Consider the following rules (V = {a, b})</p>
@@ -78,7 +80,7 @@ character. There are much easier than the context-dependent L-Systems. The writt
 simpler:</p>
 
 <ul>
-<li>ab -> bbb</li>
+<li>a -> bbb</li>
 </ul>
 
 <p>In a dependent context L-System (noted XL), we have to specify a context that can be before or after the
@@ -92,10 +94,10 @@ current symbol:</p>
 <p>we can give a context before AND after:</p>
 
 <ul>
-<li>bb &lt; ab > aa -> "baba"</li>
+<li>bb &lt; b > aa -> "baba"</li>
 </ul>
 
-<p>Here, we transform the sequence "ab" in "baba" only if we previously met the sequence "bb" and the sequence
+<p>Here, we transform the sequence "b" in "baba" only if we previously met the sequence "bb" and the sequence
 "aa" follows somewhere after.</p>
 
 <p><em>NOTE</em>: A context-dependent system may mix context-dependent rules with context-free rules. In this case, the
@@ -223,13 +225,13 @@ You just have to put:</p>
 <p>The rules are seperated in 2: the left side (what may be replaced) and the right side (substitute),
 seperated by "->".</p>
 
-<pre><code>aa -&gt; bb
+<pre><code>a -&gt; bb
 </code></pre>
 
 <p>For the stochastic systems, you may add a probability that indicates the chance a rule have to be selected
 when several can be. If nothing is written, the rules have all the same probability to be selected.</p>
 
-<pre><code>aa -&gt; bb[: X]
+<pre><code>a -&gt; bb[: X]
 </code></pre>
 
 <p>Where X ∈ [0;1]</p>
@@ -237,7 +239,7 @@ when several can be. If nothing is written, the rules have all the same probabil
 <p>The deletion is symbolized by a rule where the substitute (the right side) only contains the symbol "ε"
 (you can copy / paste it from here to put it in your file if needed):</p>
 
-<pre><code>aa -&gt; ε[: X] # the probability can be given, like for the other rules
+<pre><code>a -&gt; ε[: X] # the probability can be given, like for the other rules
 </code></pre>
 
 <p>Finally:</p>
@@ -287,7 +289,7 @@ determined.</p>
 
 <h1>V. License</h1>
 
-<p>this project is under GNU GPL v. 3.</p>
+<p>This project is under GNU GPL v. 3.</p>
 
 <p>L-Systems is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

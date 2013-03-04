@@ -40,11 +40,13 @@ A L-System is defined by:
 - a list of rules
 - eventually an angle to set-up the turtle interpretation.
 
+*NOTE*: In a rule, the left-part, what will be changed, must be a single symbol.
+
 There are 2 principle types of L-Systems that can be mixed-up whether they are context-free or not,
 determinist or not.
 
 ### Determinism ###
-A L-System is determinist if a symbol, or a sequence of symbols, appear only once in the left-side of
+A L-System is determinist if a symbol, appear only once in the left-side of
 the rules. Otherwise, the system is stochastic. Here is a little example:
 
 Consider the following rules (V = {a, b})
@@ -67,7 +69,7 @@ A context-free L-System (noted OL) is a grammar where the choice of a rule depen
 character. There are much easier than the context-dependent L-Systems. The writting of their rules is also
 simpler:
 
-- ab -> bbb
+- a -> bbb
 
 In a dependent context L-System (noted XL), we have to specify a context that can be before or after the
 current symbol:
@@ -77,9 +79,9 @@ current symbol:
 
 we can give a context before AND after:
 
-- bb < ab > aa -> "baba"
+- bb < b > aa -> "baba"
 
-Here, we transform the sequence "ab" in "baba" only if we previously met the sequence "bb" and the sequence
+Here, we transform the sequence "b" in "baba" only if we previously met the sequence "bb" and the sequence
 "aa" follows somewhere after.
 
 *NOTE*: A context-dependent system may mix context-dependent rules with context-free rules. In this case, the
@@ -196,19 +198,19 @@ If no angle is precised, the default value is 90°.
 The rules are seperated in 2: the left side (what may be replaced) and the right side (substitute),
 seperated by "->".
 
-	aa -> bb
+	a -> bb
 
 For the stochastic systems, you may add a probability that indicates the chance a rule have to be selected
 when several can be. If nothing is written, the rules have all the same probability to be selected.
 
-	aa -> bb[: X]
+	a -> bb[: X]
 
 Where X ∈ [0;1]
 
 The deletion is symbolized by a rule where the substitute (the right side) only contains the symbol "ε"
 (you can copy / paste it from here to put it in your file if needed):
 
-	aa -> ε[: X] # the probability can be given, like for the other rules
+	a -> ε[: X] # the probability can be given, like for the other rules
 
 Finally:
 
