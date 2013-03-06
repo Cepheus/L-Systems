@@ -1,14 +1,12 @@
-#
-# Example of a conf file to load grammars in L-System program
-#
+# Example of a conf file to load grammars in L-System program #
 
-# first simple example of a grammar with 2 symbols: "a" and "b"
-# it is the same as the one discribed there:
-# https://fr.wikipedia.org/wiki/L-System#Exemple_1_:_l.27algue_de_Lindenmayer
+# first simple example of a grammar with 2 symbols: "a" and "b" #
+# it is the same as the one discribed there: #
+# https://fr.wikipedia.org/wiki/L-System Exemple 1: l'algue de Lindenmayer #
 FIRST_EXAMPLE
 DOL
 {
-	V
+	SYMBOLS
 	{
 		a
 		b
@@ -23,55 +21,64 @@ DOL
 	}
 }
 
-# Another simple example with interpretations
-# from: https://fr.wikipedia.org/wiki/L-System#Exemple_de_la_courbe_de_Koch
+# Another simple example with interpretations #
+# from: https://fr.wikipedia.org/wiki/L-System Exemple de la courbe de Koch #
 SECOND_EXAMPLE
 DOL
 {
 	SYMBOLS
 	{
-		F: FORWARD # we precise the interpretation
+		# we precise the interpretation #
+		F: FORWARD
 		+: TURNLEFT
 		-: TURNRIGHT
 	}
 
 	AXIOM: F
-	ANGLE: 90 # same as default, we could not write it
+	# angle = 90°, same as default, we could not write it #
+	ANGLE: 90
 
-	RULE
+	RULES
 	{
-		F -> F+F−F−F+F
+		F -> F+F-F-F+F
 	}
 }
 
-# last example much more complicated
-# we use a stochastic non context-free L-System
+# last example much more complicated #
+# we use a stochastic non context-free L-System #
 SCIOUSC
 SXL
 {
-	V # we have 3 symbols: a, b and c
+	# we have 3 symbols: a, b and c #
+	SYMBOLS
 	{
 		a: FORWARD
-		b # we don't precise an interpretation, the program will ask us for one
+		# we don't precise an interpretation for b, the program will ask us for one #
+		b
 		c: ABOUTTURN
 	}
 
-	PHRASE: aabacc # here, we start with a sequence of symbols, so we don't use "AXIOM"
+	# here, we start with a sequence of symbols, so we don't use "AXIOM" #
+	PHRASE: aabacc
 
 	ANGLE: 20
 
 	RULES
 	{
 		a -> b
-		c < a -> c # has more priority than the first rule
-		a < a > b -> bbb # when "aa", this rule has 50% probability to be applied, just like the previous one
-		aa < c -> acb: 0.8
-		c > aa -> ccc: 0.2 # when we see "cc", this rule has 20% to be applied, while the previous one hase 80%
-		b > bbb -> ε # when "bbbb", we delete the 4 "b"
+		# the following rule has more priority than the first rule #
+		a < c -> c
+		# when "a" and "a", this rule has 50% probability to be applied, just like the previous one if there also were a "c" #
+		a < a > b -> bbb
+		c < aa -> acb: 0.8
+		# when we see "c", this rule has 20% to be applied, while the previous one has 80% #
+		c > aa -> ccc: 0.2
+		# when "bbbb", we delete the 4 "b" #
+		b > bbb -> ε
 	}
 }
-# an example of a run of this grammar is:
-# 0. aabacc
-# 1. bbbbbbacbacb
-# 2. bbcbbbbacbb
-# 3. cbcbb and it stay stable on this state
+# an example of a run of this grammar is: #
+# 0. aabacc #
+# 1. bbbbbbacbacb #
+# 2. bbcbbbbacbb #
+# 3. cbcbb and it stay stable on this state #

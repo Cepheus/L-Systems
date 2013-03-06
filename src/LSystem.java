@@ -25,12 +25,12 @@ public class LSystem {
 		firstList.append(b);
 		secondList.append(a);
 		axiome.append(b);
-		Rule first = new SimpleDOLRule(a, firstList), second = new SimpleDOLRule(b, secondList);
+		Rule first = new OLRule(a, firstList), second = new OLRule(b, secondList);
 		Grammar g = new Grammar();
 		g.getRules().add(first);
 		g.getRules().add(second);
 		g.setUsableSymbols(firstList.clone());
-		g.setAxiome(axiome);
+		g.setAxiom(axiome);
 		
 		Generator generator = new Generator(g);
 		generator.setTotalIteration(6);
@@ -54,11 +54,11 @@ public class LSystem {
 		post.append(plus);
 		post.append(F);
 		
-		Rule rule = new SimpleDOLRule(F, post);
+		Rule rule = new OLRule(F, post);
 		Grammar g2 = new Grammar();
 		g2.getRules().add(rule);
 		g2.setUsableSymbols(symbols);
-		g2.setAxiome(axiom);
+		g2.setAxiom(axiom);
 		
 		Generator generator2 = new Generator(g2);
 		generator2.setTotalIteration(4);

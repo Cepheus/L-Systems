@@ -165,7 +165,7 @@ public class ListSymbols implements Cloneable
 		final int size = symbols.size();
 		
 		for (int i = 0; i < size; i++)
-			str += symbols.get(i).toString();
+			str += symbols.get(i).getCharacter();
 		
 		return str;
 	}

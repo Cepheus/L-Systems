@@ -87,14 +87,15 @@ simpler:</p>
 current symbol:</p>
 
 <ul>
-<li>a &lt; b -> bbb : to apply this rule, we must have met "a" symbol previously, and actually be on "b".</li>
+<li>b &lt; a -> bbb : to apply this rule, we must have met "a" symbol previously, and actually be on "b".</li>
 <li>a > b -> aaa : to apply this rule, we must be on a "a" symbol, and a "b" must follow somewhere in the word.</li>
 </ul>
 
-<p>we can give a context before AND after:</p>
+<p>we can give a context before AND after (this syntax is not very userfriendly, but it was to have a grammar LL(1)
+easily parsable in the file):</p>
 
 <ul>
-<li>bb &lt; b > aa -> "baba"</li>
+<li>b &lt; bb > aa -> "baba"</li>
 </ul>
 
 <p>Here, we transform the sequence "b" in "baba" only if we previously met the sequence "bb" and the sequence
@@ -145,11 +146,13 @@ an axiom and a optional angle. In the program, we also give a name to the gramma
 
 <p>Each of these will have to be written in the file. Let's see how it works.</p>
 
+<p><em>NOTE</em>: the file MUST be written in UTF-8.</p>
+
 <p><em>NOTE</em>: an example file can be studied in the doc/ folder: grammars-example.txt. A example is also
 available at the end of this section.</p>
 
-<p><em>NOTE</em>: You can add comments wherever you want in a conf file by preceding the comment with the
-character "#".</p>
+<p><em>NOTE</em>: You can add comments in a conf file by putting the comment between 2 characters "#". Comments
+MUST begin a new line.</p>
 
 <p><em>NOTE</em>: The following sections are in the order where they should appear in a conf file. For instance,
 the optional ANGLE definition must be after the AXIOME definition and before the RULES.</p>
@@ -169,10 +172,9 @@ TYPE
 <h4>2. Symbols</h4>
 
 <p>You have to write all the symbols the grammar will use, even if they don't appear in the rules.
-To do so, you need to declare a bloc "{}" called "V" or "SYMBOLS".</p>
+To do so, you need to declare a bloc "{}" called "SYMBOLS".</p>
 
-<p>A symbol is a simple character. Forbidden characters are: "{", "}", "\n", "\t", " " (space),
-"ε" (this one will be use in the rules). Each symbol must be declared on a new line.</p>
+<p>A symbol is a simple character. Each symbol must be declared on a new line.</p>
 
 <p>You can add a interpretation to a symbol by adding ": INTERPRETATION" after the character.
 INTERPRETATION must be one of the followings (basic order to the turtle interpretation):</p>
@@ -192,7 +194,7 @@ INTERPRETATION must be one of the followings (basic order to the turtle interpre
 
 <p>Here how to write it:</p>
 
-<pre><code>V | SYMBOLS
+<pre><code>SYMBOLS
 {
     a[: INTERPRETATION]
     # ...
@@ -246,19 +248,60 @@ when several can be. If nothing is written, the rules have all the same probabil
 
 <pre><code>RULES
 {
-    [S &lt;] X [&gt; T] -&gt; Y[: Z]
+    X [&lt; S] [&gt; T] -&gt; Y[: Z]
     # ...
 }
 </code></pre>
 
-<h4>6. Complete file</h4>
+<h4>6. Forbidden characters and words</h4>
+
+<p>For your symbols or the name of the grammar, you can use any symbols you want except the followings:</p>
+
+<ul>
+<li>"{"</li>
+<li>"}"</li>
+<li>"ε"</li>
+<li>"#"</li>
+<li>"&lt;"</li>
+<li>">"</li>
+<li>":"</li>
+<li>"\n", "\r", "\r\n" (end of line character)</li>
+<li>"\t" (tabulation)</li>
+<li>" " (space)</li>
+</ul>
+
+<p>For the name of the grammar, you can not use the following reserved words:</p>
+
+<ul>
+<li>ANGLE</li>
+<li>AXIOM</li>
+<li>PHRASE</li>
+<li>RULES</li>
+<li>SYMBOLS</li>
+<li>DOL</li>
+<li>SOL</li>
+<li>DXL</li>
+<li>SXL</li>
+<li>FORWARD</li>
+<li>TURNLEFT</li>
+<li>TURNRIGHT</li>
+<li>TURNUP</li>
+<li>TURNDOWN</li>
+<li>ROLLLEFT</li>
+<li>ROLLRIGHT</li>
+<li>ABOUTTURN</li>
+<li>SAVEPOSITION </li>
+<li>RESTOREPOSITION</li>
+</ul>
+
+<h4>7. Complete file</h4>
 
 <p>Finally, this is what we get at the end:</p>
 
 <pre><code>NAME
 TYPE
 {
-    V | SYMBOLS
+    SYMBOLS
     {
         a[: INTERPRETATION]
         # ...
@@ -270,7 +313,7 @@ TYPE
 
     RULES
     {
-        [S &lt;] X [&gt; T] -&gt; Y[: Z]
+        X [&lt; S] [&gt; T] -&gt; Y[: Z]
         # ...
     }
 }

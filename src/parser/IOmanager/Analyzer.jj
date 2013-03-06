@@ -1,0 +1,469 @@
+/* syntaxe plus grammaire des règles */
+
+options
+{
+	STATIC = false;
+}
+
+PARSER_BEGIN (Analyzer)
+
+	package parser.IOmanager;
+	
+	import java.util.ArrayList;
+
+	import parser.*;
+
+	/**
+	 * classe permettant l'analyse d'un fichier contenant des grammaires.
+	 * Peut aussi être utilisée pour analyser des règles écrites dans le programme. les grammaires du fichier sont
+	 * stockées dans leur ordre d'appartition dans une liste de grammaires: Analyzer.getGrammars().
+	 * @author xinouch
+	 */
+	public class Analyzer
+	{
+		private Grammar current;
+		private ArrayList<Grammar> grammars = new ArrayList<Grammar>();
+		
+		/**
+		 * @return the current
+		 */
+		public Grammar getCurrent ()
+		{
+			return current;
+		}
+
+		/**
+		 * @param current the current to set
+		 */
+		public void setCurrent (Grammar current)
+		{
+			this.current = current;
+		}
+
+		/**
+		 * @return the grammars
+		 */
+		public ArrayList<Grammar> getGrammars ()
+		{
+			return grammars;
+		}
+		
+		public static void main (String[] args) throws ParseException, NumberFormatException, BadFileException
+		{
+			Analyzer analyz = new Analyzer(System.in, "UTF-8");
+			
+			analyz.validationStart();
+			
+			for (int i = 0; i < analyz.getGrammars().size(); i++)
+				System.out.println(analyz.getGrammars().get(i));
+		}
+	}
+	
+PARSER_END (Analyzer)
+
+
+/* ****************************
+ * SYMBOLS
+ * ***************************/
+
+// SPECIAL WORDS
+TOKEN : { < SYMBOLS : "SYMBOLS" > }
+TOKEN : { < AXIOM : "AXIOM" > }
+TOKEN : { < LONGAXIOM : "PHRASE" > }
+TOKEN : { < RULES : "RULES" > }
+TOKEN : { < ANGLE : "ANGLE" > }
+
+// TURTLE INTERPRETATION
+TOKEN : { < FORWARD : "FORWARD" > }
+TOKEN : { < TURNLEFT : "TURNLEFT" > }
+TOKEN : { < TURNRIGHT : "TURNRIGHT" > }
+TOKEN : { < TURNUP : "TURNUP" > }
+TOKEN : { < TURNDOWN : "TURNDOWN" > }
+TOKEN : { < ROLLLEFT : "ROLLLEFT" > }
+TOKEN : { < ROLLRIGHT : "ROLLRIGHT" > }
+TOKEN : { < ABOUTTURN : "ABOUTTURN" > }
+TOKEN : { < SAVEPOSITION : "SAVEPOSITION" > }
+TOKEN : { < RESTOREPOSITION : "RESTOREPOSITION" > }
+
+// TYPES OF GRAMMARS
+TOKEN : { < DOL : "DOL" > }
+TOKEN : { < SOL : "SOL" > }
+TOKEN : { < DXL : "DXL" > }
+TOKEN : { < SXL : "SXL" > }
+
+// SKIP AND COMMENTS
+SKIP : { "#" : IN_COMMENT }
+< IN_COMMENT > SKIP : { < ~["#"] > }
+< IN_COMMENT > SKIP : { "#"  : DEFAULT }
+SKIP : { " " | "\t" }
+
+// SPECIAL SYMBOLS
+TOKEN : { < ENDL : "\n" | "\r" | "\r\n" > }
+TOKEN : { < #DOT : "." > }
+TOKEN : { < COLON : ":" > }
+TOKEN : { < ARROW : "->" > }
+TOKEN : { < OPEN_BRA : "{" > }
+TOKEN : { < CLOSE_BRA : "}" > }
+TOKEN : { < PREVIOUS : "<" > }
+TOKEN : { < FOLLOW : ">" > }
+TOKEN : { < NULL_CHAR : "ε" > }
+
+
+// NUMBERS
+TOKEN : { < #DIGITS_ONE_OR_MORE : (["0" - "9"])+ > }
+TOKEN : { < #DIGITS_ZERO_OR_MORE : (["0" - "9"])* > }
+TOKEN : { < INTEGER : < DIGITS_ONE_OR_MORE > > }
+TOKEN : { < FLOAT : < DIGITS_ZERO_OR_MORE > ( < DOT > ) < DIGITS_ONE_OR_MORE > 
+				| < DIGITS_ONE_OR_MORE > ( < DOT > ) < DIGITS_ZERO_OR_MORE > 
+		> }
+
+// SYMBOL
+TOKEN : { < SYMBOL : ~["<", ">", " ", "\t", "{", "}", ":", "\n", "\r", "ε", "#"] > }
+TOKEN : { < SEQUENCE : (< SYMBOL >)+ > }
+
+
+/* ****************************
+ * REAL FUNCTIONS DEFINITION
+ * ***************************/
+
+/**
+ * Start the parse of a file containing some grammars
+ * @throws ParseException en cas d'erreur de parsing
+ * @throws NumberFormatException en cas d'erreur de format des nombres
+ * @throws BadFileException
+ */
+void validationStart() throws NumberFormatException, BadFileException:
+{}
+{
+	(<ENDL>)*
+	(
+		{
+			current = new Grammar();
+			current.getUsableSymbols().append(new Symbol('ε', Symbol.S_NULLCHARACTER));
+		}
+		validationNameAndType()
+		< OPEN_BRA >
+		validationSymbols ()
+		validationAxiom ()
+		validationAngle ()
+		validationRules ()
+		< CLOSE_BRA >
+		{
+			grammars.add(current);
+		}
+
+		(<ENDL>)*
+	)*
+	<EOF>
+}
+
+/**
+ * Validate the name and the type of the grammar.
+ * @throws ParseException en cas d'erreur de parsing
+ */
+private void validationNameAndType ():
+{
+	Token t;
+}
+{
+	t = < SEQUENCE >
+	(<ENDL>)+
+	{ current.setName(t.image); }
+	(
+		< DOL >
+		{ current.setType(Grammar.TYPE_DOL); }
+	|
+		< SOL >
+		{ current.setType(Grammar.TYPE_SOL); }
+	|
+		< DXL >
+		{ current.setType(Grammar.TYPE_DXL); }
+	|
+		< SXL >
+		{ current.setType(Grammar.TYPE_SXL); }
+	)
+	(<ENDL>)*
+}
+
+/**
+ * Define a symbole.
+ * A symbol is a simple character eventually followed by an interpretation.
+ * @throws ParseException en cas d'erreur de parsing
+ */
+private void validationSymbols ():
+{
+	Token t;
+	Symbol sym;
+}
+{
+	// Déclaration des symboles
+	(<ENDL>)*
+	<SYMBOLS>
+	(<ENDL>)*
+	<OPEN_BRA>
+	(<ENDL>)*
+	
+	// Déclaration des symboles
+	(
+		t = <SYMBOL>
+		{ sym = new Symbol(t.image.charAt(0)); }
+		(
+			<COLON>
+			(
+				<FORWARD>
+				{ sym.setInterpretation(Symbol.S_FORWARD); }
+			|
+				<TURNLEFT>
+				{ sym.setInterpretation(Symbol.S_TURNLEFT); }
+			|
+				<TURNRIGHT>
+				{ sym.setInterpretation(Symbol.S_TURNRIGHT); }
+			|
+				<TURNUP>
+				{ sym.setInterpretation(Symbol.S_TURNUP); }
+			|
+				<TURNDOWN>
+				{ sym.setInterpretation(Symbol.S_TURNDOWN); }
+			|
+				<ROLLLEFT>
+				{ sym.setInterpretation(Symbol.S_ROLLLEFT); }
+			|
+				<ROLLRIGHT>
+				{ sym.setInterpretation(Symbol.S_ROLLRIGHT); }
+			|
+				<ABOUTTURN>
+				{ sym.setInterpretation(Symbol.S_ABOUTTURN); }
+			|
+				<SAVEPOSITION>
+				{ sym.setInterpretation(Symbol.S_SAVEPOSITION); }
+			|
+				<RESTOREPOSITION>
+				{ sym.setInterpretation(Symbol.S_RESTOREPOSITION); }
+			)
+		)?
+		(<ENDL>)+
+		{ current.getUsableSymbols().append(sym); }
+	)+
+	
+	// fin
+	<CLOSE_BRA>
+	(<ENDL>)+
+}
+
+/**
+ * Define the axiome.
+ * An axiome is a simple character or a sequence of symbols.
+ * @throws ParseException en cas d'erreur de parsing
+ * @throws BadFileException
+ */
+private void validationAxiom () throws BadFileException:
+{
+	Token t;
+	Symbol sym = null;
+}
+{
+	(
+		<AXIOM>
+		<COLON>
+		t = <SYMBOL>
+		{
+			sym = current.getUsableSymbols().find(t.image.charAt(0));
+			if (sym == null)
+				throw new BadFileException("In axiom definition: symbol " + t.image + " not declared.");
+			current.getAxiom().append(sym);
+		}
+	|
+		<LONGAXIOM>
+		<COLON>
+		t = <SEQUENCE>
+		{
+			String s = t.image;
+			final int size = s.length();
+			for (int i = 0; i < size; i++)
+			{
+				sym = current.getUsableSymbols().find(s.charAt(i));
+				if (sym == null)
+					throw new BadFileException("In axiom definition: symbol " + s.charAt(i) + " not declared.");
+				current.getAxiom().append(sym);
+			}
+		}
+	)
+	(<ENDL>)+
+}
+
+/**
+ * Define the angle.
+ * The angle tells how much the turtle have to turn
+ * @throws ParseException en cas d'erreur de parsing
+ * @throws NumberFormatException en cas d'erreur de format des nombres
+ */
+private void validationAngle () throws NumberFormatException:
+{
+	Token t;
+}
+{
+	(
+		<ANGLE>
+		<COLON>
+		t = <INTEGER>
+		{ current.setAngle(Integer.parseInt(t.image)); }
+		(<ENDL>)+
+	)?
+}
+
+/**
+ * Define the rules
+ * A rule describe how to change a symbol into another one or in a sequence of symbols.
+ * @throws ParseException en cas d'erreur de parsing
+ * @throws BadFileException
+ * @throws NumberFormatException en cas d'erreur de format des nombres
+ */
+private void validationRules () throws BadFileException, NumberFormatException:
+{
+	Token t;
+	Symbol sym = null;
+	Rule rule = null;
+}
+{
+	// Déclaration des symboles
+	<RULES>
+	(<ENDL>)*
+	<OPEN_BRA>
+	(<ENDL>)*
+	
+	(
+		// Création de la rule
+		{
+			switch (current.getType())
+			{
+				case Grammar.TYPE_DOL:
+					rule = new OLRule(true);
+					break;
+				case Grammar.TYPE_SOL:
+					rule = new OLRule(false);
+					break;
+				case Grammar.TYPE_DXL:
+					rule = new XLRule(true);
+					break;
+				case Grammar.TYPE_SXL:
+					rule = new XLRule(false);
+					break;
+			}
+		}
+		// Déclaration des symboles
+		t = <SYMBOL>
+		{
+			sym = current.getUsableSymbols().find(t.image.charAt(0));
+			if (sym == null)
+				throw new BadFileException("In rules definition: symbol " + t.image + " not declared.");
+			rule.setPreExpr(sym);
+			// On teste la stochasticité
+			if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_DXL)
+			{
+				final int size = current.getRules().size();
+				
+				for (int i = 0; i < size; i++)
+				{
+					if (current.getRules().get(i).getPreExpr().getCharacter() == sym.getCharacter())
+						throw new BadFileException("In rules definition:\n" +
+								t.image + " appear more than once in the left part of a rule declaration while the" +
+										" grammar is determinist");
+				}
+			}
+		}
+		// Déclaration des précédences
+		(
+			<PREVIOUS>
+			(
+				t = <SYMBOL>
+			|
+				t = <SEQUENCE>
+			)
+			{
+				// on test le type de la grammaire et si on peut ajouter la règle
+				if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_SOL)
+					throw new BadFileException("In rules definition:\n" +
+							"a precedence has been given while the grammar is 0L:" + t.image + ".");
+				String s = t.image;
+				final int size = s.length();
+				for (int i = 0; i < size; i++)
+				{
+					sym = current.getUsableSymbols().find(s.charAt(i));
+					if (sym == null)
+						throw new BadFileException("In rules definition: symbol " + s.charAt(i) + " not declared.");
+					((XLRule) rule).getPrevExpr().append(sym);
+				}
+			}
+		)?
+		// Déclaration des suivances
+		(
+			<FOLLOW>
+			(
+				t = <SYMBOL>
+			|
+				t = <SEQUENCE>
+			)
+			{
+				// on test le type de la grammaire et si on peut ajouter la règle
+				if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_SOL)
+					throw new BadFileException("In rules definition:\n" +
+							"a next constraint has been given while the grammar is 0L:" + t.image + ".");
+				String s = t.image;
+				final int size = s.length();
+				for (int i = 0; i < size; i++)
+				{
+					sym = current.getUsableSymbols().find(s.charAt(i));
+					if (sym == null)
+						throw new BadFileException("In rules definition: symbol " + s.charAt(i) + " not declared.");
+					((XLRule) rule).getNextExpr().append(sym);
+				}
+			}
+		)?
+		<ARROW>
+		// Déclaration de la séquence de remplacement
+		(
+			t = <SYMBOL>
+		|
+			t = <SEQUENCE>
+		|
+			t = <NULL_CHAR>
+		)
+		{
+			String s = t.image;
+			final int size = s.length();
+			// cas du caractère ε
+			if (t.image == "ε")
+			{
+				if (t.image.length() != 1)
+					throw new BadFileException("In rules definition: symbol " + t.image + " not alone in the right " +
+							"side of the rule.");
+				sym = current.getUsableSymbols().find(s.charAt(0));
+				rule.getPostExpr().append(sym);
+			}
+			// traitement général
+			else
+			{
+				for (int i = 0; i < size; i++)
+				{
+					sym = current.getUsableSymbols().find(s.charAt(i));
+					if (sym == null)
+						throw new BadFileException("In rules definition: symbol " + s.charAt(i) + " not declared.");
+					rule.getPostExpr().append(sym);
+				}
+			}
+		}
+		// Déclaration de la probabilité
+		(
+			<COLON>
+			t = <FLOAT>
+			{ rule.setProba(Double.parseDouble(t.image)); }
+		)?
+		(<ENDL>)+
+		{ current.getRules().add(rule); }
+	)+
+	
+	// fin
+	<CLOSE_BRA>
+	(<ENDL>)+
+}
+

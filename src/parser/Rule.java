@@ -30,14 +30,9 @@ package parser;
 
 /**
  * Represent a rewrite rule.
- * A rule contains a preExpr which contains a list of Symbols that are going to be replaced, and a postExpr that contains
- * the replacing symbols: preExpr -> postExpr.
+ * A rule contains a preExpr which contains a single of Symbol that is going to be replaced, and a postExpr that contains
+ * the substitute symbols: preExpr -> postExpr.
  * <p>Each rule has a probability to happen if it is in conflict with another (for non determinist grammars)</p>
- * <p>The rules are divided in 2 groups:
- * <ul>
- * <li>simple rules are those which only have one symbol in preExpr</li>
- * <li>complex rules are those which have more than one symbol in preExpr</li>
- * </ul>
  * </p>
  * @author xinouch
  *
@@ -50,6 +45,14 @@ public interface Rule
 	 * @return true if it can be applied, false otherwise
 	 */
 	public boolean canBeApplied (ListSymbols phrase);
+	
+	/**
+	 * tell if this rule can be applied in the following phrase at the given index.
+	 * @param index the index to replace
+	 * @param phraseFromPreviousIteration the phrase as it was on last iteration
+	 * @return true if it can be applied, false otherwise
+	 */
+	public boolean canBeApplied (int index, ListSymbols phraseFromPreviousIteration);
 	
 	/**
 	 * apply this rule on the given phrase.
@@ -79,5 +82,42 @@ public interface Rule
 	/**
 	 * @return the probability for this rule to happen. It is 1 for determinist grammars.
 	 */
-	public int getProba ();
+	public double getProba ();
+	
+	/**
+	 * @param probability the probability for the rule
+	 */
+	public void setProba (double probability);
+
+	/**
+	 * @return the preExpr
+	 */
+	public Symbol getPreExpr ();
+
+	/**
+	 * @param preExpr the preExpr to set
+	 */
+	public void setPreExpr (Symbol preExpr);
+
+	/**
+	 * @return the postExpr
+	 */
+	public ListSymbols getPostExpr ();
+
+	/**
+	 * @param postExpr the postExpr to set
+	 */
+	public void setPostExpr (ListSymbols postExpr);
+	
+	/**
+	 * @return the determinist
+	 */
+	public boolean isDeterminist ();
+	
+	/**
+	 * @param isDeterminist the determinist to set
+	 */
+	public void setDeterminist (boolean isDeterminist);
+	
+	public String toString ();
 }

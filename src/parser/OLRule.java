@@ -33,19 +33,41 @@ package parser;
  * @author xinouch
  *
  */
-public class SimpleDOLRule implements Rule
+public class OLRule implements Rule
 {
 	/** Symbol to be replaced in the rule */
 	private Symbol preExpr;
 	/** List of symbols that will replace preExpr */
 	private ListSymbols postExpr;
+	/** True if the rule is part of a determinist grammar, false otherwise */
+	private boolean determinist = true;
+	/** The probability of the rule */
+	private double proba = 1;
+	
+	/**
+	 * Constructor
+	 */
+	public OLRule ()
+	{
+		postExpr = new ListSymbols();
+	}
+	
+	/**
+	 * Constructor
+	 * @param isDeterminist true if the rule is part of a determinist grammar
+	 */
+	public OLRule (boolean isDeterminist)
+	{
+		determinist = isDeterminist;
+		postExpr = new ListSymbols();
+	}
 	
 	/**
 	 * Constructor
 	 * @param pre
 	 * @param post
 	 */
-	public SimpleDOLRule (Symbol pre, ListSymbols post)
+	public OLRule (Symbol pre, ListSymbols post)
 	{
 		preExpr = pre;
 		postExpr = post;
@@ -58,24 +80,26 @@ public class SimpleDOLRule implements Rule
 	}
 
 	@Override
+	public boolean canBeApplied (int index, ListSymbols phraseFromPreviousIteration)
+	{
+		return phraseFromPreviousIteration.get(index).getCharacter() == preExpr.getCharacter();
+	}
+
+	@Override
 	public boolean apply (ListSymbols phrase)
 	{
 		boolean retour = false;
-		final int size = phrase.size(), sizej = postExpr.size();
+		int offset = 0;
+		final int size = phrase.size();
+		ListSymbols saved = phrase.clone();
 
-		if (postExpr.get(0).getCharacter() == 'ε')
-			retour = phrase.remove(preExpr);
-		else
+		for (int i = 0; i < size; i++)
 		{
-			for (int i = 0; i < size; i++)
+			offset = applyOnce(i, saved, phrase);
+			if (offset != 0)
 			{
-				if (phrase.get(i).getCharacter() == preExpr.getCharacter())
-				{
-					phrase.set(i, postExpr.get(0));
-					for (int j = 1; j < sizej; j++)
-						phrase.add(i + j, postExpr.get(j));
-					retour = true;
-				}
+				i += offset;
+				retour = true;
 			}
 		}
 
@@ -103,14 +127,20 @@ public class SimpleDOLRule implements Rule
 	}
 
 	@Override
-	public int getProba ()
+	public double getProba ()
 	{
-		return 1;
+		return proba;
+	}
+	
+	public void setProba (double probability)
+	{
+		proba = probability;
 	}
 
 	/**
 	 * @return the preExpr
 	 */
+	@Override
 	public Symbol getPreExpr ()
 	{
 		return preExpr;
@@ -119,6 +149,7 @@ public class SimpleDOLRule implements Rule
 	/**
 	 * @param preExpr the preExpr to set
 	 */
+	@Override
 	public void setPreExpr (Symbol preExpr)
 	{
 		this.preExpr = preExpr;
@@ -127,6 +158,7 @@ public class SimpleDOLRule implements Rule
 	/**
 	 * @return the postExpr
 	 */
+	@Override
 	public ListSymbols getPostExpr ()
 	{
 		return postExpr;
@@ -135,8 +167,33 @@ public class SimpleDOLRule implements Rule
 	/**
 	 * @param postExpr the postExpr to set
 	 */
+	@Override
 	public void setPostExpr (ListSymbols postExpr)
 	{
 		this.postExpr = postExpr;
+	}
+
+	/**
+	 * @return the determinist
+	 */
+	@Override
+	public boolean isDeterminist ()
+	{
+		return determinist;
+	}
+
+	/**
+	 * @param determinist the determinist to set
+	 */
+	@Override
+	public void setDeterminist (boolean determinist)
+	{
+		this.determinist = determinist;
+	}
+
+	@Override
+	public String toString ()
+	{
+		return preExpr.getCharacter() + " -> " + postExpr;
 	}
 }
