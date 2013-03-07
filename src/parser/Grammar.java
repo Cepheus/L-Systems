@@ -18,7 +18,8 @@ import java.util.ArrayList;
 
 
 /**
- * Represent a grammar. A grammar contains a list of rules, a list of usable symbols, and an axiom (which can be just a symbol or a list of
+ * Represent a grammar.
+ * A grammar contains a list of rules, a list of usable symbols, and an axiom (which can be just a symbol or a list of
  * symbols). It also has an attribute "angle" that gives the angle to turn (default is 90°).
  * <p>
  * Before using a Grammar, you have to setup the list of usable symbols, the axiom and the list of rules.
@@ -32,10 +33,10 @@ public class Grammar
 	public static final int TYPE_DOL = 1;
 	/** La grammaire est de type SOL */
 	public static final int TYPE_SOL = 2;
-	/** La grammaire est de type DXL */
-	public static final int TYPE_DXL = 3;
-	/** La grammaire est de type SXL */
-	public static final int TYPE_SXL = 4;
+	/** La grammaire est de type DIL */
+	public static final int TYPE_DIL = 3;
+	/** La grammaire est de type SIL */
+	public static final int TYPE_SIL = 4;
 
 	/** The alphabet of the grammar */
 	private ListSymbols usableSymbols = new ListSymbols();
@@ -160,11 +161,11 @@ public class Grammar
 			case TYPE_SOL:
 				s += "SOL\n";
 				break;
-			case TYPE_DXL:
-				s += "DXL\n";
+			case TYPE_DIL:
+				s += "DIL\n";
 				break;
-			case TYPE_SXL:
-				s += "SXL\n";
+			case TYPE_SIL:
+				s += "SIL\n";
 				break;
 		}
 

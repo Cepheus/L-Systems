@@ -1,4 +1,10 @@
-import parser.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+import parser.Generator;
+import parser.IOmanager.*;
+
 
 /**
  * 
@@ -6,65 +12,50 @@ import parser.*;
 
 /**
  * @author Caelum
- *
  */
-public class LSystem {
+public class LSystem
+{
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main (String[] args)
+	{
 		char eps = 'ε';
-		
+
 		System.out.println("Bonjour tortue !" + eps);
 
-		//----------------- essai de génération
-		Symbol a = new Symbol('a'), b = new Symbol('b');
-		ListSymbols firstList = new ListSymbols(), secondList = new ListSymbols(), axiome = new ListSymbols();
-		firstList.append(a);
-		firstList.append(b);
-		secondList.append(a);
-		axiome.append(b);
-		Rule first = new OLRule(a, firstList), second = new OLRule(b, secondList);
-		Grammar g = new Grammar();
-		g.getRules().add(first);
-		g.getRules().add(second);
-		g.setUsableSymbols(firstList.clone());
-		g.setAxiom(axiome);
-		
-		Generator generator = new Generator(g);
-		generator.setTotalIteration(6);
-		generator.generate();
-		System.out.println(generator.getLastGenerated());
-		System.out.println(generator.getGenerated());
-		//----------------- essai de génération 2
-		Symbol F = new Symbol('f'), plus = new Symbol('+'), moins = new Symbol('-');
-		ListSymbols symbols = new ListSymbols(), axiom = new ListSymbols(), post = new ListSymbols();
-		symbols.append(F);
-		symbols.append(moins);
-		symbols.append(plus);
-		axiom.append(F);
-		post.append(F);
-		post.append(plus);
-		post.append(F);
-		post.append(moins);
-		post.append(F);
-		post.append(moins);
-		post.append(F);
-		post.append(plus);
-		post.append(F);
-		
-		Rule rule = new OLRule(F, post);
-		Grammar g2 = new Grammar();
-		g2.getRules().add(rule);
-		g2.setUsableSymbols(symbols);
-		g2.setAxiom(axiom);
-		
-		Generator generator2 = new Generator(g2);
-		generator2.setTotalIteration(4);
-		generator2.generate();
-		System.out.println(generator2.getLastGenerated());
-		System.out.println(generator2.getGenerated());
+		// ----------------- essai de génération
+		InputStream istrm = null;
+		try
+		{
+			istrm = new FileInputStream("doc/grammars-example.txt");
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println(e.getMessage());
+		}
+		Analyzer analyzer = new Analyzer(istrm, "UTF-8");
+		try
+		{
+			analyzer.startValidation();
+		}
+		catch (NumberFormatException | ParseException | BadFileException e)
+		{
+			System.out.println(e.getMessage());
+			System.exit(0);
+		}
+
+		Generator generator;
+		for (int i = 0; i < analyzer.getGrammars().size(); i++)
+		{
+			generator = new Generator(analyzer.getGrammars().get(i));
+			generator.setTotalIteration(3);
+			generator.generate();
+			System.out.println(analyzer.getGrammars().get(i).getName());
+			System.out.println(generator.getLastGenerated());
+			System.out.println(generator.getGenerated());
+		}
 	}
 
 }

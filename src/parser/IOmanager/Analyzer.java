@@ -39,16 +39,6 @@
                         return grammars;
                 }
 
-                public static void main (String[] args) throws ParseException, NumberFormatException, BadFileException
-                {
-                        Analyzer analyz = new Analyzer(System.in, "UTF-8");
-
-                        analyz.validationStart();
-
-                        for (int i = 0; i < analyz.getGrammars().size(); i++)
-                                System.out.println(analyz.getGrammars().get(i));
-                }
-
 /* ****************************
  * REAL FUNCTIONS DEFINITION
  * ***************************/
@@ -59,7 +49,7 @@
  * @throws NumberFormatException en cas d'erreur de format des nombres
  * @throws BadFileException
  */
-  final public void validationStart() throws ParseException, NumberFormatException, BadFileException {
+  final public void startValidation() throws ParseException, NumberFormatException, BadFileException {
     label_1:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -133,13 +123,13 @@
       jj_consume_token(SOL);
                   current.setType(Grammar.TYPE_SOL);
       break;
-    case DXL:
-      jj_consume_token(DXL);
-                  current.setType(Grammar.TYPE_DXL);
+    case DIL:
+      jj_consume_token(DIL);
+                  current.setType(Grammar.TYPE_DIL);
       break;
-    case SXL:
-      jj_consume_token(SXL);
-                  current.setType(Grammar.TYPE_SXL);
+    case SIL:
+      jj_consume_token(SIL);
+                  current.setType(Grammar.TYPE_SIL);
       break;
     default:
       jj_la1[4] = jj_gen;
@@ -409,11 +399,11 @@
                                 case Grammar.TYPE_SOL:
                                         rule = new OLRule(false);
                                         break;
-                                case Grammar.TYPE_DXL:
-                                        rule = new XLRule(true);
+                                case Grammar.TYPE_DIL:
+                                        rule = new OLRule(true);
                                         break;
-                                case Grammar.TYPE_SXL:
-                                        rule = new XLRule(false);
+                                case Grammar.TYPE_SIL:
+                                        rule = new OLRule(false);
                                         break;
                         }
       // Déclaration des symboles
@@ -422,19 +412,6 @@
                         if (sym == null)
                                 {if (true) throw new BadFileException("In rules definition: symbol " + t.image + " not declared.");}
                         rule.setPreExpr(sym);
-                        // On teste la stochasticité
-                        if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_DXL)
-                        {
-                                final int size = current.getRules().size();
-
-                                for (int i = 0; i < size; i++)
-                                {
-                                        if (current.getRules().get(i).getPreExpr().getCharacter() == sym.getCharacter())
-                                                {if (true) throw new BadFileException("In rules definition:\u005cn" +
-                                                                t.image + " appear more than once in the left part of a rule declaration while the" +
-                                                                                " grammar is determinist");}
-                                }
-                        }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case PREVIOUS:
         jj_consume_token(PREVIOUS);
@@ -454,6 +431,8 @@
                                 if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_SOL)
                                         {if (true) throw new BadFileException("In rules definition:\u005cn" +
                                                         "a precedence has been given while the grammar is 0L:" + t.image + ".");}
+                                ILRule tmp = new ILRule(rule.isDeterminist());
+                                tmp.setPreExpr(rule.getPreExpr());
                                 String s = t.image;
                                 final int size = s.length();
                                 for (int i = 0; i < size; i++)
@@ -461,8 +440,9 @@
                                         sym = current.getUsableSymbols().find(s.charAt(i));
                                         if (sym == null)
                                                 {if (true) throw new BadFileException("In rules definition: symbol " + s.charAt(i) + " not declared.");}
-                                        ((XLRule) rule).getPrevExpr().append(sym);
+                                        tmp.getPrevExpr().append(sym);
                                 }
+                                rule = tmp;
         break;
       default:
         jj_la1[21] = jj_gen;
@@ -487,6 +467,10 @@
                                 if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_SOL)
                                         {if (true) throw new BadFileException("In rules definition:\u005cn" +
                                                         "a next constraint has been given while the grammar is 0L:" + t.image + ".");}
+                                ILRule tmp = new ILRule(rule.isDeterminist());
+                                tmp.setPreExpr(rule.getPreExpr());
+                                if (!rule.isContextFree())
+                                        tmp.setPrevExpr(((ILRule) rule).getPrevExpr());
                                 String s = t.image;
                                 final int size = s.length();
                                 for (int i = 0; i < size; i++)
@@ -494,13 +478,28 @@
                                         sym = current.getUsableSymbols().find(s.charAt(i));
                                         if (sym == null)
                                                 {if (true) throw new BadFileException("In rules definition: symbol " + s.charAt(i) + " not declared.");}
-                                        ((XLRule) rule).getNextExpr().append(sym);
+                                        tmp.getNextExpr().append(sym);
                                 }
+                                rule = tmp;
         break;
       default:
         jj_la1[23] = jj_gen;
         ;
       }
+                        // On teste la stochasticité
+                        if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_DIL)
+                        {
+                                final int size = current.getRules().size();
+
+                                for (int i = 0; i < size; i++)
+                                {
+                                        if ((current.getRules().get(i).getPreExpr().getCharacter() == rule.getPreExpr().getCharacter()) &&
+                                                        (current.getRules().get(i).isContextFree() == rule.isContextFree()))
+                                                {if (true) throw new BadFileException("In rules definition:\u005cn" +
+                                                                rule.getPreExpr().getCharacter() + " appear more than once in the left part of a rule " +
+                                                                                "declaration while the grammar is determinist");}
+                                }
+                        }
       jj_consume_token(ARROW);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case SYMBOL:
@@ -762,4 +761,15 @@
   final public void disable_tracing() {
   }
 
+                /*
+		public static void main (String[] args) throws ParseException, NumberFormatException, BadFileException
+		{
+			Analyzer analyz = new Analyzer(System.in, "UTF-8");
+			
+			analyz.validationStart();
+			
+			for (int i = 0; i < analyz.getGrammars().size(); i++)
+				System.out.println(analyz.getGrammars().get(i));
+		}
+		*/
         }

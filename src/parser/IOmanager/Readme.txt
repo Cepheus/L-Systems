@@ -1,6 +1,8 @@
 # we use JavaCC to create the file parser.
 # just run "javacc Analyzer.jj" to create the java classes of the parser
 
+# TODO: better comments (only one "#" at the beginning of the line)
+
 # following the list of things used in the parser
 
 # symbols:

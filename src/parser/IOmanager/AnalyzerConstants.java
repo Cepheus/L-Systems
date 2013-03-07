@@ -45,9 +45,9 @@ public interface AnalyzerConstants {
   /** RegularExpression Id. */
   int SOL = 17;
   /** RegularExpression Id. */
-  int DXL = 18;
+  int DIL = 18;
   /** RegularExpression Id. */
-  int SXL = 19;
+  int SIL = 19;
   /** RegularExpression Id. */
   int ENDL = 25;
   /** RegularExpression Id. */
@@ -104,8 +104,8 @@ public interface AnalyzerConstants {
     "\"RESTOREPOSITION\"",
     "\"DOL\"",
     "\"SOL\"",
-    "\"DXL\"",
-    "\"SXL\"",
+    "\"DIL\"",
+    "\"SIL\"",
     "\"#\"",
     "<token of kind 21>",
     "\"#\"",

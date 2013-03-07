@@ -48,11 +48,11 @@ public interface Rule
 	
 	/**
 	 * tell if this rule can be applied in the following phrase at the given index.
-	 * @param index the index to replace
+	 * @param indexPrev l'index actuel dans la chaine précédente
 	 * @param phraseFromPreviousIteration the phrase as it was on last iteration
 	 * @return true if it can be applied, false otherwise
 	 */
-	public boolean canBeApplied (int index, ListSymbols phraseFromPreviousIteration);
+	public boolean canBeApplied (int indexPrev, ListSymbols phraseFromPreviousIteration);
 	
 	/**
 	 * apply this rule on the given phrase.
@@ -72,12 +72,13 @@ public interface Rule
 	 * <li>1 if a character has been changed</li>
 	 * <li>x if x characters have been inserted</li>
 	 * </ul>
-	 * @param index 
+	 * @param indexPrev index from the previous
 	 * @param phraseFromPreviousIteration the phrase as it was on last iteration
+	 * @param indexNew the actual index in the new list actually in calcul
 	 * @param toBeModified the phrase to work on
 	 * @return the offset of the next symbol not changed.
 	 */
-	public int applyOnce (int index, ListSymbols phraseFromPreviousIteration, ListSymbols toBeModified);
+	public int applyOnce (int indexPrev, ListSymbols phraseFromPreviousIteration, int indexNew, ListSymbols toBeModified);
 	
 	/**
 	 * @return the probability for this rule to happen. It is 1 for determinist grammars.
@@ -118,6 +119,11 @@ public interface Rule
 	 * @param isDeterminist the determinist to set
 	 */
 	public void setDeterminist (boolean isDeterminist);
+	
+	/**
+	 * @return true if the rule is contextFree
+	 */
+	public boolean isContextFree ();
 	
 	public String toString ();
 }

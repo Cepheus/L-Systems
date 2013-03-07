@@ -29,7 +29,7 @@
 package parser;
 
 /**
- * Represent a rule for a determinist context-free L-system, where preExpr contains only one symbol.
+ * Represent a rule for a context-free L-system, where preExpr contains only one symbol.
  * @author xinouch
  *
  */
@@ -80,49 +80,50 @@ public class OLRule implements Rule
 	}
 
 	@Override
-	public boolean canBeApplied (int index, ListSymbols phraseFromPreviousIteration)
+	public boolean canBeApplied (int indexPrev, ListSymbols phraseFromPreviousIteration)
 	{
-		return phraseFromPreviousIteration.get(index).getCharacter() == preExpr.getCharacter();
+		return phraseFromPreviousIteration.get(indexPrev).getCharacter() == preExpr.getCharacter();
 	}
 
 	@Override
 	public boolean apply (ListSymbols phrase)
 	{
 		boolean retour = false;
-		int offset = 0;
+		int offset = 0, indexOld = 0;
 		final int size = phrase.size();
 		ListSymbols saved = phrase.clone();
 
 		for (int i = 0; i < size; i++)
 		{
-			offset = applyOnce(i, saved, phrase);
+			offset = applyOnce(indexOld, saved, i, phrase);
 			if (offset != 0)
 			{
 				i += offset;
 				retour = true;
 			}
+			indexOld++;
 		}
 
 		return retour;
 	}
 
 	@Override
-	public int applyOnce (int index, ListSymbols phraseFromPreviousIteration, ListSymbols toBeModified)
+	public int applyOnce (int indexPrev, ListSymbols phraseFromPreviousIteration, int indexNew, ListSymbols toBeModified)
 	{
 		final int size = postExpr.size();
-		
-		if (toBeModified.get(index).getCharacter() != preExpr.getCharacter())
+
+		if (!canBeApplied(indexPrev, phraseFromPreviousIteration))
 			return 0;
-		
+
 		if (postExpr.get(0).getCharacter() == 'ε')
 		{
-			toBeModified.remove(index);
+			toBeModified.remove(indexNew);
 			return -1;
 		}
-		
-		toBeModified.set(index, postExpr.get(0));
+
+		toBeModified.set(indexNew, postExpr.get(0));
 		for (int i = 1; i < size; i++)
-			toBeModified.add(index + i, postExpr.get(i));
+			toBeModified.add(indexNew + i, postExpr.get(i));
 		return size;
 	}
 
@@ -190,10 +191,16 @@ public class OLRule implements Rule
 	{
 		this.determinist = determinist;
 	}
+	
+	@Override
+	public boolean isContextFree ()
+	{
+		return true;
+	}
 
 	@Override
 	public String toString ()
 	{
-		return preExpr.getCharacter() + " -> " + postExpr;
+		return preExpr.getCharacter() + " -> " + postExpr + ((proba == 1) ? "" : ": " + proba);
 	}
 }

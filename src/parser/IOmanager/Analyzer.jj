@@ -47,7 +47,7 @@ PARSER_BEGIN (Analyzer)
 		{
 			return grammars;
 		}
-		
+		/*
 		public static void main (String[] args) throws ParseException, NumberFormatException, BadFileException
 		{
 			Analyzer analyz = new Analyzer(System.in, "UTF-8");
@@ -57,6 +57,7 @@ PARSER_BEGIN (Analyzer)
 			for (int i = 0; i < analyz.getGrammars().size(); i++)
 				System.out.println(analyz.getGrammars().get(i));
 		}
+		*/
 	}
 	
 PARSER_END (Analyzer)
@@ -88,8 +89,8 @@ TOKEN : { < RESTOREPOSITION : "RESTOREPOSITION" > }
 // TYPES OF GRAMMARS
 TOKEN : { < DOL : "DOL" > }
 TOKEN : { < SOL : "SOL" > }
-TOKEN : { < DXL : "DXL" > }
-TOKEN : { < SXL : "SXL" > }
+TOKEN : { < DIL : "DIL" > }
+TOKEN : { < SIL : "SIL" > }
 
 // SKIP AND COMMENTS
 SKIP : { "#" : IN_COMMENT }
@@ -132,7 +133,7 @@ TOKEN : { < SEQUENCE : (< SYMBOL >)+ > }
  * @throws NumberFormatException en cas d'erreur de format des nombres
  * @throws BadFileException
  */
-void validationStart() throws NumberFormatException, BadFileException:
+void startValidation() throws NumberFormatException, BadFileException:
 {}
 {
 	(<ENDL>)*
@@ -176,11 +177,11 @@ private void validationNameAndType ():
 		< SOL >
 		{ current.setType(Grammar.TYPE_SOL); }
 	|
-		< DXL >
-		{ current.setType(Grammar.TYPE_DXL); }
+		< DIL >
+		{ current.setType(Grammar.TYPE_DIL); }
 	|
-		< SXL >
-		{ current.setType(Grammar.TYPE_SXL); }
+		< SIL >
+		{ current.setType(Grammar.TYPE_SIL); }
 	)
 	(<ENDL>)*
 }
@@ -342,11 +343,11 @@ private void validationRules () throws BadFileException, NumberFormatException:
 				case Grammar.TYPE_SOL:
 					rule = new OLRule(false);
 					break;
-				case Grammar.TYPE_DXL:
-					rule = new XLRule(true);
+				case Grammar.TYPE_DIL:
+					rule = new OLRule(true);
 					break;
-				case Grammar.TYPE_SXL:
-					rule = new XLRule(false);
+				case Grammar.TYPE_SIL:
+					rule = new OLRule(false);
 					break;
 			}
 		}
@@ -357,19 +358,6 @@ private void validationRules () throws BadFileException, NumberFormatException:
 			if (sym == null)
 				throw new BadFileException("In rules definition: symbol " + t.image + " not declared.");
 			rule.setPreExpr(sym);
-			// On teste la stochasticité
-			if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_DXL)
-			{
-				final int size = current.getRules().size();
-				
-				for (int i = 0; i < size; i++)
-				{
-					if (current.getRules().get(i).getPreExpr().getCharacter() == sym.getCharacter())
-						throw new BadFileException("In rules definition:\n" +
-								t.image + " appear more than once in the left part of a rule declaration while the" +
-										" grammar is determinist");
-				}
-			}
 		}
 		// Déclaration des précédences
 		(
@@ -384,6 +372,8 @@ private void validationRules () throws BadFileException, NumberFormatException:
 				if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_SOL)
 					throw new BadFileException("In rules definition:\n" +
 							"a precedence has been given while the grammar is 0L:" + t.image + ".");
+				ILRule tmp = new ILRule(rule.isDeterminist());
+				tmp.setPreExpr(rule.getPreExpr());
 				String s = t.image;
 				final int size = s.length();
 				for (int i = 0; i < size; i++)
@@ -391,8 +381,9 @@ private void validationRules () throws BadFileException, NumberFormatException:
 					sym = current.getUsableSymbols().find(s.charAt(i));
 					if (sym == null)
 						throw new BadFileException("In rules definition: symbol " + s.charAt(i) + " not declared.");
-					((XLRule) rule).getPrevExpr().append(sym);
+					tmp.getPrevExpr().append(sym);
 				}
+				rule = tmp;
 			}
 		)?
 		// Déclaration des suivances
@@ -408,6 +399,10 @@ private void validationRules () throws BadFileException, NumberFormatException:
 				if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_SOL)
 					throw new BadFileException("In rules definition:\n" +
 							"a next constraint has been given while the grammar is 0L:" + t.image + ".");
+				ILRule tmp = new ILRule(rule.isDeterminist());
+				tmp.setPreExpr(rule.getPreExpr());
+				if (!rule.isContextFree())
+					tmp.setPrevExpr(((ILRule) rule).getPrevExpr());
 				String s = t.image;
 				final int size = s.length();
 				for (int i = 0; i < size; i++)
@@ -415,10 +410,27 @@ private void validationRules () throws BadFileException, NumberFormatException:
 					sym = current.getUsableSymbols().find(s.charAt(i));
 					if (sym == null)
 						throw new BadFileException("In rules definition: symbol " + s.charAt(i) + " not declared.");
-					((XLRule) rule).getNextExpr().append(sym);
+					tmp.getNextExpr().append(sym);
 				}
+				rule = tmp;
 			}
 		)?
+		{
+			// On teste la stochasticité
+			if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_DIL)
+			{
+				final int size = current.getRules().size();
+
+				for (int i = 0; i < size; i++)
+				{
+					if ((current.getRules().get(i).getPreExpr().getCharacter() == rule.getPreExpr().getCharacter()) &&
+							(current.getRules().get(i).isContextFree() == rule.isContextFree()))
+						throw new BadFileException("In rules definition:\n" +
+								rule.getPreExpr().getCharacter() + " appear more than once in the left part of a rule " +
+										"declaration while the grammar is determinist");
+				}
+			}
+		}
 		<ARROW>
 		// Déclaration de la séquence de remplacement
 		(
