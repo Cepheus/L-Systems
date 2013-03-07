@@ -83,7 +83,7 @@ simpler:</p>
 <li>a -> bbb</li>
 </ul>
 
-<p>In a dependent context L-System (noted XL), we have to specify a context that can be before or after the
+<p>In a dependent context L-System (noted IL), we have to specify a context that can be before or after the
 current symbol:</p>
 
 <ul>
@@ -118,8 +118,8 @@ context-dependent rules are tested first (priority for the context-dependent):</
 <ul>
 <li>DOL is a determinist context-free L-System</li>
 <li>SOL is a stochastic context-free L-System</li>
-<li>DXL is a determinist context-dependent L-System</li>
-<li>SXL is a stochastic context-dependent L-System</li>
+<li>DIL is a determinist context-dependent L-System</li>
+<li>SIL is a stochastic context-dependent L-System</li>
 </ul>
 
 <h2>2. Interpretations</h2>
@@ -141,7 +141,7 @@ in order to generate a sequence applying the rules of the given grammar on the w
 <h3>1. With files</h3>
 
 <p>You have to write a config file where you describe the grammar you want to use. We have seen
-that a L-System is described by a type (DOL, SOL, DXL or SXL), a list of symbols, a list of rules,
+that a L-System is described by a type (DOL, SOL, DIL or SIL), a list of symbols, a list of rules,
 an axiom and a optional angle. In the program, we also give a name to the grammars.</p>
 
 <p>Each of these will have to be written in the file. Let's see how it works.</p>
@@ -280,8 +280,8 @@ when several can be. If nothing is written, the rules have all the same probabil
 <li>SYMBOLS</li>
 <li>DOL</li>
 <li>SOL</li>
-<li>DXL</li>
-<li>SXL</li>
+<li>DIL</li>
+<li>SIL</li>
 <li>FORWARD</li>
 <li>TURNLEFT</li>
 <li>TURNRIGHT</li>
