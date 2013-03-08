@@ -1,5 +1,5 @@
 /**
- * File of the class Turtle, this is the main class for the turtle interpretation
+ * File of the class Drawer, this is the main class for the turtle interpretation
  */
 package ATuin;
 
@@ -16,13 +16,20 @@ import com.jme3.scene.shape.Box;
  * Class for the turtle interpretation
  * 
  */
-public class Turtle extends SimpleApplication {
-        
+public class Drawer extends SimpleApplication {
+    
+    /**
+     * 
+     * @param args 
+     */
     public static void main(String[] args) {
-        Turtle app = new Turtle();
+        Drawer app = new Drawer();
         app.start();
     }
     
+    /**
+     * Création initiale de la scène
+     */
     @Override
     public void simpleInitApp() {
         Box b = new Box(Vector3f.ZERO, 1, 1, 1);
