@@ -7,25 +7,18 @@ import parser.IOmanager.*;
 
 
 /**
- * 
- */
-
-/**
  * @author Caelum
  */
 public class LSystem
 {
-
 	/**
+	 * Launch the program
 	 * @param args
 	 */
 	public static void main (String[] args)
 	{
 		char eps = 'ε';
-
-		System.out.println("Bonjour tortue !" + eps);
-
-		// ----------------- essai de génération
+		System.out.println("Bonjour tortue !" + eps); // ----------------- essai de génération
 		InputStream istrm = null;
 		try
 		{
@@ -45,7 +38,6 @@ public class LSystem
 			System.out.println(e.getMessage());
 			System.exit(0);
 		}
-
 		Generator generator;
 		for (int i = 0; i < analyzer.getGrammars().size(); i++)
 		{
@@ -56,6 +48,9 @@ public class LSystem
 			System.out.println(generator.getLastGenerated());
 			System.out.println(generator.getGenerated());
 		}
-	}
 
+		// gestion des objets 3D
+		Controller controller = new Controller();
+		controller.startLSystem();
+	}
 }
