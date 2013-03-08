@@ -12,6 +12,21 @@ Release/*
 .classpath
 .project
 .desktop
+.settings/*
 
-# tmp Linux files
+# JMonkey
+assets/*
+nbproject/*
+test/*
+build.xml
+MANIFEST.MF
+master-application.jnlp
+
+# Windows files
+*.dll
+
+# Linux files
+*.so
 *~
+/build/
+/dist/

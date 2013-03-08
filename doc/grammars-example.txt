@@ -35,7 +35,7 @@ DOL
 	}
 
 	AXIOM: F
-	# angle = 90°, same as default, we could not write it #
+	# angle = 90°, same as default, we don't have to specify it #
 	ANGLE: 90
 
 	RULES
