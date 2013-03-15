@@ -95,7 +95,7 @@ public class Panel3D extends JPanel
 	/**
 	 * @return the turtle
 	 */
-	public Drawer getTurtle ()
+	public Drawer getDrawer ()
 	{
 		return drawer;
 	}
