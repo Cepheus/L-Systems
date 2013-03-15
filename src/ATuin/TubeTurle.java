@@ -14,25 +14,46 @@
 
 package ATuin;
 
+import parser.ListSymbols;
+import parser.Symbol;
+import com.jme3.math.Vector3f;
+
 /**
  *
  * @author Caelum
  */
 public class TubeTurle extends Turtle {
     
+	/**
+     * Default constructor.
+     */
+    public TubeTurle() {
+        super();
+    }
+    
+    /**
+     * Constructor.
+     * @param drawer The object drawer of the scene 
+     */
+    public TubeTurle(Drawer drawer, ListSymbols symbols) {
+        super(drawer, symbols);
+    }
+	
     /**
      * Checks if the interpretation can interpret all the symbols.
      * If not the function throws an exception.
      * @throws BadInterpretationException 
      */
-    protected void checkSymbols() throws BadInterpretationException {
-        
+    public void checkSymbols() throws BadInterpretationException {
+        for (Symbol symbol : symbols.getSymbols()) {
+			System.out.println("Char:"+symbol.getCharacter()+" Inter:"+symbol.getInterpretation());
+		}
     }
     
     /**
      * Draws the list of symbols depending of the turtle's interpretation.
      */
-    protected void drawSymbols() {
-        
+    public void drawSymbols() {
+    	drawer.createLine(new Vector3f(0f,0f,0f), new Vector3f(100f,100f,100f));
     }
 }

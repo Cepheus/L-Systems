@@ -14,13 +14,20 @@
 
 package ATuin;
 
+import java.util.ArrayList;
+
+import parser.ListSymbols;
+import parser.Symbol;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Line;
 import com.jme3.system.AppSettings;
 
 /**
@@ -34,8 +41,23 @@ public class Drawer extends SimpleApplication {
      * @param args 
      */
     public static void main(String[] args) {
-        Drawer app = new Drawer();
-        app.start();
+    	Drawer app = new Drawer();
+    	app.start();
+        
+        ListSymbols symbols = new ListSymbols();
+        ArrayList<Symbol> arraySymbols = new ArrayList<Symbol>();
+        arraySymbols.add(new Symbol('F',1));
+        arraySymbols.add(new Symbol('F',1));
+        arraySymbols.add(new Symbol('L',2));
+        arraySymbols.add(new Symbol('F',1));
+        symbols.setSymbols(arraySymbols);
+        TubeTurle turtle = new TubeTurle(app, symbols);
+        try {
+			turtle.checkSymbols();
+		} catch (BadInterpretationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     /**
@@ -55,18 +77,24 @@ public class Drawer extends SimpleApplication {
     }
     
     /**
+     * 
+     */
+    public void createLine(Vector3f origine, Vector3f end) {
+    	Box box = new Box(origine, end);
+    	//Line line = new Line(origine, end);
+        Geometry geom = new Geometry("Line", box);
+        //Material mat2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        //mat2.setColor("Color", ColorRGBA.Red);
+        //geom.setMaterial(mat2);
+        rootNode.attachChild(geom);
+    }
+    
+    /**
      * Initiale creation of the scene.
      */
     @Override
     public void simpleInitApp() {
-        Box b = new Box(Vector3f.ZERO, 1, 1, 1);
-        Geometry geom = new Geometry("Box", b);
-
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        geom.setMaterial(mat);
-
-        rootNode.attachChild(geom);
+        
     }
 
     /**

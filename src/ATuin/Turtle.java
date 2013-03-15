@@ -25,10 +25,10 @@ import parser.ListSymbols;
 public abstract class Turtle {
     
     /** The list of symbols to interpret */
-    private ListSymbols symbols;
-    
-    /** The Drawer of the 3D scene */
-    private Drawer drawer;
+    protected ListSymbols symbols;	
+
+	/** The Drawer of the 3D scene */
+    protected Drawer drawer;
     
     /**
      * Default constructor.
@@ -41,9 +41,10 @@ public abstract class Turtle {
      * Constructor.
      * @param drawer The object drawer of the scene 
      */
-    public Turtle(Drawer drawer) {
+    public Turtle(Drawer drawer, ListSymbols symbols) {
         this();
         this.drawer = drawer;
+        this.symbols = symbols;
     }
     
     /**
@@ -51,10 +52,24 @@ public abstract class Turtle {
      * If not the function throws an exception.
      * @throws BadInterpretationException 
      */
-    protected abstract void checkSymbols() throws BadInterpretationException;
+    public abstract void checkSymbols() throws BadInterpretationException;
     
     /**
      * Draws the list of symbols depending of the turtle's interpretation.
      */
-    protected abstract void drawSymbols();
+    public abstract void drawSymbols();
+    
+    /**
+	 * @param drawer the drawer to set
+	 */
+	public void setDrawer(Drawer drawer) {
+		this.drawer = drawer;
+	}
+	
+    /**
+	 * @param symbols the symbols to set
+	 */
+	public void setSymbols(ListSymbols symbols) {
+		this.symbols = symbols;
+	}
 }
