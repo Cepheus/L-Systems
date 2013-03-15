@@ -47,7 +47,7 @@ public class Drawer extends SimpleApplication {
     	app.start();
     	
     	try {
-			Thread.sleep(750);
+			Thread.sleep(1000);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -56,11 +56,13 @@ public class Drawer extends SimpleApplication {
         ListSymbols symbols = new ListSymbols();
         ArrayList<Symbol> arraySymbols = new ArrayList<Symbol>();
         arraySymbols.add(new Symbol('F',1));
-        arraySymbols.add(new Symbol('F',1));
         arraySymbols.add(new Symbol('L',2));
+        arraySymbols.add(new Symbol('F',1));
+        arraySymbols.add(new Symbol('R',3));
         arraySymbols.add(new Symbol('F',1));
         symbols.setSymbols(arraySymbols);
         TubeTurle turtle = new TubeTurle(app, symbols);
+        turtle.setParameters(5, 10, ColorRGBA.Green);
         try {
 			turtle.checkSymbols();
 		} catch (BadInterpretationException e) {
@@ -87,39 +89,17 @@ public class Drawer extends SimpleApplication {
     }
     
     /**
-     * 
+     * Get the assetManager of the scene
      */
-    public void createLine(Vector3f origine, Vector3f end) {
-    	
-    	/*Line line = new Line(origine, end);
-        Geometry geom = new Geometry("Line", line);
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Red);
-        geom.setMaterial(mat);
-        rootNode.attachChild(geom);*/
-    	
-    	
-    	//if(manager!=null) {
-			Box b = new Box(5, 5, 5);
-			Geometry geom = new Geometry("Box", b);
-			Material mat = new Material(assetManager,
-					"Common/MatDefs/Misc/Unshaded.j3md");
-			mat.setColor("Color", ColorRGBA.Green);
-			geom.setMaterial(mat);
-			rootNode.attachChild(geom);
-    	//}
-    	//else
-    		System.out.println("tralala");
-        
-        /** An unshaded textured cube. 
-        *  Uses texture from jme3-test-data library! */ 
-       /*Box boxshape1 = new Box(Vector3f.ZERO, 1f,1f,1f); 
-       Geometry cube_tex = new Geometry("A Textured Box", boxshape1); 
-       Material mat_tex = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"); 
-       Texture tex = assetManager.loadTexture("Interface/Logo/Monkey.jpg"); 
-       mat_tex.setTexture("ColorMap", tex); 
-       cube_tex.setMaterial(mat_tex); 
-       rootNode.attachChild(cube_tex);*/ 
+    public AssetManager getAssetManager() {
+		return assetManager;
+    }
+    
+    /**
+     * Get the root node of the scene
+     */
+    public Node getRootNode() {
+    	return rootNode;
     }
     
     /**
@@ -127,15 +107,7 @@ public class Drawer extends SimpleApplication {
      */
     @Override
     public void simpleInitApp() {
-    	Box b = new Box(1, 1, 1);
-		Geometry geom = new Geometry("Box", b);
-		Material mat = new Material(assetManager,
-				"Common/MatDefs/Misc/Unshaded.j3md");
-		mat.setColor("Color", ColorRGBA.Blue);
-		geom.setMaterial(mat);
-		rootNode.attachChild(geom);
-		
-		System.out.println("END InitApp");
+    	
     }
 
     /**

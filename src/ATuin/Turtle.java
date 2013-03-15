@@ -13,6 +13,8 @@
 
 package ATuin;
 
+import com.jme3.asset.AssetManager;
+
 import parser.ListSymbols;
 
 
@@ -72,4 +74,5 @@ public abstract class Turtle {
 	public void setSymbols(ListSymbols symbols) {
 		this.symbols = symbols;
 	}
+
 }
