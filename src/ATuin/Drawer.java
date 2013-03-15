@@ -13,12 +13,20 @@
 
 package ATuin;
 
+import java.util.ArrayList;
+
+import parser.ListSymbols;
+import parser.Symbol;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.AssetManager;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -26,58 +34,65 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
 import com.jme3.util.TangentBinormalGenerator;
 
-
 /**
  * @author Caelum Class for 3D object drawing.
  */
-public class Drawer extends SimpleApplication
-{
+public class Drawer extends SimpleApplication {
 
 	/**
 	 * TODO : a supprimer
 	 * 
 	 * @param args
 	 */
-	public static void main (String[] args)
-	{
+	public static void main(String[] args) {
 		Drawer app = new Drawer();
 		app.start();
 
-		try
-		{
+		try {
 			Thread.sleep(1000);
-		}
-		catch (InterruptedException e1)
-		{
+		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
-		/*
-		 * ListSymbols symbols = new ListSymbols(); ArrayList<Symbol> arraySymbols = new ArrayList<Symbol>(); arraySymbols.add(new
-		 * Symbol('F', 1)); arraySymbols.add(new Symbol('L', 2)); arraySymbols.add(new Symbol('F', 1)); arraySymbols.add(new Symbol('R',
-		 * 3)); arraySymbols.add(new Symbol('F', 1)); arraySymbols.add(new Symbol('U', 4)); arraySymbols.add(new Symbol('F', 1));
-		 * arraySymbols.add(new Symbol('D', 5)); arraySymbols.add(new Symbol('F', 1)); symbols.setSymbols(arraySymbols); TubeTurle turtle =
-		 * new TubeTurle(app); turtle.setSymbols(symbols); turtle.setParameters(5, 10, 90,ColorRGBA.Green); try { if(turtle.checkSymbols())
-		 * turtle.drawSymbols(); } catch (BadInterpretationException e) { e.printStackTrace(); }
-		 */
+		ListSymbols symbols = new ListSymbols();
+		ArrayList<Symbol> arraySymbols = new ArrayList<Symbol>();
+		arraySymbols.add(new Symbol('F', 1));
+		arraySymbols.add(new Symbol('L', 2));
+		arraySymbols.add(new Symbol('F', 1));
+		arraySymbols.add(new Symbol('R', 3));
+		arraySymbols.add(new Symbol('F', 1));
+		arraySymbols.add(new Symbol('D', Symbol.S_TURNDOWN));
+		arraySymbols.add(new Symbol('F', 1));
+		arraySymbols.add(new Symbol('U', Symbol.S_TURNUP));
+		arraySymbols.add(new Symbol('F', 1));
+		symbols.setSymbols(arraySymbols);
+		TubeTurtle turtle = new TubeTurtle(app);
+		turtle.setSymbols(symbols);
+		turtle.setParameters(5, 10, 90, ColorRGBA.Green);
+		try {
+			if (turtle.checkSymbols())
+				turtle.drawSymbols();
+		} catch (BadInterpretationException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
 	 * Default constructor.
 	 */
-	public Drawer ()
-	{
+	public Drawer() {
 		setPauseOnLostFocus(false);
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param settings The settings such as the size
+	 * @param settings
+	 *            The settings such as the size
 	 */
-	public Drawer (AppSettings settings)
-	{
+	public Drawer(AppSettings settings) {
 		this();
 		setSettings(settings);
 	}
@@ -85,16 +100,14 @@ public class Drawer extends SimpleApplication
 	/**
 	 * Get the assetManager of the scene
 	 */
-	public AssetManager getAssetManager ()
-	{
+	public AssetManager getAssetManager() {
 		return assetManager;
 	}
 
 	/**
 	 * Get the root node of the scene
 	 */
-	public Node getRootNode ()
-	{
+	public Node getRootNode() {
 		return rootNode;
 	}
 
@@ -102,51 +115,44 @@ public class Drawer extends SimpleApplication
 	 * Initiale creation of the scene.
 	 */
 	@Override
-	public void simpleInitApp ()
-	{
+	public void simpleInitApp() {
+		/** A white ambient light source. */
+		AmbientLight ambient = new AmbientLight();
+		ambient.setColor(ColorRGBA.White);
+		rootNode.addLight(ambient);
 		/** A white, directional light source */
 		DirectionalLight sun = new DirectionalLight();
 		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
 		sun.setColor(ColorRGBA.White);
 		rootNode.addLight(sun);
-		/**
-		 * Illuminated bumpy rock with shiny effect. Uses Texture from jme3-test-data library! Needs light source!
-		 */
-		Sphere rock = new Sphere(32, 32, 2f);
-		Geometry rock_shiny = new Geometry("Shiny rock", rock);
-		rock.setTextureMode(Sphere.TextureMode.Projected); // better quality on spheres
-		TangentBinormalGenerator.generate(rock); // for lighting effect
-		Material mat_shiny = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-		// mat_shiny.setTexture("DiffuseMap", assetManager.loadTexture("Textures/Pond.png"));
-		// mat_shiny.setTexture("NormalMap", assetManager.loadTexture("Textures/Terrain/Pond/Pond_normal.png"));
-		// mat_shiny.setTexture("GlowMap", assetManager.loadTexture("Textures/glowmap.png")); // requires flow filter!
-		mat_shiny.setBoolean("UseMaterialColors", true); // needed for shininess
-		mat_shiny.setColor("Specular", ColorRGBA.White); // needed for shininess
-		mat_shiny.setColor("Diffuse", ColorRGBA.White); // needed for shininess
-		mat_shiny.setFloat("Shininess", 5f); // shininess from 1-128
-		rock_shiny.setMaterial(mat_shiny);
-		rootNode.attachChild(rock_shiny);
+
+		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+		BloomFilter bloom = new BloomFilter();
+		bloom.setBlurScale(2.5f);
+		bloom.setBloomIntensity(10f);
+		fpp.addFilter(bloom);
+		viewPort.addProcessor(fpp);
 	}
 
 	/**
 	 * Update loop.
 	 * 
-	 * @param tpf time per frame
+	 * @param tpf
+	 *            time per frame
 	 */
 	@Override
-	public void simpleUpdate (float tpf)
-	{
+	public void simpleUpdate(float tpf) {
 
 	}
 
 	/**
 	 * Render loop.
 	 * 
-	 * @param rm Render Manager
+	 * @param rm
+	 *            Render Manager
 	 */
 	@Override
-	public void simpleRender (RenderManager rm)
-	{
+	public void simpleRender(RenderManager rm) {
 
 	}
 }
