@@ -24,6 +24,9 @@ import com.jme3.math.Vector3f;
  */
 public class TubeTurle extends Turtle {
     
+	/** The list of symbols known by the interpretation */
+    private static ListSymbols authorizedSymbols;
+	
 	/**
      * Default constructor.
      */
