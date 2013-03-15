@@ -33,10 +33,18 @@ import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+
+import parser.IOmanager.BadFileException;
+import parser.IOmanager.ParseException;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.JLabel;
 
 
 // important line : JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -67,6 +75,7 @@ public class MainFrame extends JFrame
 	 */
 	public MainFrame (Controller c, Panel3D panel)
 	{
+		setTitle("LSystem");
 		controller = c;
 
 		// we create the window
@@ -85,25 +94,38 @@ public class MainFrame extends JFrame
 
 		pack();
 	}
-	
+
 	/**
-	 * Open a file chooser to open a grammar file.
-	 * It calls the controller if a file has been chosen to be opened.
+	 * Open a file chooser to open a grammar file. It calls the controller if a file has been chosen to be opened.
 	 */
 	void openFileChooser ()
 	{
 		JFileChooser chooser = new JFileChooser();
 		FileFilter filter = new FileNameExtensionFilter("L-SYSTEM files", "lsys");
-		
+
 		chooser.setFileFilter(filter);
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY );
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		chooser.setMultiSelectionEnabled(false);
 		chooser.setDialogTitle("Open a grammar file");
 		// on ouvre la fenêtre
 		int returnVal = chooser.showOpenDialog(me);
 		// on teste la valeur de retour
-		if(returnVal == JFileChooser.APPROVE_OPTION)
-			System.out.println(chooser.getSelectedFile().getAbsolutePath());
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+		{
+			try
+			{
+				controller.loadFile(chooser.getSelectedFile().getAbsolutePath());
+			}
+			catch (ParseException | BadFileException e)
+			{
+				JEditorPane editor = new JEditorPane();
+				editor.setText("An error occurs while parsing the file \"" + chooser.getSelectedFile().getAbsolutePath() + "\":\n"
+						+ e.getMessage());
+				editor.setEditable(false);
+
+				JOptionPane.showMessageDialog(me, editor, "Parsing error in the file", JOptionPane.ERROR_MESSAGE);
+			}
+		}
 	}
 
 	/**
@@ -141,16 +163,16 @@ public class MainFrame extends JFrame
 		mntmOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 		mnFile.add(mntmOpen);
 		mnFile.add(mntmQuit);
-		
+
 		JMenu mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
-		
+
 		JMenuItem mntmEditCurrentGrammar = new JMenuItem("Edit current grammar");
 		mnTools.add(mntmEditCurrentGrammar);
-		
+
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
-		
+
 		JMenuItem mntmAboutLsystem = new JMenuItem("About LSystem");
 		mnHelp.add(mntmAboutLsystem);
 		contentPane = new JPanel();
@@ -161,9 +183,16 @@ public class MainFrame extends JFrame
 		JToolBar toolBar = new JToolBar();
 		contentPane.add(toolBar, BorderLayout.NORTH);
 
-		JComboBox<String> comboBoxInterpretation = new JComboBox<String>();
-		comboBoxInterpretation.setToolTipText("You have to import a file defining grammars first");
+		final JComboBox<String> comboBoxInterpretation = new JComboBox<String>();
+		comboBoxInterpretation.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				controller.setIndexOfCurrentGrammar(comboBoxInterpretation.getSelectedIndex());
+			}
+		});
 		comboBoxInterpretation.setEnabled(false);
+		comboBoxInterpretation.setToolTipText("You have to import a file defining grammars first");
 		comboBoxInterpretation.setModel(new DefaultComboBoxModel<String>(new String[] { "Select a grammar" }));
 		toolBar.add(comboBoxInterpretation);
 
@@ -172,6 +201,16 @@ public class MainFrame extends JFrame
 		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Select an interpretation" }));
 		comboBox.setToolTipText("You have to import a file defining grammars first");
 		toolBar.add(comboBox);
+
+		JLabel lblNumberOfIterations = new JLabel("Number of iterations: ");
+		lblNumberOfIterations.setEnabled(false);
+		toolBar.add(lblNumberOfIterations);
+
+		JSpinner spinner = new JSpinner();
+		spinner.setEnabled(false);
+		spinner.setToolTipText("Number of iterations");
+		spinner.setModel(new SpinnerNumberModel(3, 0, 999, 1));
+		toolBar.add(spinner);
 	}
 
 }

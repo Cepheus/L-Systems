@@ -63,12 +63,6 @@ public class Drawer extends SimpleApplication {
         symbols.setSymbols(arraySymbols);
         TubeTurle turtle = new TubeTurle(app, symbols);
         turtle.setParameters(5, 10, ColorRGBA.Green);
-        try {
-			turtle.checkSymbols();
-		} catch (BadInterpretationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
         turtle.drawSymbols();
     }
     

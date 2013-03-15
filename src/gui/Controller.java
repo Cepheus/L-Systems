@@ -14,6 +14,10 @@ package gui;
  * *****************************************************
  */
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -26,6 +30,7 @@ import ATuin.Drawer;
 
 import parser.Generator;
 import parser.Grammar;
+import parser.IOmanager.*;
 
 
 /**
@@ -36,7 +41,7 @@ import parser.Grammar;
 public class Controller
 {
 	/** The list of grammar launched in the program */
-	private ArrayList<Grammar> grammars = null;
+	private ArrayList<Grammar> grammars = new ArrayList<Grammar>();
 	/** The generator for the current grammar */
 	private Generator generator = null;
 	/** index of the current grammar that we're working on */
@@ -45,6 +50,10 @@ public class Controller
 	private MainFrame mainFrame;
 	/** The panel containing the 3D application */
 	private Drawer application3d;
+	/** Size of the panel where the 3D appears (width) */
+	public int canvasJMEWidth = 1024;
+	/** Size of the panel where the 3D appears (height) */
+	public int canvasJMEHeight = 768;
 
 	/**
 	 * Constructor
@@ -60,8 +69,8 @@ public class Controller
 	{
 		// gestion des objets 3D
 		AppSettings settings = new AppSettings(true);
-		settings.setWidth(800);
-		settings.setHeight(600);
+		settings.setWidth(canvasJMEWidth);
+		settings.setHeight(canvasJMEHeight);
 		application3d = new Drawer(settings);
 		final Panel3D pan = new Panel3D(application3d, settings);
 
@@ -85,23 +94,37 @@ public class Controller
 	}
 
 	/**
-	 * start the 3D application in the canvas
+	 * Open and load a file containing grammars.
+	 * 
+	 * @param path the path to the file
+	 * @throws ParseException if the file is corrected written
+	 * @throws BadFileException if the file is corrected written
 	 */
-	private void start3dApp ()
+	public void loadFile (String path) throws ParseException, BadFileException
 	{
-		application3d.startCanvas();
-		application3d.enqueue(new Callable<Void>()
+		InputStream istrm = null;
+		try
 		{
-			public Void call ()
+			istrm = new FileInputStream(path);
+			Analyzer analyzer = new Analyzer(istrm, "UTF-8");
+			try
 			{
-				if (application3d instanceof SimpleApplication)
-				{
-					SimpleApplication simpleApp = (SimpleApplication) application3d;
-					simpleApp.getFlyByCamera().setDragToRotate(true);
-				}
-				return null;
+				analyzer.startValidation();
+
+				grammars.clear();
+				grammars = analyzer.getGrammars();
 			}
-		});
+			catch (NumberFormatException e)
+			{
+				System.out.println(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -158,5 +181,25 @@ public class Controller
 	public Grammar getCurrentGrammar ()
 	{
 		return grammars.get(indexOfCurrentGrammar);
+	}
+
+	/**
+	 * start the 3D application in the canvas
+	 */
+	private void start3dApp ()
+	{
+		application3d.startCanvas();
+		application3d.enqueue(new Callable<Void>()
+		{
+			public Void call ()
+			{
+				if (application3d instanceof SimpleApplication)
+				{
+					SimpleApplication simpleApp = (SimpleApplication) application3d;
+					simpleApp.getFlyByCamera().setDragToRotate(true);
+				}
+				return null;
+			}
+		});
 	}
 }
