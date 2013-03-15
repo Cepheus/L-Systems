@@ -13,8 +13,6 @@
 
 package ATuin;
 
-import com.jme3.asset.AssetManager;
-
 import parser.ListSymbols;
 
 
@@ -24,54 +22,61 @@ import parser.ListSymbols;
  * 
  * @author Caelum
  */
-public abstract class Turtle {
-    
+public abstract class Turtle
+{
+
 	/** The list of symbols to interpret */
-    public ListSymbols symbols;	
+	public ListSymbols symbols;
 
 	/** The Drawer of the 3D scene */
-    protected Drawer drawer;
-    
-    /**
-     * Default constructor.
-     */
-    public Turtle() {
-        
-    }
-    
-    /**
-     * Constructor.
-     * @param drawer The object drawer of the scene 
-     */
-    public Turtle(Drawer drawer, ListSymbols symbols) {
-        this();
-        this.drawer = drawer;
-        this.symbols = symbols;
-    }
-    
-    /**
-     * Checks if the interpretation can interpret all the symbols.
-     * If not the function throws an exception.
-     * @throws BadInterpretationException 
-     */
-    public abstract void checkSymbols() throws BadInterpretationException;
-    
-    /**
-     * Draws the list of symbols depending of the turtle's interpretation.
-     */
-    public abstract void drawSymbols();
-    
-    /**
+	protected Drawer drawer;
+
+	/**
+	 * Default constructor.
+	 */
+	public Turtle ()
+	{
+
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param drawer The object drawer of the scene
+	 * @param symbols
+	 */
+	public Turtle (Drawer drawer, ListSymbols symbols)
+	{
+		this();
+		this.drawer = drawer;
+		this.symbols = symbols;
+	}
+
+	/**
+	 * Checks if the interpretation can interpret all the symbols. If not the function throws an exception.
+	 * 
+	 * @return true if all is ok, false if all symbols can't be interpreted
+	 */
+	public abstract boolean checkSymbols ();
+
+	/**
+	 * Draws the list of symbols depending of the turtle's interpretation.
+	 */
+	public abstract void drawSymbols ();
+
+	/**
 	 * @param drawer the drawer to set
 	 */
-	public void setDrawer(Drawer drawer) {
+	public void setDrawer (Drawer drawer)
+	{
 		this.drawer = drawer;
 	}
-	
-    /**
+
+	/**
 	 * @param symbols the symbols to set
 	 */
-	public void setSymbols(ListSymbols symbols) {
+	public void setSymbols (ListSymbols symbols)
+	{
 		this.symbols = symbols;
 	}
 

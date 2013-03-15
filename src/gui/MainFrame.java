@@ -69,6 +69,8 @@ public class MainFrame extends JFrame
 	{
 		controller = c;
 
+		// we create the window
+		initFrame();
 		// we add the 3D panel
 		panel3d = panel;
 		addWindowListener(new WindowAdapter()
@@ -79,8 +81,9 @@ public class MainFrame extends JFrame
 				panel3d.dispose();
 			}
 		});
-		// we create the window
-		initFrame();
+		contentPane.add(panel3d, BorderLayout.CENTER);
+
+		pack();
 	}
 	
 	/**
@@ -138,11 +141,22 @@ public class MainFrame extends JFrame
 		mntmOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
 		mnFile.add(mntmOpen);
 		mnFile.add(mntmQuit);
+		
+		JMenu mnTools = new JMenu("Tools");
+		menuBar.add(mnTools);
+		
+		JMenuItem mntmEditCurrentGrammar = new JMenuItem("Edit current grammar");
+		mnTools.add(mntmEditCurrentGrammar);
+		
+		JMenu mnHelp = new JMenu("Help");
+		menuBar.add(mnHelp);
+		
+		JMenuItem mntmAboutLsystem = new JMenuItem("About LSystem");
+		mnHelp.add(mntmAboutLsystem);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		contentPane.add(panel3d, BorderLayout.CENTER);
 
 		JToolBar toolBar = new JToolBar();
 		contentPane.add(toolBar, BorderLayout.NORTH);
@@ -158,8 +172,6 @@ public class MainFrame extends JFrame
 		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Select an interpretation" }));
 		comboBox.setToolTipText("You have to import a file defining grammars first");
 		toolBar.add(comboBox);
-
-		pack();
 	}
 
 }
