@@ -106,7 +106,7 @@ public class TubeTurle extends Turtle {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean checkSymbols() {
 		boolean found;
@@ -131,7 +131,7 @@ public class TubeTurle extends Turtle {
 	 */
 	public TubeTurle() {
 		super();
-                name = "Tube Turle";
+		name = "Tube Turle";
 	}
 
 	/**
@@ -142,7 +142,7 @@ public class TubeTurle extends Turtle {
 	 */
 	public TubeTurle(Drawer drawer) {
 		super(drawer);
-                name = "Tube Turle";
+		name = "Tube Turle";
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class TubeTurle extends Turtle {
 	 */
 	public TubeTurle(Drawer drawer, ListSymbols symbols) {
 		super(drawer, symbols);
-                name = "Tube Turle";
+		name = "Tube Turle";
 	}
 
 	@Override
@@ -163,28 +163,35 @@ public class TubeTurle extends Turtle {
 		Node node = drawer.getRootNode();
 		for (Symbol symbol : symbols.getSymbols()) {
 			switch (symbol.getInterpretation()) {
-			case 1: // S_FORWARD
+			case Symbol.S_FORWARD:
 				drawLine(node);
 				Node tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
-			case 2: // S_TURNLEFT
-				node.rotate(0, 0, angle * FastMath.DEG_TO_RAD);
+			case Symbol.S_TURNLEFT:
+				node.rotate(0, angle * FastMath.DEG_TO_RAD, 0);
 				break;
-			case 3: // S_TURNRIGHT
-				node.rotate(0, 0, -angle * FastMath.DEG_TO_RAD);
+			case Symbol.S_TURNRIGHT:
+				node.rotate(0, -angle * FastMath.DEG_TO_RAD, 0);
 				break;
-			case 4: // S_TURNUP
+			case Symbol.S_TURNUP:
 				node.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
 				break;
-			case 5: // S_TURNDOWN
+			case Symbol.S_TURNDOWN:
 				node.rotate(-angle * FastMath.DEG_TO_RAD, 0, 0);
+				break;
+			case Symbol.S_ROLLLEFT:
+				node.rotate(0, 0, angle * FastMath.DEG_TO_RAD);
+				break;
+			case Symbol.S_ROLLRIGHT:
+				node.rotate(0, 0, -angle * FastMath.DEG_TO_RAD);
 				break;
 			case 0: // UNDEFINED
 				break;
 			default:
-				throw(new BadInterpretationException("The turle has uncounter a symbol impossible to draw!"));
+				throw (new BadInterpretationException(
+						"The turle has uncounter a symbol impossible to draw!"));
 			}
 		}
 	}
@@ -211,6 +218,7 @@ public class TubeTurle extends Turtle {
 
 	/**
 	 * Sets the parameters for the object to be drawn
+	 * 
 	 * @param length
 	 *            The length of the lines
 	 * @param width

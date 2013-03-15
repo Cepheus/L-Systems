@@ -25,9 +25,9 @@ import parser.ListSymbols;
 public abstract class Turtle
 {
 
-        /** The name of the turtle */
-        protected String name;
-    
+	/** The name of the turtle */
+	protected String name;
+
 	/** The list of symbols to interpret */
 	public ListSymbols symbols;
 
@@ -52,7 +52,7 @@ public abstract class Turtle
 		this();
 		this.drawer = drawer;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
@@ -74,7 +74,8 @@ public abstract class Turtle
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
-	 * @throws BadInterpretationException 
+	 * 
+	 * @throws BadInterpretationException
 	 */
 	public abstract void drawSymbols () throws BadInterpretationException;
 
@@ -93,7 +94,7 @@ public abstract class Turtle
 	{
 		this.symbols = symbols;
 	}
-        
+
 	/**
 	 * @return the name
 	 */
@@ -101,5 +102,4 @@ public abstract class Turtle
 	{
 		return name;
 	}
-
 }
