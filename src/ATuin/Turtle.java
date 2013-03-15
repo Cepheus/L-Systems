@@ -24,8 +24,8 @@ import parser.ListSymbols;
  */
 public abstract class Turtle {
     
-    /** The list of symbols to interpret */
-    public static ListSymbols symbols;	
+	/** The list of symbols to interpret */
+    public ListSymbols symbols;	
 
 	/** The Drawer of the 3D scene */
     protected Drawer drawer;

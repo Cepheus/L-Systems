@@ -20,6 +20,7 @@ import parser.ListSymbols;
 import parser.Symbol;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -29,13 +30,14 @@ import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Line;
 import com.jme3.system.AppSettings;
+import com.jme3.texture.Texture;
 
 /**
  * @author Caelum
  * Class for 3D object drawing.
  */
-public class Drawer extends SimpleApplication {
-    
+public class Drawer extends SimpleApplication {	
+	
     /**
      * TODO : a supprimer
      * @param args 
@@ -43,6 +45,13 @@ public class Drawer extends SimpleApplication {
     public static void main(String[] args) {
     	Drawer app = new Drawer();
     	app.start();
+    	
+    	try {
+			Thread.sleep(750);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
         
         ListSymbols symbols = new ListSymbols();
         ArrayList<Symbol> arraySymbols = new ArrayList<Symbol>();
@@ -58,6 +67,7 @@ public class Drawer extends SimpleApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        turtle.drawSymbols();
     }
     
     /**
@@ -80,13 +90,36 @@ public class Drawer extends SimpleApplication {
      * 
      */
     public void createLine(Vector3f origine, Vector3f end) {
-    	Box box = new Box(origine, end);
-    	//Line line = new Line(origine, end);
-        Geometry geom = new Geometry("Line", box);
-        //Material mat2 = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        //mat2.setColor("Color", ColorRGBA.Red);
-        //geom.setMaterial(mat2);
-        rootNode.attachChild(geom);
+    	
+    	/*Line line = new Line(origine, end);
+        Geometry geom = new Geometry("Line", line);
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        mat.setColor("Color", ColorRGBA.Red);
+        geom.setMaterial(mat);
+        rootNode.attachChild(geom);*/
+    	
+    	
+    	//if(manager!=null) {
+			Box b = new Box(5, 5, 5);
+			Geometry geom = new Geometry("Box", b);
+			Material mat = new Material(assetManager,
+					"Common/MatDefs/Misc/Unshaded.j3md");
+			mat.setColor("Color", ColorRGBA.Green);
+			geom.setMaterial(mat);
+			rootNode.attachChild(geom);
+    	//}
+    	//else
+    		System.out.println("tralala");
+        
+        /** An unshaded textured cube. 
+        *  Uses texture from jme3-test-data library! */ 
+       /*Box boxshape1 = new Box(Vector3f.ZERO, 1f,1f,1f); 
+       Geometry cube_tex = new Geometry("A Textured Box", boxshape1); 
+       Material mat_tex = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md"); 
+       Texture tex = assetManager.loadTexture("Interface/Logo/Monkey.jpg"); 
+       mat_tex.setTexture("ColorMap", tex); 
+       cube_tex.setMaterial(mat_tex); 
+       rootNode.attachChild(cube_tex);*/ 
     }
     
     /**
@@ -94,7 +127,15 @@ public class Drawer extends SimpleApplication {
      */
     @Override
     public void simpleInitApp() {
-        
+    	Box b = new Box(1, 1, 1);
+		Geometry geom = new Geometry("Box", b);
+		Material mat = new Material(assetManager,
+				"Common/MatDefs/Misc/Unshaded.j3md");
+		mat.setColor("Color", ColorRGBA.Blue);
+		geom.setMaterial(mat);
+		rootNode.attachChild(geom);
+		
+		System.out.println("END InitApp");
     }
 
     /**
@@ -103,7 +144,7 @@ public class Drawer extends SimpleApplication {
      */
     @Override
     public void simpleUpdate(float tpf) {
-        
+    	
     }
 
     /**
