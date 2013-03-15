@@ -14,11 +14,6 @@
 
 package ATuin;
 
-import java.util.ArrayList;
-
-import parser.ListSymbols;
-import parser.Symbol;
-
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.AssetManager;
 import com.jme3.light.DirectionalLight;
@@ -28,11 +23,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Line;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
-import com.jme3.texture.Texture;
 import com.jme3.util.TangentBinormalGenerator;
 
 /**
@@ -56,7 +48,7 @@ public class Drawer extends SimpleApplication {
 			e1.printStackTrace();
 		}
                 
-		ListSymbols symbols = new ListSymbols();
+		/*ListSymbols symbols = new ListSymbols();
 		ArrayList<Symbol> arraySymbols = new ArrayList<Symbol>();
 		arraySymbols.add(new Symbol('F', 1));
 		arraySymbols.add(new Symbol('L', 2));
@@ -76,7 +68,7 @@ public class Drawer extends SimpleApplication {
 				turtle.drawSymbols();
 		} catch (BadInterpretationException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**
@@ -116,18 +108,18 @@ public class Drawer extends SimpleApplication {
 	 */
 	@Override
 	public void simpleInitApp() {    /** A white, directional light source */ 
-            /*DirectionalLight sun = new DirectionalLight();
+            DirectionalLight sun = new DirectionalLight();
             sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
             sun.setColor(ColorRGBA.White);
-            rootNode.addLight(sun); */
+            rootNode.addLight(sun); 
             /** Illuminated bumpy rock with shiny effect. 
             *  Uses Texture from jme3-test-data library! Needs light source! */
-           /*Sphere rock = new Sphere(32,32, 2f);
+           Sphere rock = new Sphere(32,32, 2f);
            Geometry rock_shiny = new Geometry("Shiny rock", rock);
            rock.setTextureMode(Sphere.TextureMode.Projected); // better quality on spheres
            TangentBinormalGenerator.generate(rock);   // for lighting effect
            Material mat_shiny = new Material( assetManager, "Common/MatDefs/Light/Lighting.j3md");
-           //mat_shiny.setTexture("DiffuseMap", assetManager.loadTexture("Textures/Terrain/Pond/Pond.png"));
+           //mat_shiny.setTexture("DiffuseMap", assetManager.loadTexture("Textures/Pond.png"));
            //mat_shiny.setTexture("NormalMap",  assetManager.loadTexture("Textures/Terrain/Pond/Pond_normal.png"));
            //mat_shiny.setTexture("GlowMap", assetManager.loadTexture("Textures/glowmap.png")); // requires flow filter!
            mat_shiny.setBoolean("UseMaterialColors",true);  // needed for shininess
@@ -135,7 +127,7 @@ public class Drawer extends SimpleApplication {
            mat_shiny.setColor("Diffuse",  ColorRGBA.White); // needed for shininess
            mat_shiny.setFloat("Shininess", 5f); // shininess from 1-128
            rock_shiny.setMaterial(mat_shiny);
-           rootNode.attachChild(rock_shiny);*/
+           rootNode.attachChild(rock_shiny);
 	}
 
 	/**

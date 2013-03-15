@@ -15,19 +15,18 @@ package ATuin;
 
 import parser.ListSymbols;
 
-
 /**
- * Default class of a turtle interpretation. This class factorise the differents turtle interpretation. If you wish to create a new turtle
- * interpretation you should extends this class and implements its methods.
+ * Default class of a turtle interpretation. This class factorise the differents
+ * turtle interpretation. If you wish to create a new turtle interpretation you
+ * should extends this class and implements its methods.
  * 
  * @author Caelum
  */
-public abstract class Turtle
-{
+public abstract class Turtle {
 
-        /** The name of the turtle */
-        protected String name;
-    
+	/** The name of the turtle */
+	protected String name;
+
 	/** The list of symbols to interpret */
 	public ListSymbols symbols;
 
@@ -37,30 +36,30 @@ public abstract class Turtle
 	/**
 	 * Default constructor.
 	 */
-	public Turtle ()
-	{
+	public Turtle() {
 
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer The object drawer of the scene
+	 * @param drawer
+	 *            The object drawer of the scene
 	 */
-	public Turtle (Drawer drawer)
-	{
+	public Turtle(Drawer drawer) {
 		this();
 		this.drawer = drawer;
 	}
-	
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer The object drawer of the scene
-	 * @param symbols The symbols to represent
+	 * @param drawer
+	 *            The object drawer of the scene
+	 * @param symbols
+	 *            The symbols to represent
 	 */
-	public Turtle (Drawer drawer, ListSymbols symbols)
-	{
+	public Turtle(Drawer drawer, ListSymbols symbols) {
 		this(drawer);
 		this.symbols = symbols;
 	}
@@ -70,35 +69,43 @@ public abstract class Turtle
 	 * 
 	 * @return true if all is ok, false if all symbols can't be interpreted
 	 */
-	public abstract boolean checkSymbols ();
+	public abstract boolean checkSymbols();
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
-	 * @throws BadInterpretationException 
+	 * 
+	 * @throws BadInterpretationException
 	 */
-	public abstract void drawSymbols () throws BadInterpretationException;
+	public abstract void drawSymbols() throws BadInterpretationException;
 
 	/**
-	 * @param drawer the drawer to set
+	 * @param drawer
+	 *            the drawer to set
 	 */
-	public void setDrawer (Drawer drawer)
-	{
+	public void setDrawer(Drawer drawer) {
 		this.drawer = drawer;
 	}
 
 	/**
-	 * @param symbols the symbols to set
+	 * @param symbols
+	 *            the symbols to set
 	 */
-	public void setSymbols (ListSymbols symbols)
-	{
+	public void setSymbols(ListSymbols symbols) {
 		this.symbols = symbols;
 	}
-        
-        /**
-	 * @param name the name to set
+
+	/**
+	 * @return the name
 	 */
-	public void setSName (String name)
-	{
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setSName(String name) {
 		this.name = name;
 	}
 
