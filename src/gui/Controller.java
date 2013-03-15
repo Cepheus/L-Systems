@@ -16,7 +16,6 @@ package gui;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -27,6 +26,8 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.system.AppSettings;
 
 import ATuin.Drawer;
+import ATuin.TubeTurle;
+import ATuin.Turtle;
 
 import parser.Generator;
 import parser.Grammar;
@@ -42,10 +43,14 @@ public class Controller
 {
 	/** The list of grammar launched in the program */
 	private ArrayList<Grammar> grammars = new ArrayList<Grammar>();
+	/** The list of the interpretations launched in the program */
+	private ArrayList<Turtle> turtles = new ArrayList<Turtle>();
 	/** The generator for the current grammar */
 	private Generator generator = null;
 	/** index of the current grammar that we're working on */
 	private int indexOfCurrentGrammar = -1;
+	/** index of the current interpretation that we're working on */
+	private int indexOfCurrentTurtle = -1;
 	/** The main window */
 	private MainFrame mainFrame;
 	/** The panel containing the 3D application */
@@ -113,6 +118,10 @@ public class Controller
 
 				grammars.clear();
 				grammars = analyzer.getGrammars();
+				ArrayList<String> grs = new ArrayList<String>();
+				for (Grammar g : grammars)
+					grs.add(g.getName());
+				mainFrame.setListGrammars(grs);
 			}
 			catch (NumberFormatException e)
 			{
@@ -168,11 +177,15 @@ public class Controller
 	}
 
 	/**
+	 * change the index and set the available grammars in the window.
+	 * 
 	 * @param indexOfCurrentGrammar the indexOfCurrentGrammar to set
 	 */
 	public void setIndexOfCurrentGrammar (int indexOfCurrentGrammar)
 	{
 		this.indexOfCurrentGrammar = indexOfCurrentGrammar;
+		chooseInterpretations();
+		System.out.println("tralalal");
 	}
 
 	/**
@@ -181,6 +194,22 @@ public class Controller
 	public Grammar getCurrentGrammar ()
 	{
 		return grammars.get(indexOfCurrentGrammar);
+	}
+
+	/**
+	 * @return the indexOfCurrentTurtle
+	 */
+	public int getIndexOfCurrentTurtle ()
+	{
+		return indexOfCurrentTurtle;
+	}
+
+	/**
+	 * @param indexOfCurrentTurtle the indexOfCurrentTurtle to set
+	 */
+	public void setIndexOfCurrentTurtle (int indexOfCurrentTurtle)
+	{
+		this.indexOfCurrentTurtle = indexOfCurrentTurtle;
 	}
 
 	/**
@@ -201,5 +230,26 @@ public class Controller
 				return null;
 			}
 		});
+	}
+
+	/**
+	 * Choose the interpretations compatible with the current grammar and put it in the window.
+	 */
+	private void chooseInterpretations ()
+	{
+		if (indexOfCurrentGrammar >= 0 && !grammars.isEmpty())
+		{
+			ArrayList<String> its = new ArrayList<String>();
+			Turtle turtle;
+			turtles.clear();
+			if (TubeTurle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbols()))
+			{
+				turtle = new TubeTurle(application3d);
+				turtles.add(turtle);
+				its.add(turtle.getName());
+			}
+			if (!its.isEmpty())
+				mainFrame.setListInterpretations(its);
+		}
 	}
 }

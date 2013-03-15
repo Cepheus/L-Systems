@@ -32,6 +32,7 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.InputEvent;
+import java.util.ArrayList;
 
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
@@ -66,6 +67,16 @@ public class MainFrame extends JFrame
 	private JPanel contentPane;
 	/** Panel containing the 3D application */
 	private Panel3D panel3d;
+	/** Combobox of the interpretations */
+	private final JComboBox<String> comboBoxGrammars = new JComboBox<String>();
+	/** combobox of the grammars */
+	private final JComboBox<String> comboBoxInterpretations = new JComboBox<String>();
+	/** Label in the toolbar */
+	private JLabel lblNumberOfIterations = new JLabel("Number of iterations: ");
+	/** JSpinner to choose the number of iteration */
+	private JSpinner spinnerNbIt = new JSpinner();
+	/** Menu item edit current grammar */
+	private JMenuItem mntmEditCurrentGrammar = new JMenuItem("Edit current grammar");
 
 	/**
 	 * Create the frame.
@@ -92,13 +103,73 @@ public class MainFrame extends JFrame
 		});
 		contentPane.add(panel3d, BorderLayout.CENTER);
 
+		setEnable(false);
 		pack();
+	}
+
+	/**
+	 * Import the list of grammars in the combobox
+	 * 
+	 * @param grammars
+	 */
+	public void setListGrammars (ArrayList<String> grammars)
+	{
+		comboBoxGrammars.removeAllItems();
+		for (String s : grammars)
+			comboBoxGrammars.addItem(s);
+		comboBoxGrammars.setSelectedIndex(0);
+
+		// on active le bouzin
+		comboBoxGrammars.setEnabled(true);
+		mntmEditCurrentGrammar.setEnabled(true);
+		comboBoxGrammars.setToolTipText("Select the wanted grammar");
+	}
+
+	/**
+	 * Import the list of interpretations in the combobox
+	 * 
+	 * @param interpretations
+	 */
+	public void setListInterpretations (ArrayList<String> interpretations)
+	{
+		comboBoxInterpretations.removeAllItems();
+		for (String s : interpretations)
+			comboBoxInterpretations.addItem(s);
+		comboBoxInterpretations.setSelectedIndex(0);
+
+		// on active le bouzin
+		setEnable(true);
+	}
+
+	/**
+	 * enable or not the components of the window
+	 * 
+	 * @param enable
+	 */
+	private void setEnable (boolean enabled)
+	{
+		comboBoxInterpretations.setEnabled(enabled);
+		comboBoxGrammars.setEnabled(enabled);
+		lblNumberOfIterations.setEnabled(enabled);
+		spinnerNbIt.setEnabled(enabled);
+		mntmEditCurrentGrammar.setEnabled(enabled);
+
+		if (enabled)
+		{
+			comboBoxInterpretations.setToolTipText("Select the wanted grammar");
+			comboBoxGrammars.setToolTipText("Select wanted interpretation");
+		}
+		else
+		{
+			comboBoxInterpretations.setToolTipText("You have to import a file defining grammars first");
+			comboBoxGrammars.setToolTipText("You have to import a file defining grammars first");
+		}
 	}
 
 	/**
 	 * Open a file chooser to open a grammar file. It calls the controller if a file has been chosen to be opened.
 	 */
-	void openFileChooser ()
+	private void openFileChooser ()
 	{
 		JFileChooser chooser = new JFileChooser();
 		FileFilter filter = new FileNameExtensionFilter("L-SYSTEM files", "lsys");
@@ -131,7 +202,7 @@ public class MainFrame extends JFrame
 	/**
 	 * Create the window with the buttons...
 	 */
-	void initFrame ()
+	private void initFrame ()
 	{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 385, 330);
@@ -167,7 +238,7 @@ public class MainFrame extends JFrame
 		JMenu mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
 
-		JMenuItem mntmEditCurrentGrammar = new JMenuItem("Edit current grammar");
+		mntmEditCurrentGrammar.setEnabled(false);
 		mnTools.add(mntmEditCurrentGrammar);
 
 		JMenu mnHelp = new JMenu("Help");
@@ -183,34 +254,37 @@ public class MainFrame extends JFrame
 		JToolBar toolBar = new JToolBar();
 		contentPane.add(toolBar, BorderLayout.NORTH);
 
-		final JComboBox<String> comboBoxInterpretation = new JComboBox<String>();
-		comboBoxInterpretation.addActionListener(new ActionListener()
+		comboBoxGrammars.addActionListener(new ActionListener()
 		{
 			public void actionPerformed (ActionEvent arg0)
 			{
-				controller.setIndexOfCurrentGrammar(comboBoxInterpretation.getSelectedIndex());
+				controller.setIndexOfCurrentGrammar(comboBoxGrammars.getSelectedIndex());
 			}
 		});
-		comboBoxInterpretation.setEnabled(false);
-		comboBoxInterpretation.setToolTipText("You have to import a file defining grammars first");
-		comboBoxInterpretation.setModel(new DefaultComboBoxModel<String>(new String[] { "Select a grammar" }));
-		toolBar.add(comboBoxInterpretation);
+		comboBoxGrammars.setEnabled(false);
+		comboBoxGrammars.setToolTipText("You have to import a file defining grammars first");
+		comboBoxGrammars.setModel(new DefaultComboBoxModel<String>(new String[] { "Select a grammar" }));
+		toolBar.add(comboBoxGrammars);
+		comboBoxInterpretations.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent e)
+			{
+				controller.setIndexOfCurrentTurtle(comboBoxInterpretations.getSelectedIndex());
+			}
+		});
 
-		JComboBox<String> comboBox = new JComboBox<String>();
-		comboBox.setEnabled(false);
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Select an interpretation" }));
-		comboBox.setToolTipText("You have to import a file defining grammars first");
-		toolBar.add(comboBox);
+		comboBoxInterpretations.setEnabled(false);
+		comboBoxInterpretations.setModel(new DefaultComboBoxModel<String>(new String[] { "Select an interpretation" }));
+		comboBoxInterpretations.setToolTipText("You have to import a file defining grammars first");
+		toolBar.add(comboBoxInterpretations);
 
-		JLabel lblNumberOfIterations = new JLabel("Number of iterations: ");
 		lblNumberOfIterations.setEnabled(false);
 		toolBar.add(lblNumberOfIterations);
 
-		JSpinner spinner = new JSpinner();
-		spinner.setEnabled(false);
-		spinner.setToolTipText("Number of iterations");
-		spinner.setModel(new SpinnerNumberModel(3, 0, 999, 1));
-		toolBar.add(spinner);
+		spinnerNbIt.setEnabled(false);
+		spinnerNbIt.setToolTipText("Number of iterations");
+		spinnerNbIt.setModel(new SpinnerNumberModel(3, 0, 999, 1));
+		toolBar.add(spinnerNbIt);
 	}
 
 }

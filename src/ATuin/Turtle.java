@@ -94,12 +94,12 @@ public abstract class Turtle
 		this.symbols = symbols;
 	}
         
-        /**
-	 * @param name the name to set
+	/**
+	 * @return the name
 	 */
-	public void setSName (String name)
+	public String getName ()
 	{
-		this.name = name;
+		return name;
 	}
 
 }
