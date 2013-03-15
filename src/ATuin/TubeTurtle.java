@@ -25,10 +25,12 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Line;
 
+
 /**
  * @author Caelum
  */
-public class TubeTurle extends Turtle {
+public class TubeTurtle extends Turtle
+{
 
 	/** The angle for the rotations between the lines */
 	private float angle = 90;
@@ -46,7 +48,8 @@ public class TubeTurle extends Turtle {
 	public final static ListSymbols authorizedSymbols;
 
 	// Initialisation of the authorized symbols list
-	static {
+	static
+	{
 		Symbol sym;
 		authorizedSymbols = new ListSymbols();
 
@@ -80,25 +83,24 @@ public class TubeTurle extends Turtle {
 	}
 
 	/**
-	 * Checks whether or not the given list is compatible with this turtle. If
-	 * there is an interpretation that is unknown, returns false. Undefined
-	 * interpretations are accepted
+	 * Checks whether or not the given list is compatible with this turtle. If there is an interpretation that is unknown, returns false.
+	 * Undefined interpretations are accepted
 	 * 
-	 * @param symbols
-	 *            the list to be checked
-	 * @return true if the interpretation is OK, false if this turtle can't
-	 *         represent the list
+	 * @param symbols the list to be checked
+	 * @return true if the interpretation is OK, false if this turtle can't represent the list
 	 */
-	public static boolean checkSymbols(ListSymbols symbols) {
+	public static boolean checkSymbols (ListSymbols symbols)
+	{
 		boolean found;
-		final int sizeCheck = symbols.size(), sizeInterpretation = authorizedSymbols
-				.size();
+		final int sizeCheck = symbols.size(), sizeInterpretation = authorizedSymbols.size();
 
-		for (int i = 0; i < sizeCheck; i++) {
+		for (int i = 0; i < sizeCheck; i++)
+		{
 			found = false;
-			for (int j = 0; j < sizeInterpretation; j++) {
-				if (symbols.get(i).getInterpretation() == authorizedSymbols
-						.get(j).getInterpretation())
+			for (int j = 0; j < sizeInterpretation; j++)
+			{
+				if ((symbols.get(i).getInterpretation() == 0 ||
+						(symbols.get(i).getInterpretation() == authorizedSymbols.get(j).getInterpretation())))
 					found = true;
 			}
 			if (!found)
@@ -108,16 +110,17 @@ public class TubeTurle extends Turtle {
 	}
 
 	@Override
-	public boolean checkSymbols() {
+	public boolean checkSymbols ()
+	{
 		boolean found;
-		final int sizeCheck = symbols.size(), sizeInterpretation = authorizedSymbols
-				.size();
+		final int sizeCheck = symbols.size(), sizeInterpretation = authorizedSymbols.size();
 
-		for (int i = 0; i < sizeCheck; i++) {
+		for (int i = 0; i < sizeCheck; i++)
+		{
 			found = false;
-			for (int j = 0; j < sizeInterpretation; j++) {
-				if (symbols.get(i).getInterpretation() == authorizedSymbols
-						.get(j).getInterpretation())
+			for (int j = 0; j < sizeInterpretation; j++)
+			{
+				if (symbols.get(i).getInterpretation() == authorizedSymbols.get(j).getInterpretation())
 					found = true;
 			}
 			if (!found)
@@ -129,7 +132,8 @@ public class TubeTurle extends Turtle {
 	/**
 	 * Default constructor.
 	 */
-	public TubeTurle() {
+	public TubeTurtle ()
+	{
 		super();
 		name = "Tube Turle";
 	}
@@ -137,10 +141,10 @@ public class TubeTurle extends Turtle {
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer
-	 *            The object drawer of the scene
+	 * @param drawer The object drawer of the scene
 	 */
-	public TubeTurle(Drawer drawer) {
+	public TubeTurtle (Drawer drawer)
+	{
 		super(drawer);
 		name = "Tube Turle";
 	}
@@ -148,50 +152,51 @@ public class TubeTurle extends Turtle {
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer
-	 *            The object drawer of the scene
-	 * @param symbols
-	 *            The symbols to represent
+	 * @param drawer The object drawer of the scene
+	 * @param symbols The symbols to represent
 	 */
-	public TubeTurle(Drawer drawer, ListSymbols symbols) {
+	public TubeTurtle (Drawer drawer, ListSymbols symbols)
+	{
 		super(drawer, symbols);
 		name = "Tube Turle";
 	}
 
 	@Override
-	public void drawSymbols() throws BadInterpretationException {
+	public void drawSymbols () throws BadInterpretationException
+	{
 		Node node = drawer.getRootNode();
-		for (Symbol symbol : symbols.getSymbols()) {
-			switch (symbol.getInterpretation()) {
-			case Symbol.S_FORWARD:
-				drawLine(node);
-				Node tmp = new Node();
-				node.attachChild(tmp);
-				node = tmp;
-				break;
-			case Symbol.S_TURNLEFT:
-				node.rotate(0, angle * FastMath.DEG_TO_RAD, 0);
-				break;
-			case Symbol.S_TURNRIGHT:
-				node.rotate(0, -angle * FastMath.DEG_TO_RAD, 0);
-				break;
-			case Symbol.S_TURNUP:
-				node.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
-				break;
-			case Symbol.S_TURNDOWN:
-				node.rotate(-angle * FastMath.DEG_TO_RAD, 0, 0);
-				break;
-			case Symbol.S_ROLLLEFT:
-				node.rotate(0, 0, angle * FastMath.DEG_TO_RAD);
-				break;
-			case Symbol.S_ROLLRIGHT:
-				node.rotate(0, 0, -angle * FastMath.DEG_TO_RAD);
-				break;
-			case 0: // UNDEFINED
-				break;
-			default:
-				throw (new BadInterpretationException(
-						"The turle has uncounter a symbol impossible to draw!"));
+		for (Symbol symbol : symbols.getSymbols())
+		{
+			switch (symbol.getInterpretation())
+			{
+				case Symbol.S_FORWARD:
+					drawLine(node);
+					Node tmp = new Node();
+					node.attachChild(tmp);
+					node = tmp;
+					break;
+				case Symbol.S_TURNLEFT:
+					node.rotate(0, angle * FastMath.DEG_TO_RAD, 0);
+					break;
+				case Symbol.S_TURNRIGHT:
+					node.rotate(0, -angle * FastMath.DEG_TO_RAD, 0);
+					break;
+				case Symbol.S_TURNUP:
+					node.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
+					break;
+				case Symbol.S_TURNDOWN:
+					node.rotate(-angle * FastMath.DEG_TO_RAD, 0, 0);
+					break;
+				case Symbol.S_ROLLLEFT:
+					node.rotate(0, 0, angle * FastMath.DEG_TO_RAD);
+					break;
+				case Symbol.S_ROLLRIGHT:
+					node.rotate(0, 0, -angle * FastMath.DEG_TO_RAD);
+					break;
+				case 0: // UNDEFINED
+					break;
+				default:
+					throw (new BadInterpretationException("The turle has uncounter a symbol impossible to draw!"));
 			}
 		}
 	}
@@ -199,17 +204,16 @@ public class TubeTurle extends Turtle {
 	/**
 	 * Draws a line
 	 * 
-	 * @param origine
-	 *            The node to link the drawn line to
+	 * @param origine The node to link the drawn line to
 	 */
-	private void drawLine(Node node) {
+	private void drawLine (Node node)
+	{
 		Vector3f start = new Vector3f(0, 0, 0);
 		Vector3f end = new Vector3f(0, length, 0);
 		Line line = new Line(start, end);
 		line.setLineWidth(width);
 		Geometry geom = new Geometry("Line", line);
-		Material mat = new Material(drawer.getAssetManager(),
-				"Common/MatDefs/Misc/Unshaded.j3md");
+		Material mat = new Material(drawer.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 		mat.setColor("Color", color);
 		geom.setMaterial(mat);
 		node.setLocalTranslation(end);
@@ -219,17 +223,13 @@ public class TubeTurle extends Turtle {
 	/**
 	 * Sets the parameters for the object to be drawn
 	 * 
-	 * @param length
-	 *            The length of the lines
-	 * @param width
-	 *            The width of the lines
-	 * @param angle
-	 *            The angle of the rotations
-	 * @param color
-	 *            The color of the lines
+	 * @param length The length of the lines
+	 * @param width The width of the lines
+	 * @param angle The angle of the rotations
+	 * @param color The color of the lines
 	 */
-	public void setParameters(float length, float width, float angle,
-			ColorRGBA color) {
+	public void setParameters (float length, float width, float angle, ColorRGBA color)
+	{
 		this.length = length;
 		this.width = width;
 		this.angle = angle;

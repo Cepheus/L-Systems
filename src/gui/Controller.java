@@ -26,7 +26,7 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.system.AppSettings;
 
 import ATuin.Drawer;
-import ATuin.TubeTurle;
+import ATuin.TubeTurtle;
 import ATuin.Turtle;
 
 import parser.Generator;
@@ -242,9 +242,9 @@ public class Controller
 			ArrayList<String> its = new ArrayList<String>();
 			Turtle turtle;
 			turtles.clear();
-			if (TubeTurle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbols()))
+			if (TubeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbols()))
 			{
-				turtle = new TubeTurle(application3d);
+				turtle = new TubeTurtle(application3d);
 				turtles.add(turtle);
 				its.add(turtle.getName());
 			}
