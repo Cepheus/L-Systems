@@ -1,3 +1,5 @@
+package gui;
+
 /* ******************************************************
  * * Copyright (C) 2013 xinouch** This file is part of L-Systems** L-Systems is free software: you can redistribute it and/or modify* it
  * under the terms of the GNU General Public License as published by* the Free Software Foundation, either version 3 of the License, or* (at
@@ -11,8 +13,6 @@
  * * Project: L-Systems* File: Controller.java** Created on: 8 mars 2013* Author: xinouch*
  * *****************************************************
  */
-import gui.MainFrame;
-import gui.Panel3D;
 
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -52,7 +52,7 @@ public class Controller
 	public Controller ()
 	{
 	}
-	
+
 	/**
 	 * Create the window of the application and the 3D panel
 	 */
@@ -65,13 +65,14 @@ public class Controller
 		application3d = new Drawer(settings);
 		final Panel3D pan = new Panel3D(application3d, settings);
 
+		final Controller me = this;
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run ()
 			{
 				try
 				{
-					mainFrame = new MainFrame(pan);
+					mainFrame = new MainFrame(me, pan);
 					start3dApp();
 					mainFrame.setVisible(true);
 				}
