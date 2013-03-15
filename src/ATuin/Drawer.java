@@ -33,98 +33,103 @@ import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 
 /**
- * @author Caelum
- * Class for 3D object drawing.
+ * @author Caelum Class for 3D object drawing.
  */
-public class Drawer extends SimpleApplication {	
-	
-    /**
-     * TODO : a supprimer
-     * @param args 
-     */
-    public static void main(String[] args) {
-    	Drawer app = new Drawer();
-    	app.start();
-    	
-    	try {
+public class Drawer extends SimpleApplication {
+
+	/**
+	 * TODO : a supprimer
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Drawer app = new Drawer();
+		app.start();
+
+		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-        
-        ListSymbols symbols = new ListSymbols();
-        ArrayList<Symbol> arraySymbols = new ArrayList<Symbol>();
-        arraySymbols.add(new Symbol('F',1));
-        arraySymbols.add(new Symbol('L',2));
-        arraySymbols.add(new Symbol('F',1));
-        arraySymbols.add(new Symbol('R',3));
-        arraySymbols.add(new Symbol('F',1));
-        symbols.setSymbols(arraySymbols);
-        TubeTurle turtle = new TubeTurle(app, symbols);
-        turtle.setParameters(5, 10, ColorRGBA.Green);
-        try {
-			turtle.checkSymbols();
-		} catch (BadInterpretationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        turtle.drawSymbols();
-    }
-    
-    /**
-     * Default constructor.
-     */
-    public Drawer() {
-        setPauseOnLostFocus(false);
-    }
-    
-    /**
-     * Constructor.
-     * @param settings The settings such as the size
-     */
-    public Drawer(AppSettings settings) {
-        this();
-        setSettings(settings);
-    }
-    
-    /**
-     * Get the assetManager of the scene
-     */
-    public AssetManager getAssetManager() {
+
+		ListSymbols symbols = new ListSymbols();
+		ArrayList<Symbol> arraySymbols = new ArrayList<Symbol>();
+		arraySymbols.add(new Symbol('F', 1));
+		arraySymbols.add(new Symbol('L', 2));
+		arraySymbols.add(new Symbol('F', 1));
+		arraySymbols.add(new Symbol('R', 3));
+		arraySymbols.add(new Symbol('F', 1));
+		arraySymbols.add(new Symbol('U', 4));
+		arraySymbols.add(new Symbol('F', 1));
+		arraySymbols.add(new Symbol('D', 5));
+		arraySymbols.add(new Symbol('F', 1));
+		symbols.setSymbols(arraySymbols);
+		TubeTurle turtle = new TubeTurle(app, symbols);
+		turtle.setParameters(5, 10, 90,ColorRGBA.Green);
+		turtle.checkSymbols();
+		turtle.drawSymbols();
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public Drawer() {
+		setPauseOnLostFocus(false);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param settings
+	 *            The settings such as the size
+	 */
+	public Drawer(AppSettings settings) {
+		this();
+		setSettings(settings);
+	}
+
+	/**
+	 * Get the assetManager of the scene
+	 */
+	public AssetManager getAssetManager() {
 		return assetManager;
-    }
-    
-    /**
-     * Get the root node of the scene
-     */
-    public Node getRootNode() {
-    	return rootNode;
-    }
-    
-    /**
-     * Initiale creation of the scene.
-     */
-    @Override
-    public void simpleInitApp() {
-    	
-    }
+	}
 
-    /**
-     * Update loop.
-     * @param tpf time per frame
-     */
-    @Override
-    public void simpleUpdate(float tpf) {
-    	
-    }
+	/**
+	 * Get the root node of the scene
+	 */
+	public Node getRootNode() {
+		return rootNode;
+	}
 
-    /**
-     * Render loop.
-     * @param rm Render Manager
-     */
-    @Override
-    public void simpleRender(RenderManager rm) {
-        
-    }
+	/**
+	 * Initiale creation of the scene.
+	 */
+	@Override
+	public void simpleInitApp() {
+
+	}
+
+	/**
+	 * Update loop.
+	 * 
+	 * @param tpf
+	 *            time per frame
+	 */
+	@Override
+	public void simpleUpdate(float tpf) {
+
+	}
+
+	/**
+	 * Render loop.
+	 * 
+	 * @param rm
+	 *            Render Manager
+	 */
+	@Override
+	public void simpleRender(RenderManager rm) {
+
+	}
 }
