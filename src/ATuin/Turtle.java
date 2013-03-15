@@ -25,6 +25,9 @@ import parser.ListSymbols;
 public abstract class Turtle
 {
 
+        /** The name of the turtle */
+        protected String name;
+    
 	/** The list of symbols to interpret */
 	public ListSymbols symbols;
 
@@ -43,17 +46,27 @@ public abstract class Turtle
 	 * Constructor.
 	 * 
 	 * @param drawer The object drawer of the scene
-	 * @param symbols
 	 */
-	public Turtle (Drawer drawer, ListSymbols symbols)
+	public Turtle (Drawer drawer)
 	{
 		this();
 		this.drawer = drawer;
+	}
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param drawer The object drawer of the scene
+	 * @param symbols The symbols to represent
+	 */
+	public Turtle (Drawer drawer, ListSymbols symbols)
+	{
+		this(drawer);
 		this.symbols = symbols;
 	}
 
 	/**
-	 * Checks if the interpretation can interpret all the symbols. If not the function throws an exception.
+	 * Checks if the interpretation can interpret all the symbols.
 	 * 
 	 * @return true if all is ok, false if all symbols can't be interpreted
 	 */
@@ -61,8 +74,9 @@ public abstract class Turtle
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
+	 * @throws BadInterpretationException 
 	 */
-	public abstract void drawSymbols ();
+	public abstract void drawSymbols () throws BadInterpretationException;
 
 	/**
 	 * @param drawer the drawer to set
@@ -78,6 +92,14 @@ public abstract class Turtle
 	public void setSymbols (ListSymbols symbols)
 	{
 		this.symbols = symbols;
+	}
+        
+        /**
+	 * @param name the name to set
+	 */
+	public void setSName (String name)
+	{
+		this.name = name;
 	}
 
 }
