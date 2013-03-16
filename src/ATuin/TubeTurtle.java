@@ -17,13 +17,18 @@ package ATuin;
 import parser.ListSymbols;
 import parser.Symbol;
 
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.BloomFilter;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Line;
+import com.jme3.system.AppSettings;
 
 
 /**
@@ -144,36 +149,27 @@ public class TubeTurtle extends Turtle
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer The object drawer of the scene
+	 * @param settings
+	 *            The settings such as the size
 	 */
-	public TubeTurtle (Drawer drawer)
+	public TubeTurtle (AppSettings settings)
 	{
-		super(drawer);
-		name = "Tube Turle";
+		super(settings);
+		name = "Tube Turtle";
 	}
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param drawer The object drawer of the scene
-	 * @param symbols The symbols to represent
-	 */
-	public TubeTurtle (Drawer drawer, ListSymbols symbols)
-	{
-		super(drawer, symbols);
-		name = "Tube Turle";
-	}
-
-	@Override
 	public void drawSymbols () throws BadInterpretationException
-	{
-		material = new Material(drawer.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+	{		
+		super.drawSymbols();
+		
+		material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
+		//material = new Material(drawer.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 		material.setBoolean("UseMaterialColors", true); // needed for shininess
 		material.setColor("Specular", color); // needed for shininess
 		material.setColor("Diffuse", color); // needed for shininess
 		material.setFloat("Shininess", 1); // shininess from 1-128
 
-		Node node = drawer.getRootNode();
+		Node node = getRootNode();
 		for (Symbol symbol : symbols.getSymbols())
 		{
 			switch (symbol.getInterpretation())
@@ -226,7 +222,7 @@ public class TubeTurtle extends Turtle
 		node.setLocalTranslation(end);
 		node.attachChild(geom);
 	}
-
+	
 	/**
 	 * Sets the parameters for the object to be drawn
 	 * 

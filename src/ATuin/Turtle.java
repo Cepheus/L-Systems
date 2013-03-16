@@ -13,17 +13,25 @@
 
 package ATuin;
 
+import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.BloomFilter;
+import com.jme3.renderer.RenderManager;
+import com.jme3.system.AppSettings;
+
 import parser.ListSymbols;
 
-
 /**
- * Default class of a turtle interpretation. This class factorise the differents turtle interpretation. If you wish to create a new turtle
- * interpretation you should extends this class and implements its methods.
+ * Default class of a turtle interpretation. This class factorise the differents
+ * turtle interpretation. If you wish to create a new turtle interpretation you
+ * should extends this class and implements its methods.
  * 
  * @author Caelum
  */
-public abstract class Turtle
-{
+public abstract class Turtle extends Drawer {
 
 	/** The name of the turtle */
 	protected String name;
@@ -31,38 +39,22 @@ public abstract class Turtle
 	/** The list of symbols to interpret */
 	public ListSymbols symbols;
 
-	/** The Drawer of the 3D scene */
-	protected Drawer drawer;
-
 	/**
 	 * Default constructor.
 	 */
-	public Turtle ()
-	{
-
+	public Turtle() {
+		setPauseOnLostFocus(false);
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer The object drawer of the scene
+	 * @param settings
+	 *            The settings such as the size
 	 */
-	public Turtle (Drawer drawer)
-	{
+	public Turtle(AppSettings settings) {
 		this();
-		this.drawer = drawer;
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param drawer The object drawer of the scene
-	 * @param symbols The symbols to represent
-	 */
-	public Turtle (Drawer drawer, ListSymbols symbols)
-	{
-		this(drawer);
-		this.symbols = symbols;
+		setSettings(settings);
 	}
 
 	/**
@@ -70,36 +62,86 @@ public abstract class Turtle
 	 * 
 	 * @return true if all is ok, false if all symbols can't be interpreted
 	 */
-	public abstract boolean checkSymbols ();
+	public abstract boolean checkSymbols();
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
 	 * 
 	 * @throws BadInterpretationException
+	 *             WARNING! In order to create a new turtle you need to
+	 *             redifined this function in your class and the first line of
+	 *             your drawSymbols function should be super.drawSymbols()
 	 */
-	public abstract void drawSymbols () throws BadInterpretationException;
-
-	/**
-	 * @param drawer the drawer to set
-	 */
-	public void setDrawer (Drawer drawer)
-	{
-		this.drawer = drawer;
+	public void drawSymbols() throws BadInterpretationException {
+		rootNode.detachAllChildren();
+		System.out.println("Moustache!");
 	}
 
 	/**
-	 * @param symbols the symbols to set
+	 * Initiale creation of the scene.
 	 */
-	public void setSymbols (ListSymbols symbols)
-	{
+	@Override
+	public void simpleInitApp() {
+		initInputs();
+
+		/** A white ambient light source. */
+		AmbientLight ambient = new AmbientLight();
+		ambient.setColor(ColorRGBA.White);
+		rootNode.addLight(ambient);
+		/** A white, directional light source */
+		DirectionalLight sun = new DirectionalLight();
+		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+		sun.setColor(ColorRGBA.White);
+		rootNode.addLight(sun);
+
+		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+		BloomFilter bloom = new BloomFilter();
+		bloom.setBlurScale(2.5f);
+		bloom.setBloomIntensity(10f);
+		fpp.addFilter(bloom);
+		viewPort.addProcessor(fpp);
+
+		try {
+			drawSymbols();
+		} catch (BadInterpretationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Update loop.
+	 * 
+	 * @param tpf
+	 *            time per frame
+	 */
+	@Override
+	public void simpleUpdate(float tpf) {
+
+	}
+
+	/**
+	 * Render loop.
+	 * 
+	 * @param rm
+	 *            Render Manager
+	 */
+	@Override
+	public void simpleRender(RenderManager rm) {
+
+	}
+
+	/**
+	 * @param symbols
+	 *            the symbols to set
+	 */
+	public void setSymbols(ListSymbols symbols) {
 		this.symbols = symbols;
 	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName ()
-	{
+	public String getName() {
 		return name;
 	}
 }
