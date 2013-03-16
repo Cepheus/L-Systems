@@ -56,12 +56,14 @@ public class Controller
 	private int indexOfCurrentTurtle = -1;
 	/** The main window */
 	private MainFrame mainFrame;
+	/** The panel 3D containing the JME application */
+	final Panel3D panel3D = new Panel3D();
 	/** The panel containing the 3D application */
 	private Drawer application3d;
 	/** Size of the panel where the 3D appears (width) */
-	public int canvasJMEWidth = 1024;
+	public static int canvasJMEWidth = 1024;
 	/** Size of the panel where the 3D appears (height) */
-	public int canvasJMEHeight = 768;
+	public static int canvasJMEHeight = 768;
 
 	/**
 	 * Constructor
@@ -80,7 +82,6 @@ public class Controller
 		settings.setWidth(canvasJMEWidth);
 		settings.setHeight(canvasJMEHeight);
 		application3d = new Drawer(settings);
-		final Panel3D pan = new Panel3D(application3d, settings);
 
 		final Controller me = this;
 		SwingUtilities.invokeLater(new Runnable()
@@ -89,8 +90,7 @@ public class Controller
 			{
 				try
 				{
-					mainFrame = new MainFrame(me, pan);
-					start3dApp();
+					mainFrame = new MainFrame(me, panel3D);
 					mainFrame.setVisible(true);
 				}
 				catch (Exception e)
@@ -156,6 +156,8 @@ public class Controller
 		System.out.println(generator.getGenerated());
 
 		// on donne la salade à la tortue
+		start3dApp();
+		
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
 		turtle.setSymbols(generator.getGenerated());
 		((TubeTurtle) turtle).setParameters(5, 10, 90, ColorRGBA.Green);
@@ -242,7 +244,8 @@ public class Controller
 	 */
 	private void start3dApp ()
 	{
-		application3d.startCanvas();
+		panel3D.createJMEPanel(application3d);
+		mainFrame.pack();
 		application3d.enqueue(new Callable<Void>()
 		{
 			public Void call ()
