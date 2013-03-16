@@ -25,27 +25,24 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 
-
 /**
  * @author Caelum Class for 3D object drawing.
  */
-public class Drawer extends SimpleApplication
-{
+public abstract class Drawer extends SimpleApplication {
 	/**
 	 * Default constructor.
 	 */
-	public Drawer ()
-	{
+	public Drawer() {
 		setPauseOnLostFocus(false);
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param settings The settings such as the size
+	 * @param settings
+	 *            The settings such as the size
 	 */
-	public Drawer (AppSettings settings)
-	{
+	public Drawer(AppSettings settings) {
 		this();
 		setSettings(settings);
 	}
@@ -53,62 +50,25 @@ public class Drawer extends SimpleApplication
 	/**
 	 * Get the assetManager of the scene
 	 */
-	public AssetManager getAssetManager ()
-	{
+	public AssetManager getAssetManager() {
 		return assetManager;
 	}
 
 	/**
 	 * Get the root node of the scene
 	 */
-	public Node getRootNode ()
-	{
+	public Node getRootNode() {
 		return rootNode;
 	}
 
 	/**
-	 * Initiale creation of the scene.
+	 * Clear the scene of all its objects
 	 */
-	@Override
-	public void simpleInitApp ()
-	{
-		/** A white ambient light source. */
-		AmbientLight ambient = new AmbientLight();
-		ambient.setColor(ColorRGBA.White);
-		rootNode.addLight(ambient);
-		/** A white, directional light source */
-		DirectionalLight sun = new DirectionalLight();
-		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
-		sun.setColor(ColorRGBA.White);
-		rootNode.addLight(sun);
-
-		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-		BloomFilter bloom = new BloomFilter();
-		bloom.setBlurScale(2.5f);
-		bloom.setBloomIntensity(10f);
-		fpp.addFilter(bloom);
-		viewPort.addProcessor(fpp);
+	public void clearScene() {
+		rootNode.detachAllChildren();
 	}
 
-	/**
-	 * Update loop.
-	 * 
-	 * @param tpf time per frame
-	 */
-	@Override
-	public void simpleUpdate (float tpf)
-	{
-
-	}
-
-	/**
-	 * Render loop.
-	 * 
-	 * @param rm Render Manager
-	 */
-	@Override
-	public void simpleRender (RenderManager rm)
-	{
-
+	protected final void initInputs () {
+		
 	}
 }
