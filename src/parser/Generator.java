@@ -44,7 +44,7 @@ public class Generator
 	public Generator (Grammar g)
 	{
 		grammar = g;
-		generated = g.getAxiom();
+		generated = g.getAxiom().clone();
 		lastGenerated = generated.clone();
 	}
 

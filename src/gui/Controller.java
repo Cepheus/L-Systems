@@ -147,6 +147,7 @@ public class Controller
 	 */
 	public void launchTurtle (int nbIterations) throws BadInterpretationException
 	{
+		generator = null;
 		// on génère les symboles
 		generator = new Generator(grammars.get(indexOfCurrentGrammar));
 		generator.setTotalIteration(nbIterations);
