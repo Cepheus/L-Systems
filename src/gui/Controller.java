@@ -22,16 +22,19 @@ import java.util.concurrent.Callable;
 
 import javax.swing.SwingUtilities;
 
-import com.jme3.app.SimpleApplication;
-import com.jme3.system.AppSettings;
-
+import parser.Generator;
+import parser.Grammar;
+import parser.IOmanager.Analyzer;
+import parser.IOmanager.BadFileException;
+import parser.IOmanager.ParseException;
+import ATuin.BadInterpretationException;
 import ATuin.Drawer;
 import ATuin.TubeTurtle;
 import ATuin.Turtle;
 
-import parser.Generator;
-import parser.Grammar;
-import parser.IOmanager.*;
+import com.jme3.app.SimpleApplication;
+import com.jme3.math.ColorRGBA;
+import com.jme3.system.AppSettings;
 
 
 /**
@@ -137,6 +140,28 @@ public class Controller
 	}
 
 	/**
+	 * Launch the grammar generator, and then call the turtle to draw.
+	 * 
+	 * @param nbIterations the number of iterations to make in the generetor
+	 * @throws BadInterpretationException
+	 */
+	public void launchTurtle (int nbIterations) throws BadInterpretationException
+	{
+		// on génère les symboles
+		generator = new Generator(grammars.get(indexOfCurrentGrammar));
+		generator.setTotalIteration(nbIterations);
+		generator.generate();
+
+		System.out.println(generator.getGenerated());
+
+		// on donne la salade à la tortue
+		Turtle turtle = turtles.get(indexOfCurrentTurtle);
+		turtle.setSymbols(generator.getGenerated());
+		((TubeTurtle) turtle).setParameters(5, 10, 90, ColorRGBA.Green);
+		turtle.drawSymbols();
+	}
+
+	/**
 	 * @return the grammars
 	 */
 	public ArrayList<Grammar> getGrammars ()
@@ -185,7 +210,6 @@ public class Controller
 	{
 		this.indexOfCurrentGrammar = indexOfCurrentGrammar;
 		chooseInterpretations();
-		System.out.println("tralalal");
 	}
 
 	/**
@@ -242,14 +266,13 @@ public class Controller
 			ArrayList<String> its = new ArrayList<String>();
 			Turtle turtle;
 			turtles.clear();
-			if (TubeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbols()))
+			if (TubeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbolsWithoutNull()))
 			{
 				turtle = new TubeTurtle(application3d);
 				turtles.add(turtle);
 				its.add(turtle.getName());
 			}
-			if (!its.isEmpty())
-				mainFrame.setListInterpretations(its);
+			mainFrame.setListInterpretations(its);
 		}
 	}
 }

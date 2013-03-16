@@ -1,37 +1,23 @@
 /* ******************************************************
- **	Copyright (C) 2013  xinouch
- **
- **	This file is part of L-Systems
- **
- **	L-Systems is free software: you can redistribute it and/or modify
- **	it under the terms of the GNU General Public License as published by
- **	the Free Software Foundation, either version 3 of the License, or
- **	(at your option) any later version.
- **
- **	This program is distributed in the hope that it will be useful,
- **	but WITHOUT ANY WARRANTY; without even the implied warranty of
- **	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- **	GNU General Public License for more details.
- **
- **	You should have received a copy of the GNU General Public License
- **	along with this program.  If not, see <http://www.gnu.org/licenses/>.
- ****************************************************** */
+ * * Copyright (C) 2013 xinouch** This file is part of L-Systems** L-Systems is free software: you can redistribute it and/or modify* it
+ * under the terms of the GNU General Public License as published by* the Free Software Foundation, either version 3 of the License, or* (at
+ * your option) any later version.** This program is distributed in the hope that it will be useful,* but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the* GNU General Public License for more details.** You
+ * should have received a copy of the GNU General Public License* along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * *****************************************************
+ */
 /* ******************************************************
- **
- **          Project: L-Systems
- **             File: SimpleDOLContextFreeRule.java
- **
- **       Created on: 26 févr. 2013
- **           Author: xinouch
- **
- ****************************************************** */
+ * *
+ * * Project: L-Systems* File: SimpleDOLContextFreeRule.java** Created on: 26 févr. 2013* Author: xinouch*
+ * *****************************************************
+ */
 
 package parser;
 
 /**
  * Represent a rule for a context-free L-system, where preExpr contains only one symbol.
+ * 
  * @author xinouch
- *
  */
 public class OLRule implements Rule
 {
@@ -43,7 +29,7 @@ public class OLRule implements Rule
 	private boolean determinist = true;
 	/** The probability of the rule */
 	private double proba = 1;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -51,9 +37,10 @@ public class OLRule implements Rule
 	{
 		postExpr = new ListSymbols();
 	}
-	
+
 	/**
 	 * Constructor
+	 * 
 	 * @param isDeterminist true if the rule is part of a determinist grammar
 	 */
 	public OLRule (boolean isDeterminist)
@@ -61,9 +48,10 @@ public class OLRule implements Rule
 		determinist = isDeterminist;
 		postExpr = new ListSymbols();
 	}
-	
+
 	/**
 	 * Constructor
+	 * 
 	 * @param pre
 	 * @param post
 	 */
@@ -72,7 +60,7 @@ public class OLRule implements Rule
 		preExpr = pre;
 		postExpr = post;
 	}
-	
+
 	@Override
 	public boolean canBeApplied (ListSymbols phrase)
 	{
@@ -132,7 +120,7 @@ public class OLRule implements Rule
 	{
 		return proba;
 	}
-	
+
 	public void setProba (double probability)
 	{
 		proba = probability;
@@ -191,7 +179,7 @@ public class OLRule implements Rule
 	{
 		this.determinist = determinist;
 	}
-	
+
 	@Override
 	public boolean isContextFree ()
 	{

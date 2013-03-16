@@ -1,7 +1,7 @@
+import gui.Controller;
+
 import javax.swing.JPopupMenu;
 import javax.swing.ToolTipManager;
-
-import gui.Controller;
 
 
 /**
@@ -19,7 +19,7 @@ public class LSystem
 		// we use that because of JME which use AWT whereas I use Swing
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
-		
+
 		// On lance le programme
 		Controller controller = new Controller();
 		controller.canvasJMEWidth = 1024;

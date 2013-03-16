@@ -39,8 +39,8 @@ public class ListSymbols implements Cloneable
 	public ListSymbols clone ()
 	{
 		ListSymbols list = new ListSymbols();
-		list.setSymbols((ArrayList<Symbol>)symbols.clone());
-		
+		list.setSymbols((ArrayList<Symbol>) symbols.clone());
+
 		return list;
 	}
 
@@ -106,8 +106,9 @@ public class ListSymbols implements Cloneable
 	}
 
 	/**
-	 * add the element at the given index.
-	 * put the element at the given index, so the actual element at index will be at index+1 after this function.
+	 * add the element at the given index. put the element at the given index, so the actual element at index will be at index+1 after this
+	 * function.
+	 * 
 	 * @param index
 	 * @param sym
 	 */
@@ -125,8 +126,8 @@ public class ListSymbols implements Cloneable
 	public boolean remove (Symbol sym)
 	{
 		boolean retour = false;
-		
-		for (int i = symbols.size(); i >= 0; i--)
+
+		for (int i = symbols.size() - 1; i >= 0; i--)
 		{
 			if (symbols.get(i).getCharacter() == sym.getCharacter())
 			{
@@ -135,21 +136,23 @@ public class ListSymbols implements Cloneable
 				retour = true;
 			}
 		}
-		
+
 		return retour;
 	}
-	
+
 	/**
 	 * remove the symbol at the given index
+	 * 
 	 * @param index
 	 */
 	public void remove (int index)
 	{
 		symbols.remove(index);
 	}
-	
+
 	/**
 	 * change the symbol at index by the symbol sym
+	 * 
 	 * @param index
 	 * @param sym
 	 */
@@ -157,21 +160,22 @@ public class ListSymbols implements Cloneable
 	{
 		symbols.set(index, sym);
 	}
-	
+
 	@Override
 	public String toString ()
 	{
 		String str = "";
 		final int size = symbols.size();
-		
+
 		for (int i = 0; i < size; i++)
 			str += symbols.get(i).getCharacter();
-		
+
 		return str;
 	}
-	
+
 	/**
 	 * return the symbol at the given index
+	 * 
 	 * @param index
 	 * @return the symbol at the given index
 	 */
@@ -195,7 +199,7 @@ public class ListSymbols implements Cloneable
 	{
 		this.symbols = symbols;
 	}
-	
+
 	/**
 	 * @return the size of the list
 	 */

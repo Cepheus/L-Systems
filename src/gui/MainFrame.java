@@ -15,37 +15,37 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
-import java.awt.event.KeyEvent;
-import java.awt.event.InputEvent;
-import java.util.ArrayList;
-
-import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JToolBar;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 
 import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JLabel;
+import ATuin.BadInterpretationException;
 
 
 // important line : JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -77,6 +77,8 @@ public class MainFrame extends JFrame
 	private JSpinner spinnerNbIt = new JSpinner();
 	/** Menu item edit current grammar */
 	private JMenuItem mntmEditCurrentGrammar = new JMenuItem("Edit current grammar");
+	/** The button to launch the turtle */
+	private JButton btnLaunch = new JButton("Launch!");
 
 	/**
 	 * Create the frame.
@@ -132,19 +134,45 @@ public class MainFrame extends JFrame
 	 */
 	public void setListInterpretations (ArrayList<String> interpretations)
 	{
-		comboBoxInterpretations.removeAllItems();
-		for (String s : interpretations)
-			comboBoxInterpretations.addItem(s);
-		comboBoxInterpretations.setSelectedIndex(0);
+		if (interpretations.isEmpty())
+		{
+			comboBoxInterpretations.setEnabled(false);
+			lblNumberOfIterations.setEnabled(false);
+			spinnerNbIt.setEnabled(false);
+			btnLaunch.setEnabled(false);
 
-		// on active le bouzin
-		setEnable(true);
+			comboBoxInterpretations.setToolTipText("No Interpretation fits with the current grammar. Change the symbols!");
+		}
+		else
+		{
+			comboBoxInterpretations.removeAllItems();
+			for (String s : interpretations)
+				comboBoxInterpretations.addItem(s);
+			comboBoxInterpretations.setSelectedIndex(0);
+			// on active le bouzin
+			setEnable(true);
+		}
+	}
+
+	/**
+	 * called when click on Launch! button. Launch the turtle calling the controller
+	 */
+	private void launchTurtle ()
+	{
+		try
+		{
+			controller.launchTurtle((int) spinnerNbIt.getValue());
+		}
+		catch (BadInterpretationException e)
+		{
+			showException(e);
+		}
 	}
 
 	/**
 	 * enable or not the components of the window
 	 * 
-	 * @param enable
+	 * @param enabled
 	 */
 	private void setEnable (boolean enabled)
 	{
@@ -153,6 +181,7 @@ public class MainFrame extends JFrame
 		lblNumberOfIterations.setEnabled(enabled);
 		spinnerNbIt.setEnabled(enabled);
 		mntmEditCurrentGrammar.setEnabled(enabled);
+		btnLaunch.setEnabled(enabled);
 
 		if (enabled)
 		{
@@ -189,14 +218,19 @@ public class MainFrame extends JFrame
 			}
 			catch (ParseException | BadFileException e)
 			{
-				JEditorPane editor = new JEditorPane();
-				editor.setText("An error occurs while parsing the file \"" + chooser.getSelectedFile().getAbsolutePath() + "\":\n"
-						+ e.getMessage());
-				editor.setEditable(false);
-
-				JOptionPane.showMessageDialog(me, editor, "Parsing error in the file", JOptionPane.ERROR_MESSAGE);
+				showException(new Exception("An error occurs while parsing the file \"" + chooser.getSelectedFile().getAbsolutePath()
+						+ "\":\n" + e.getMessage()));
 			}
 		}
+	}
+
+	private void showException (Exception e)
+	{
+		JEditorPane editor = new JEditorPane();
+		editor.setText(e.getMessage());
+		editor.setEditable(false);
+
+		JOptionPane.showMessageDialog(me, editor, "Parsing error in the file", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -285,6 +319,16 @@ public class MainFrame extends JFrame
 		spinnerNbIt.setToolTipText("Number of iterations");
 		spinnerNbIt.setModel(new SpinnerNumberModel(3, 0, 999, 1));
 		toolBar.add(spinnerNbIt);
+		btnLaunch.setEnabled(false);
+		btnLaunch.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent e)
+			{
+				launchTurtle();
+			}
+		});
+
+		toolBar.add(btnLaunch);
 	}
 
 }
