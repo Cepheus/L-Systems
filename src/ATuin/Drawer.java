@@ -19,56 +19,67 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
-import com.jme3.post.FilterPostProcessor;
-import com.jme3.post.filters.BloomFilter;
-import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
-import com.jme3.system.AppSettings;
+
 
 /**
- * @author Caelum Class for 3D object drawing.
+ * @author Caelum Class for 3D object drawing. When subclassing, you have to call the methods initInputs() and initScene() at the beginning
+ *         of simpleInitApp()
  */
-public abstract class Drawer extends SimpleApplication {
+public abstract class Drawer extends SimpleApplication
+{
 	/**
 	 * Default constructor.
 	 */
-	public Drawer() {
+	public Drawer ()
+	{
 		setPauseOnLostFocus(false);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param settings
-	 *            The settings such as the size
-	 */
-	public Drawer(AppSettings settings) {
-		this();
-		setSettings(settings);
 	}
 
 	/**
 	 * Get the assetManager of the scene
 	 */
-	public AssetManager getAssetManager() {
+	public AssetManager getAssetManager ()
+	{
 		return assetManager;
 	}
 
 	/**
 	 * Get the root node of the scene
 	 */
-	public Node getRootNode() {
+	public Node getRootNode ()
+	{
 		return rootNode;
 	}
 
 	/**
 	 * Clear the scene of all its objects
 	 */
-	public void clearScene() {
+	public void clearScene ()
+	{
 		rootNode.detachAllChildren();
 	}
 
-	protected final void initInputs () {
-		
+	/**
+	 * Initialize the inputs (keybord and mouse)
+	 */
+	protected final void initInputs ()
+	{
+	}
+
+	/**
+	 * Initialize the scene (camera position, lights...)
+	 */
+	protected final void initScene ()
+	{
+		/** A white ambient light source. */
+		AmbientLight ambient = new AmbientLight();
+		ambient.setColor(ColorRGBA.White);
+		rootNode.addLight(ambient);
+		/** A white, directional light source */
+		DirectionalLight sun = new DirectionalLight();
+		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+		sun.setColor(ColorRGBA.White);
+		rootNode.addLight(sun);
 	}
 }

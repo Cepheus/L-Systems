@@ -13,28 +13,31 @@
 
 package ATuin;
 
-import com.jme3.light.AmbientLight;
-import com.jme3.light.DirectionalLight;
-import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.RenderManager;
-import com.jme3.system.AppSettings;
 
 import parser.ListSymbols;
 
+
 /**
- * Default class of a turtle interpretation. This class factorise the differents
- * turtle interpretation. If you wish to create a new turtle interpretation you
- * should extends this class and implements its methods.
+ * Default class of a turtle interpretation. This class factorise the differents turtle interpretation. If you wish to create a new turtle
+ * interpretation you should extends this class and implements its methods.
  * 
  * @author Caelum
  */
-public abstract class Turtle extends Drawer {
+public abstract class Turtle extends Drawer
+{
 
+	/** turtle of type indéfini */
+	public final static int TYPE_UNKNOWN = 0;
+	/** turtle of type tube */
+	public final static int TYPE_TUBE = 1;
+	
 	/** The name of the turtle */
-	protected String name;
+	protected String name = "";
+	/** The type of the turtle */
+	protected int type = 0;
 
 	/** The list of symbols to interpret */
 	public ListSymbols symbols;
@@ -42,37 +45,26 @@ public abstract class Turtle extends Drawer {
 	/**
 	 * Default constructor.
 	 */
-	public Turtle() {
-		setPauseOnLostFocus(false);
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param settings
-	 *            The settings such as the size
-	 */
-	public Turtle(AppSettings settings) {
-		this();
-		setSettings(settings);
+	public Turtle ()
+	{
+		super();
 	}
 
 	/**
 	 * Checks if the interpretation can interpret all the symbols.
 	 * 
-	 * @return true if all is ok, false if all symbols can't be interpreted
+	 * @return true if all is OK, false if all symbols can't be interpreted
 	 */
-	public abstract boolean checkSymbols();
+	public abstract boolean checkSymbols ();
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
 	 * 
-	 * @throws BadInterpretationException
-	 *             WARNING! In order to create a new turtle you need to
-	 *             redifined this function in your class and the first line of
-	 *             your drawSymbols function should be super.drawSymbols()
+	 * @throws BadInterpretationException WARNING! In order to create a new turtle you need to redifined this function in your class and the
+	 *         first line of your drawSymbols function should be super.drawSymbols()
 	 */
-	public void drawSymbols() throws BadInterpretationException {
+	public void drawSymbols () throws BadInterpretationException
+	{
 		rootNode.detachAllChildren();
 		System.out.println("Moustache!");
 	}
@@ -81,18 +73,10 @@ public abstract class Turtle extends Drawer {
 	 * Initiale creation of the scene.
 	 */
 	@Override
-	public void simpleInitApp() {
+	public void simpleInitApp ()
+	{
 		initInputs();
-
-		/** A white ambient light source. */
-		AmbientLight ambient = new AmbientLight();
-		ambient.setColor(ColorRGBA.White);
-		rootNode.addLight(ambient);
-		/** A white, directional light source */
-		DirectionalLight sun = new DirectionalLight();
-		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
-		sun.setColor(ColorRGBA.White);
-		rootNode.addLight(sun);
+		initScene();
 
 		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 		BloomFilter bloom = new BloomFilter();
@@ -101,9 +85,12 @@ public abstract class Turtle extends Drawer {
 		fpp.addFilter(bloom);
 		viewPort.addProcessor(fpp);
 
-		try {
+		try
+		{
 			drawSymbols();
-		} catch (BadInterpretationException e) {
+		}
+		catch (BadInterpretationException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -111,37 +98,46 @@ public abstract class Turtle extends Drawer {
 	/**
 	 * Update loop.
 	 * 
-	 * @param tpf
-	 *            time per frame
+	 * @param tpf time per frame
 	 */
 	@Override
-	public void simpleUpdate(float tpf) {
+	public void simpleUpdate (float tpf)
+	{
 
 	}
 
 	/**
 	 * Render loop.
 	 * 
-	 * @param rm
-	 *            Render Manager
+	 * @param rm Render Manager
 	 */
 	@Override
-	public void simpleRender(RenderManager rm) {
+	public void simpleRender (RenderManager rm)
+	{
 
 	}
 
 	/**
-	 * @param symbols
-	 *            the symbols to set
+	 * @param symbols the symbols to set
 	 */
-	public void setSymbols(ListSymbols symbols) {
+	public void setSymbols (ListSymbols symbols)
+	{
 		this.symbols = symbols;
 	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName() {
+	public String getName ()
+	{
 		return name;
+	}
+	
+	/**
+	 * @return the type of the turtle (one of the TYPE_XXX).
+	 */
+	public int getType ()
+	{
+		return type;
 	}
 }

@@ -28,7 +28,6 @@ import parser.IOmanager.Analyzer;
 import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
 import ATuin.BadInterpretationException;
-import ATuin.Drawer;
 import ATuin.TubeTurtle;
 import ATuin.Turtle;
 
@@ -58,8 +57,6 @@ public class Controller
 	private MainFrame mainFrame;
 	/** The panel 3D containing the JME application */
 	final Panel3D panel3D = new Panel3D();
-	/** The panel containing the 3D application */
-	private Drawer application3d;
 	/** Size of the panel where the 3D appears (width) */
 	public static int canvasJMEWidth = 1024;
 	/** Size of the panel where the 3D appears (height) */
@@ -77,12 +74,6 @@ public class Controller
 	 */
 	public void startLSystem ()
 	{
-		// gestion des objets 3D
-		AppSettings settings = new AppSettings(true);
-		settings.setWidth(canvasJMEWidth);
-		settings.setHeight(canvasJMEHeight);
-		application3d = new Drawer(settings);
-
 		final Controller me = this;
 		SwingUtilities.invokeLater(new Runnable()
 		{
@@ -147,7 +138,9 @@ public class Controller
 	 */
 	public void launchTurtle (int nbIterations) throws BadInterpretationException
 	{
-		generator = null;
+		// first, we clean all
+		stop3dApp();
+		
 		// on génère les symboles
 		generator = new Generator(grammars.get(indexOfCurrentGrammar));
 		generator.setTotalIteration(nbIterations);
@@ -155,10 +148,11 @@ public class Controller
 
 		System.out.println(generator.getGenerated());
 
-		// on donne la salade à la tortue
-		start3dApp();
-		
+		// we create the JME application
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
+		start3dApp(turtle);
+		
+		// on donne la salade à la tortue
 		turtle.setSymbols(generator.getGenerated());
 		((TubeTurtle) turtle).setParameters(5, 10, 90, ColorRGBA.Green);
 		turtle.drawSymbols();
@@ -241,23 +235,39 @@ public class Controller
 
 	/**
 	 * start the 3D application in the canvas
+	 * @param turtle the turtle to display
 	 */
-	private void start3dApp ()
+	private void start3dApp (Turtle t)
 	{
-		panel3D.createJMEPanel(application3d);
+		final Turtle turtle = t;
+		
+		// gestion des objets 3D
+		AppSettings settings = new AppSettings(true);
+		settings.setWidth(canvasJMEWidth);
+		settings.setHeight(canvasJMEHeight);
+		turtle.setSettings(settings);
+
+		panel3D.createJMEPanel(turtle);
 		mainFrame.pack();
-		application3d.enqueue(new Callable<Void>()
+		turtle.enqueue(new Callable<Void>()
 		{
 			public Void call ()
 			{
-				if (application3d instanceof SimpleApplication)
-				{
-					SimpleApplication simpleApp = (SimpleApplication) application3d;
-					simpleApp.getFlyByCamera().setDragToRotate(true);
-				}
+				SimpleApplication simpleApp = turtle;
+				simpleApp.getFlyByCamera().setDragToRotate(true);
 				return null;
 			}
 		});
+	}
+	
+	/**
+	 * stop the 3D application in the canvas
+	 */
+	public void stop3dApp ()
+	{
+		generator = null;
+		turtles.get(indexOfCurrentTurtle).clearScene();
+		panel3D.removeJMEPanel();
 	}
 
 	/**
@@ -272,7 +282,7 @@ public class Controller
 			turtles.clear();
 			if (TubeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbolsWithoutNull()))
 			{
-				turtle = new TubeTurtle(application3d);
+				turtle = new TubeTurtle();
 				turtles.add(turtle);
 				its.add(turtle.getName());
 			}

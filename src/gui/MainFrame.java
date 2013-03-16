@@ -180,6 +180,13 @@ public class MainFrame extends JFrame
 		comboBoxGrammars.setEnabled(enabled);
 		lblNumberOfIterations.setEnabled(enabled);
 		spinnerNbIt.setEnabled(enabled);
+		mntmEditCurrentGrammar.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				controller.stop3dApp();
+			}
+		});
 		mntmEditCurrentGrammar.setEnabled(enabled);
 		btnLaunch.setEnabled(enabled);
 
