@@ -13,8 +13,6 @@
 
 package ATuin;
 
-import com.jme3.post.FilterPostProcessor;
-import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.RenderManager;
 
 import parser.ListSymbols;
@@ -33,7 +31,7 @@ public abstract class Turtle extends Drawer
 	public final static int TYPE_UNKNOWN = 0;
 	/** turtle of type tube */
 	public final static int TYPE_TUBE = 1;
-	
+
 	/** The name of the turtle */
 	protected String name = "";
 	/** The type of the turtle */
@@ -65,7 +63,8 @@ public abstract class Turtle extends Drawer
 	 */
 	public void drawSymbols () throws BadInterpretationException
 	{
-		rootNode.detachAllChildren();
+		if (rootNode != null)
+			rootNode.detachAllChildren();
 		System.out.println("Moustache!");
 	}
 
@@ -77,13 +76,6 @@ public abstract class Turtle extends Drawer
 	{
 		initInputs();
 		initScene();
-
-		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-		BloomFilter bloom = new BloomFilter();
-		bloom.setBlurScale(2.5f);
-		bloom.setBloomIntensity(10f);
-		fpp.addFilter(bloom);
-		viewPort.addProcessor(fpp);
 
 		try
 		{
@@ -132,7 +124,7 @@ public abstract class Turtle extends Drawer
 	{
 		return name;
 	}
-	
+
 	/**
 	 * @return the type of the turtle (one of the TYPE_XXX).
 	 */

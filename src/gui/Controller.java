@@ -139,7 +139,7 @@ public class Controller
 	public void launchTurtle (int nbIterations) throws BadInterpretationException
 	{
 		// first, we clean all
-		stop3dApp();
+		//stop3dApp();
 		
 		// on génère les symboles
 		generator = new Generator(grammars.get(indexOfCurrentGrammar));
@@ -150,12 +150,11 @@ public class Controller
 
 		// we create the JME application
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
-		start3dApp(turtle);
 		
 		// on donne la salade à la tortue
 		turtle.setSymbols(generator.getGenerated());
 		((TubeTurtle) turtle).setParameters(5, 10, 90, ColorRGBA.Green);
-		turtle.drawSymbols();
+		start3dApp(turtle);
 	}
 
 	/**
@@ -266,7 +265,7 @@ public class Controller
 	public void stop3dApp ()
 	{
 		generator = null;
-		turtles.get(indexOfCurrentTurtle).clearScene();
+		//turtles.get(indexOfCurrentTurtle).clearScene();
 		panel3D.removeJMEPanel();
 	}
 

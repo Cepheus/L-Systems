@@ -19,6 +19,8 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.BloomFilter;
 import com.jme3.scene.Node;
 
 
@@ -81,5 +83,12 @@ public abstract class Drawer extends SimpleApplication
 		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
 		sun.setColor(ColorRGBA.White);
 		rootNode.addLight(sun);
+		
+		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+		BloomFilter bloom = new BloomFilter();
+		bloom.setBlurScale(2.5f);
+		bloom.setBloomIntensity(10f);
+		fpp.addFilter(bloom);
+		viewPort.addProcessor(fpp);
 	}
 }
