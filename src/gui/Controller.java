@@ -153,7 +153,7 @@ public class Controller
 		
 		// on donne la salade à la tortue
 		turtle.setSymbols(generator.getGenerated());
-		((TubeTurtle) turtle).setParameters(5, 10, 90, ColorRGBA.Green);
+		((TubeTurtle) turtle).setParameters(10f, 0.5f, 90, ColorRGBA.Green);
 		start3dApp(turtle);
 	}
 

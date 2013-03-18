@@ -23,6 +23,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Cylinder;
 import com.jme3.scene.shape.Line;
 
 
@@ -33,16 +34,16 @@ import com.jme3.scene.shape.Line;
 public class TubeTurtle extends Turtle
 {
 
-	/** The angle for the rotations between the lines */
+	/** The angle for the rotations between the tubes */
 	private float angle = 90;
 
-	/** The length of the lines */
-	private float length = 5;
+	/** The length of the tubes */
+	private float length = 10;
 
-	/** The width of the lines */
-	private float width = 5;
+	/** The width of the tubes */
+	private float width = 0.5f;
 
-	/** The color of the lines */
+	/** The color of the tubes */
 	private ColorRGBA color = ColorRGBA.Green;
 
 	/** The material of the drawn objects */
@@ -148,19 +149,22 @@ public class TubeTurtle extends Turtle
 		super.drawSymbols();
 
 		material = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
-		// material = new Material(drawer.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+		//material = new Material(getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
 		material.setBoolean("UseMaterialColors", true); // needed for shininess
 		material.setColor("Specular", color); // needed for shininess
 		material.setColor("Diffuse", color); // needed for shininess
 		material.setFloat("Shininess", 1); // shininess from 1-128
 
-		Node node = getRootNode();
+		Node node = new Node();
+		node.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
+		rootNode.attachChild(node);
 		for (Symbol symbol : symbols.getSymbols())
 		{
 			switch (symbol.getInterpretation())
 			{
 				case Symbol.S_FORWARD:
-					drawLine(node);
+					//drawLine(node);
+					drawTube(node);
 					Node tmp = new Node();
 					node.attachChild(tmp);
 					node = tmp;
@@ -209,12 +213,27 @@ public class TubeTurtle extends Turtle
 	}
 
 	/**
+	 * Draws a tube
+	 * 
+	 * @param node The node to link the drawn tube to
+	 */
+	private void drawTube (Node node)
+	{
+		Cylinder tube = new Cylinder(15, 15, width, length, true);
+		Geometry geom = new Geometry("Tube", tube);
+		geom.setMaterial(material);
+		geom.setLocalTranslation(0,0,-length/2);
+		node.setLocalTranslation(0,0,-length);
+		node.attachChild(geom);
+	}
+	
+	/**
 	 * Sets the parameters for the object to be drawn
 	 * 
-	 * @param length The length of the lines
-	 * @param width The width of the lines
+	 * @param length The length of the tubes
+	 * @param width The width of the tubes
 	 * @param angle The angle of the rotations
-	 * @param color The color of the lines
+	 * @param color The color of the tubes
 	 */
 	public void setParameters (float length, float width, float angle, ColorRGBA color)
 	{

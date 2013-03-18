@@ -17,15 +17,14 @@ import com.jme3.renderer.RenderManager;
 
 import parser.ListSymbols;
 
-
 /**
- * Default class of a turtle interpretation. This class factorise the differents turtle interpretation. If you wish to create a new turtle
- * interpretation you should extends this class and implements its methods.
+ * Default class of a turtle interpretation. This class factorise the differents
+ * turtle interpretation. If you wish to create a new turtle interpretation you
+ * should extends this class and implements its methods.
  * 
  * @author Caelum
  */
-public abstract class Turtle extends Drawer
-{
+public abstract class Turtle extends Drawer {
 
 	/** turtle of type indéfini */
 	public final static int TYPE_UNKNOWN = 0;
@@ -43,8 +42,7 @@ public abstract class Turtle extends Drawer
 	/**
 	 * Default constructor.
 	 */
-	public Turtle ()
-	{
+	public Turtle() {
 		super();
 	}
 
@@ -53,16 +51,17 @@ public abstract class Turtle extends Drawer
 	 * 
 	 * @return true if all is OK, false if all symbols can't be interpreted
 	 */
-	public abstract boolean checkSymbols ();
+	public abstract boolean checkSymbols();
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
 	 * 
-	 * @throws BadInterpretationException WARNING! In order to create a new turtle you need to redifined this function in your class and the
-	 *         first line of your drawSymbols function should be super.drawSymbols()
+	 * @throws BadInterpretationException
+	 *             WARNING! In order to create a new turtle you need to
+	 *             redifined this function in your class and the first line of
+	 *             your drawSymbols function should be super.drawSymbols()
 	 */
-	public void drawSymbols () throws BadInterpretationException
-	{
+	public void drawSymbols() throws BadInterpretationException {
 		if (rootNode != null)
 			rootNode.detachAllChildren();
 		System.out.println("Moustache!");
@@ -72,17 +71,13 @@ public abstract class Turtle extends Drawer
 	 * Initiale creation of the scene.
 	 */
 	@Override
-	public void simpleInitApp ()
-	{
+	public void simpleInitApp() {
 		initInputs();
 		initScene();
 
-		try
-		{
+		try {
 			drawSymbols();
-		}
-		catch (BadInterpretationException e)
-		{
+		} catch (BadInterpretationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -90,46 +85,44 @@ public abstract class Turtle extends Drawer
 	/**
 	 * Update loop.
 	 * 
-	 * @param tpf time per frame
+	 * @param tpf
+	 *            time per frame
 	 */
 	@Override
-	public void simpleUpdate (float tpf)
-	{
+	public void simpleUpdate(float tpf) {
 
 	}
 
 	/**
 	 * Render loop.
 	 * 
-	 * @param rm Render Manager
+	 * @param rm
+	 *            Render Manager
 	 */
 	@Override
-	public void simpleRender (RenderManager rm)
-	{
+	public void simpleRender(RenderManager rm) {
 
 	}
 
 	/**
-	 * @param symbols the symbols to set
+	 * @param symbols
+	 *            the symbols to set
 	 */
-	public void setSymbols (ListSymbols symbols)
-	{
+	public void setSymbols(ListSymbols symbols) {
 		this.symbols = symbols;
 	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName ()
-	{
+	public String getName() {
 		return name;
 	}
 
 	/**
 	 * @return the type of the turtle (one of the TYPE_XXX).
 	 */
-	public int getType ()
-	{
+	public int getType() {
 		return type;
 	}
 }
