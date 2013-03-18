@@ -13,6 +13,10 @@
 
 package ATuin;
 
+import java.util.concurrent.Callable;
+
+import com.jme3.scene.Node;
+
 import parser.ListSymbols;
 
 
@@ -24,22 +28,27 @@ import parser.ListSymbols;
  */
 public abstract class Turtle
 {
+	/** Type of the turtle is unknown */
+	public final static int TYPE_UNKNOWN = 0;
+	/** The turtle is a TubeTurlte */
+	public final static int TYPE_TUBE = 1;
 
 	/** The name of the turtle */
-	protected String name;
-
+	protected String name = "";
+	/** The type of the turtle */
+	protected int type = TYPE_UNKNOWN;
 	/** The list of symbols to interpret */
 	public ListSymbols symbols;
-
 	/** The Drawer of the 3D scene */
 	protected Drawer drawer;
+	/** The node to add in the scene when display this turtle */
+	private final Node rootNode = new Node();
 
 	/**
 	 * Default constructor.
 	 */
 	public Turtle ()
 	{
-
 	}
 
 	/**
@@ -49,7 +58,6 @@ public abstract class Turtle
 	 */
 	public Turtle (Drawer drawer)
 	{
-		this();
 		this.drawer = drawer;
 	}
 
@@ -77,7 +85,29 @@ public abstract class Turtle
 	 * 
 	 * @throws BadInterpretationException
 	 */
-	public abstract void drawSymbols () throws BadInterpretationException;
+	public void drawSymbols () throws BadInterpretationException
+	{
+		final Node root = drawer.getRootNode();
+		drawer.enqueue(new Callable<Void>()
+		{
+			@Override
+			public Void call () throws Exception
+			{
+				root.detachAllChildren();
+				rootNode.detachAllChildren();
+				rootNode.attachChild(drawScene());
+				root.attachChild(rootNode);
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * Create the scene and put all the elements in the returned node
+	 * @return the node to attach to the Root Node to display all the elements.
+	 * @throws BadInterpretationException
+	 */
+	protected abstract Node drawScene () throws BadInterpretationException;
 
 	/**
 	 * @param drawer the drawer to set
@@ -101,5 +131,13 @@ public abstract class Turtle
 	public String getName ()
 	{
 		return name;
+	}
+
+	/**
+	 * @return the type
+	 */
+	public int getType ()
+	{
+		return type;
 	}
 }

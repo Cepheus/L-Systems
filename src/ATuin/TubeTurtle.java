@@ -34,19 +34,14 @@ public class TubeTurtle extends Turtle
 
 	/** The angle for the rotations between the lines */
 	private float angle = 90;
-
 	/** The length of the lines */
 	private float length = 5;
-
 	/** The width of the lines */
 	private float width = 5;
-
 	/** The color of the lines */
 	private ColorRGBA color = ColorRGBA.Green;
-
 	/** The material of the drawn objects */
 	private Material material;
-
 	/** The list of symbols known by the interpretation */
 	public final static ListSymbols authorizedSymbols;
 
@@ -83,6 +78,32 @@ public class TubeTurtle extends Turtle
 		sym = new Symbol();
 		sym.setInterpretation(Symbol.S_ROLLRIGHT);
 		authorizedSymbols.append(sym);
+		
+		sym = new Symbol();
+		sym.setInterpretation(Symbol.S_ABOUTTURN);
+		authorizedSymbols.append(sym);
+	}
+
+	/**
+	 * Default constructor.
+	 */
+	public TubeTurtle ()
+	{
+		super();
+		name = "Tube Turtle";
+		type = TYPE_TUBE;
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param drawer The object drawer of the scene
+	 */
+	public TubeTurtle (Drawer drawer)
+	{
+		super(drawer);
+		name = "Tube Turtle";
+		type = TYPE_TUBE;
 	}
 
 	/**
@@ -133,26 +154,6 @@ public class TubeTurtle extends Turtle
 	}
 
 	/**
-	 * Default constructor.
-	 */
-	public TubeTurtle ()
-	{
-		super();
-		name = "Tube Turle";
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param drawer The object drawer of the scene
-	 */
-	public TubeTurtle (Drawer drawer)
-	{
-		super(drawer);
-		name = "Tube Turle";
-	}
-
-	/**
 	 * Constructor.
 	 * 
 	 * @param drawer The object drawer of the scene
@@ -165,7 +166,7 @@ public class TubeTurtle extends Turtle
 	}
 
 	@Override
-	public void drawSymbols () throws BadInterpretationException
+	protected Node drawScene () throws BadInterpretationException
 	{
 		material = new Material(drawer.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
 		material.setBoolean("UseMaterialColors", true); // needed for shininess
@@ -173,7 +174,8 @@ public class TubeTurtle extends Turtle
 		material.setColor("Diffuse", color); // needed for shininess
 		material.setFloat("Shininess", 1); // shininess from 1-128
 
-		Node node = drawer.getRootNode();
+		Node node = new Node();
+		Node returnNode = node;
 		for (Symbol symbol : symbols.getSymbols())
 		{
 			switch (symbol.getInterpretation())
@@ -202,12 +204,16 @@ public class TubeTurtle extends Turtle
 				case Symbol.S_ROLLRIGHT:
 					node.rotate(0, 0, -angle * FastMath.DEG_TO_RAD);
 					break;
+				case Symbol.S_ABOUTTURN:
+					node.rotate(0, 180, 0 * FastMath.DEG_TO_RAD);
+					break;
 				case 0: // UNDEFINED
 					break;
 				default:
 					throw (new BadInterpretationException("The turle has uncounter a symbol impossible to draw!"));
 			}
 		}
+		return returnNode;
 	}
 
 	/**

@@ -14,7 +14,6 @@
 package ATuin;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.AssetManager;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -22,7 +21,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Node;
 import com.jme3.system.AppSettings;
 
 
@@ -51,43 +49,13 @@ public class Drawer extends SimpleApplication
 	}
 
 	/**
-	 * Get the assetManager of the scene
-	 */
-	public AssetManager getAssetManager ()
-	{
-		return assetManager;
-	}
-
-	/**
-	 * Get the root node of the scene
-	 */
-	public Node getRootNode ()
-	{
-		return rootNode;
-	}
-
-	/**
 	 * Initiale creation of the scene.
 	 */
 	@Override
 	public void simpleInitApp ()
 	{
-		/** A white ambient light source. */
-		AmbientLight ambient = new AmbientLight();
-		ambient.setColor(ColorRGBA.White);
-		rootNode.addLight(ambient);
-		/** A white, directional light source */
-		DirectionalLight sun = new DirectionalLight();
-		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
-		sun.setColor(ColorRGBA.White);
-		rootNode.addLight(sun);
-
-		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
-		BloomFilter bloom = new BloomFilter();
-		bloom.setBlurScale(2.5f);
-		bloom.setBloomIntensity(10f);
-		fpp.addFilter(bloom);
-		viewPort.addProcessor(fpp);
+		initInputs();
+		initScene();
 	}
 
 	/**
@@ -111,4 +79,35 @@ public class Drawer extends SimpleApplication
 	{
 
 	}
+
+	/**
+	 * Initialize the inputs (keybord and mouse)
+	 */
+	protected final void initInputs ()
+	{
+	}
+
+	/**
+	 * Initialize the scene (camera position, lights...)
+	 */
+	protected final void initScene ()
+	{
+		/** A white ambient light source. */
+		AmbientLight ambient = new AmbientLight();
+		ambient.setColor(ColorRGBA.White);
+		rootNode.addLight(ambient);
+		/** A white, directional light source */
+		DirectionalLight sun = new DirectionalLight();
+		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+		sun.setColor(ColorRGBA.White);
+		rootNode.addLight(sun);
+
+		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+		BloomFilter bloom = new BloomFilter();
+		bloom.setBlurScale(2.5f);
+		bloom.setBloomIntensity(10f);
+		fpp.addFilter(bloom);
+		viewPort.addProcessor(fpp);
+	}
+
 }

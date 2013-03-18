@@ -138,7 +138,7 @@ public class Generator
 		int sizeGenerated, i, j, offset, indexOld;
 		boolean isModified;
 
-		for (actualIt = 1; actualIt < totalIt; actualIt++) // we begin to 1 because 0 is the axiom
+		for (actualIt = 0; actualIt < totalIt; actualIt++)
 		{
 			lastGenerated = generated.clone();
 			sizeGenerated = generated.size();
@@ -175,7 +175,7 @@ public class Generator
 		final int sizeRules = rules.size();
 		int sizeGenerated, i, j, offset, indexOld;
 
-		for (actualIt = 1; actualIt < totalIt; actualIt++) // we begin to 1 because 0 is the axiom
+		for (actualIt = 0; actualIt < totalIt; actualIt++)
 		{
 			lastGenerated = generated.clone();
 			sizeGenerated = generated.size();
@@ -229,7 +229,7 @@ public class Generator
 		}
 		final int sizeIL = rulesIL.size(), sizeOL = rulesOL.size();
 
-		for (actualIt = 1; actualIt < totalIt; actualIt++) // we begin to 1 because 0 is the axiom
+		for (actualIt = 0; actualIt < totalIt; actualIt++)
 		{
 			lastGenerated = generated.clone();
 			sizeGenerated = generated.size();
@@ -292,7 +292,7 @@ public class Generator
 		}
 		final int sizeIL = rulesIL.size(), sizeOL = rulesOL.size();
 
-		for (actualIt = 1; actualIt < totalIt; actualIt++) // we begin to 1 because 0 is the axiom
+		for (actualIt = 0; actualIt < totalIt; actualIt++)
 		{
 			lastGenerated = generated.clone();
 			sizeGenerated = generated.size();

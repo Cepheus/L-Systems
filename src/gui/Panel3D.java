@@ -39,34 +39,30 @@ public class Panel3D extends JPanel
 	private JmeCanvasContext context = null;
 	/** used to integrate JMonkey into the frame */
 	private Canvas canvas = null;
-	private JPanel defaultPanel = new JPanel();
 
 	/**
 	 * Create the panel.
+	 * @param app the application 3D
+	 * @param settings the settings used to create the 3D application 
 	 */
-	public Panel3D ()
+	public Panel3D (Drawer app, AppSettings settings)
 	{
-		defaultPanel.setSize(Controller.canvasJMEWidth, Controller.canvasJMEHeight);
-		add(defaultPanel, BorderLayout.CENTER);
+		createJMEPanel(app, settings);
 	}
 
 	/**
 	 * Display the JME application.
 	 * It is launched in a new Thread.
-	 * @param app The JME application that we want to display
+	 * @param app the application 3D
+	 * @param settings the settings used to create the 3D application 
 	 */
-	public void createJMEPanel (Drawer app)
+	public void createJMEPanel (Drawer app, AppSettings settings)
 	{
 		// we create the canvas
-		AppSettings settings = new AppSettings(true);
-		settings.setWidth(Controller.canvasJMEWidth);
-		settings.setHeight(Controller.canvasJMEHeight);
 		drawer = app;
 
 		createCanvas(settings);
 		// canvas is initialized
-		// we remove the panel
-		remove(defaultPanel);
 		// we add the canvas
 		add(canvas, BorderLayout.CENTER);
 	}
@@ -83,9 +79,6 @@ public class Panel3D extends JPanel
 		drawer = null;
 		context = null;
 		canvas = null;
-
-		// we put the default panel
-		add(defaultPanel, BorderLayout.CENTER);
 	}
 
 	private void createCanvas (AppSettings settings)
@@ -102,21 +95,7 @@ public class Panel3D extends JPanel
 		{
 		}
 
-		Thread t = new Thread()
-		{
-			public void run ()
-			{
-				drawer.startCanvas();
-				try
-				{
-					Thread.sleep(500);
-				}
-				catch (InterruptedException ex)
-				{
-				}
-			}
-		};
-		t.start();
+		drawer.startCanvas();
 	}
 
 	/**

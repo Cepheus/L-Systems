@@ -165,7 +165,7 @@ public class MainFrame extends JFrame
 		}
 		catch (BadInterpretationException e)
 		{
-			showException(e);
+			showException(e, "Bad interpretation");
 		}
 	}
 
@@ -219,18 +219,18 @@ public class MainFrame extends JFrame
 			catch (ParseException | BadFileException e)
 			{
 				showException(new Exception("An error occurs while parsing the file \"" + chooser.getSelectedFile().getAbsolutePath()
-						+ "\":\n" + e.getMessage()));
+						+ "\":\n" + e.getMessage()), "Parsing error in the file");
 			}
 		}
 	}
 
-	private void showException (Exception e)
+	private void showException (Exception e, String title)
 	{
 		JEditorPane editor = new JEditorPane();
 		editor.setText(e.getMessage());
 		editor.setEditable(false);
 
-		JOptionPane.showMessageDialog(me, editor, "Parsing error in the file", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(me, editor, title, JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -317,7 +317,7 @@ public class MainFrame extends JFrame
 
 		spinnerNbIt.setEnabled(false);
 		spinnerNbIt.setToolTipText("Number of iterations");
-		spinnerNbIt.setModel(new SpinnerNumberModel(3, 0, 999, 1));
+		spinnerNbIt.setModel(new SpinnerNumberModel(2, 0, 999, 1));
 		toolBar.add(spinnerNbIt);
 		btnLaunch.setEnabled(false);
 		btnLaunch.addActionListener(new ActionListener()

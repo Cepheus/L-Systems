@@ -32,7 +32,6 @@ import ATuin.Drawer;
 import ATuin.TubeTurtle;
 import ATuin.Turtle;
 
-import com.jme3.app.SimpleApplication;
 import com.jme3.math.ColorRGBA;
 import com.jme3.system.AppSettings;
 
@@ -57,9 +56,11 @@ public class Controller
 	/** The main window */
 	private MainFrame mainFrame;
 	/** The panel 3D containing the JME application */
-	final Panel3D panel3D = new Panel3D();
+	private Panel3D panel3D;
 	/** The panel containing the 3D application */
 	private Drawer application3d;
+	/** pointer on this */
+	private final Controller me = this;
 	/** Size of the panel where the 3D appears (width) */
 	public static int canvasJMEWidth = 1024;
 	/** Size of the panel where the 3D appears (height) */
@@ -78,12 +79,8 @@ public class Controller
 	public void startLSystem ()
 	{
 		// gestion des objets 3D
-		AppSettings settings = new AppSettings(true);
-		settings.setWidth(canvasJMEWidth);
-		settings.setHeight(canvasJMEHeight);
-		application3d = new Drawer(settings);
+		start3dApp();
 
-		final Controller me = this;
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run ()
@@ -156,11 +153,10 @@ public class Controller
 		System.out.println(generator.getGenerated());
 
 		// on donne la salade à la tortue
-		start3dApp();
-		
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
 		turtle.setSymbols(generator.getGenerated());
-		((TubeTurtle) turtle).setParameters(5, 10, 90, ColorRGBA.Green);
+		((TubeTurtle) turtle).setParameters(10f, 0.5f, 90, ColorRGBA.Green);
+		
 		turtle.drawSymbols();
 	}
 
@@ -244,17 +240,16 @@ public class Controller
 	 */
 	private void start3dApp ()
 	{
-		panel3D.createJMEPanel(application3d);
-		mainFrame.pack();
+		AppSettings settings = new AppSettings(true);
+		settings.setWidth(canvasJMEWidth);
+		settings.setHeight(canvasJMEHeight);
+		application3d = new Drawer(settings);
+		panel3D = new Panel3D(application3d, settings);
 		application3d.enqueue(new Callable<Void>()
 		{
 			public Void call ()
 			{
-				if (application3d instanceof SimpleApplication)
-				{
-					SimpleApplication simpleApp = (SimpleApplication) application3d;
-					simpleApp.getFlyByCamera().setDragToRotate(true);
-				}
+				application3d.getFlyByCamera().setDragToRotate(true);
 				return null;
 			}
 		});
