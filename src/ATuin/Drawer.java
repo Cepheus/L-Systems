@@ -16,6 +16,7 @@ package ATuin;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.RenderManager;
@@ -98,8 +99,10 @@ public class Drawer extends SimpleApplication {
 		sun.setColor(ColorRGBA.White);
 		rootNode.addLight(sun);
 
-		flyCam.setMoveSpeed(20);
-
+		flyCam.setMoveSpeed(40);
+		getCamera().setLocation(new Vector3f(0,0,100));
+		
+		
 		// Second light
 		/*
 		 * DirectionalLight sun2 = new DirectionalLight();

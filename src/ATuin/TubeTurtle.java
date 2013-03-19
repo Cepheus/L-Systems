@@ -16,6 +16,7 @@ package ATuin;
 
 import parser.ListSymbols;
 import parser.Symbol;
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -84,6 +85,14 @@ public class TubeTurtle extends Turtle {
 
 		sym = new Symbol();
 		sym.setInterpretation(Symbol.S_ABOUTTURN);
+		authorizedSymbols.append(sym);
+		
+		sym = new Symbol();
+		sym.setInterpretation(Symbol.S_SAVEPOSITION);
+		authorizedSymbols.append(sym);
+		
+		sym = new Symbol();
+		sym.setInterpretation(Symbol.S_RESTOREPOSITION);
 		authorizedSymbols.append(sym);
 	}
 
@@ -180,6 +189,7 @@ public class TubeTurtle extends Turtle {
 		material.setColor("GlowColor", color);
 
 		Node node = new Node();
+		Node saveNode = drawer.getRootNode();
 		Node returnNode = node;
 		returnNode.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
 		drawer.getRootNode().attachChild(returnNode);
@@ -212,6 +222,10 @@ public class TubeTurtle extends Turtle {
 			case Symbol.S_ABOUTTURN:
 				node.rotate(0, 180, 0 * FastMath.DEG_TO_RAD);
 				break;
+			case Symbol.S_SAVEPOSITION:
+				saveNode = node;
+			case Symbol.S_RESTOREPOSITION:
+				node = saveNode;
 			case 0: // UNDEFINED
 				break;
 			default:
