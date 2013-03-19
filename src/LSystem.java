@@ -27,7 +27,7 @@ public class LSystem
 		// On lance le programme
 		Controller controller = new Controller();
 		Controller.canvasJMEWidth = 1024;
-		Controller.canvasJMEHeight = 640;
+		Controller.canvasJMEHeight = 560;
 		controller.startLSystem();
 	}
 }

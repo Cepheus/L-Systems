@@ -19,15 +19,14 @@ import com.jme3.scene.Node;
 
 import parser.ListSymbols;
 
-
 /**
- * Default class of a turtle interpretation. This class factorise the differents turtle interpretation. If you wish to create a new turtle
- * interpretation you should extends this class and implements its methods.
+ * Default class of a turtle interpretation. This class factorise the differents
+ * turtle interpretation. If you wish to create a new turtle interpretation you
+ * should extends this class and implements its methods.
  * 
  * @author Caelum
  */
-public abstract class Turtle
-{
+public abstract class Turtle {
 	/** Type of the turtle is unknown */
 	public final static int TYPE_UNKNOWN = 0;
 	/** The turtle is a TubeTurlte */
@@ -47,28 +46,28 @@ public abstract class Turtle
 	/**
 	 * Default constructor.
 	 */
-	public Turtle ()
-	{
+	public Turtle() {
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer The object drawer of the scene
+	 * @param drawer
+	 *            The object drawer of the scene
 	 */
-	public Turtle (Drawer drawer)
-	{
+	public Turtle(Drawer drawer) {
 		this.drawer = drawer;
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer The object drawer of the scene
-	 * @param symbols The symbols to represent
+	 * @param drawer
+	 *            The object drawer of the scene
+	 * @param symbols
+	 *            The symbols to represent
 	 */
-	public Turtle (Drawer drawer, ListSymbols symbols)
-	{
+	public Turtle(Drawer drawer, ListSymbols symbols) {
 		this(drawer);
 		this.symbols = symbols;
 	}
@@ -78,21 +77,18 @@ public abstract class Turtle
 	 * 
 	 * @return true if all is ok, false if all symbols can't be interpreted
 	 */
-	public abstract boolean checkSymbols ();
+	public abstract boolean checkSymbols();
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
 	 * 
 	 * @throws BadInterpretationException
 	 */
-	public void drawSymbols () throws BadInterpretationException
-	{
+	public void drawSymbols() throws BadInterpretationException {
 		final Node root = drawer.getRootNode();
-		drawer.enqueue(new Callable<Void>()
-		{
+		drawer.enqueue(new Callable<Void>() {
 			@Override
-			public Void call () throws Exception
-			{
+			public Void call() throws Exception {
 				root.detachAllChildren();
 				rootNode.detachAllChildren();
 				rootNode.attachChild(drawScene());
@@ -104,40 +100,39 @@ public abstract class Turtle
 
 	/**
 	 * Create the scene and put all the elements in the returned node
+	 * 
 	 * @return the node to attach to the Root Node to display all the elements.
 	 * @throws BadInterpretationException
 	 */
-	protected abstract Node drawScene () throws BadInterpretationException;
+	protected abstract Node drawScene() throws BadInterpretationException;
 
 	/**
-	 * @param drawer the drawer to set
+	 * @param drawer
+	 *            the drawer to set
 	 */
-	public void setDrawer (Drawer drawer)
-	{
+	public void setDrawer(Drawer drawer) {
 		this.drawer = drawer;
 	}
 
 	/**
-	 * @param symbols the symbols to set
+	 * @param symbols
+	 *            the symbols to set
 	 */
-	public void setSymbols (ListSymbols symbols)
-	{
+	public void setSymbols(ListSymbols symbols) {
 		this.symbols = symbols;
 	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName ()
-	{
+	public String getName() {
 		return name;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public int getType ()
-	{
+	public int getType() {
 		return type;
 	}
 }

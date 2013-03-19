@@ -14,36 +14,33 @@
 package ATuin;
 
 import com.jme3.app.SimpleApplication;
-import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 
-
 /**
  * @author Caelum Class for 3D object drawing.
  */
-public class Drawer extends SimpleApplication
-{
+public class Drawer extends SimpleApplication {
+	DirectionalLight sun;
+
 	/**
 	 * Default constructor.
 	 */
-	public Drawer ()
-	{
+	public Drawer() {
 		setPauseOnLostFocus(false);
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param settings The settings such as the size
+	 * @param settings
+	 *            The settings such as the size
 	 */
-	public Drawer (AppSettings settings)
-	{
+	public Drawer(AppSettings settings) {
 		this();
 		setSettings(settings);
 	}
@@ -52,8 +49,7 @@ public class Drawer extends SimpleApplication
 	 * Initiale creation of the scene.
 	 */
 	@Override
-	public void simpleInitApp ()
-	{
+	public void simpleInitApp() {
 		initInputs();
 		initScene();
 	}
@@ -61,51 +57,60 @@ public class Drawer extends SimpleApplication
 	/**
 	 * Update loop.
 	 * 
-	 * @param tpf time per frame
+	 * @param tpf
+	 *            time per frame
 	 */
 	@Override
-	public void simpleUpdate (float tpf)
-	{
-
+	public void simpleUpdate(float tpf) {
+		sun.setDirection(getCamera().getDirection());
 	}
 
 	/**
 	 * Render loop.
 	 * 
-	 * @param rm Render Manager
+	 * @param rm
+	 *            Render Manager
 	 */
 	@Override
-	public void simpleRender (RenderManager rm)
-	{
+	public void simpleRender(RenderManager rm) {
 
 	}
 
 	/**
 	 * Initialize the inputs (keybord and mouse)
 	 */
-	protected final void initInputs ()
-	{
+	protected final void initInputs() {
 	}
 
 	/**
 	 * Initialize the scene (camera position, lights...)
 	 */
-	protected final void initScene ()
-	{
+	protected final void initScene() {
 		/** A white ambient light source. */
-		AmbientLight ambient = new AmbientLight();
-		ambient.setColor(ColorRGBA.White);
-		rootNode.addLight(ambient);
+		/*
+		 * AmbientLight ambient = new AmbientLight();
+		 * ambient.setColor(ColorRGBA.White); rootNode.addLight(ambient);
+		 */
+
 		/** A white, directional light source */
-		DirectionalLight sun = new DirectionalLight();
-		sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+		sun = new DirectionalLight();
+		sun.setDirection(getCamera().getDirection());
 		sun.setColor(ColorRGBA.White);
 		rootNode.addLight(sun);
 
+		flyCam.setMoveSpeed(20);
+
+		// Second light
+		/*
+		 * DirectionalLight sun2 = new DirectionalLight();
+		 * sun2.setDirection((new Vector3f(0.5f, 0.5f, 0.5f)).normalizeLocal());
+		 * sun2.setColor(ColorRGBA.White); rootNode.addLight(sun2);
+		 */
+
 		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 		BloomFilter bloom = new BloomFilter();
-		bloom.setBlurScale(2.5f);
-		bloom.setBloomIntensity(10f);
+		// bloom.setBlurScale(2.5f);
+		// bloom.setBloomIntensity(10f);
 		fpp.addFilter(bloom);
 		viewPort.addProcessor(fpp);
 	}
