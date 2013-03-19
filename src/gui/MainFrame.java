@@ -34,6 +34,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -46,6 +47,7 @@ import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
 import ATuin.BadInterpretationException;
 import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 
 
 // important line : JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -79,8 +81,8 @@ public class MainFrame extends JFrame
 	private JMenuItem mntmEditCurrentGrammar = new JMenuItem("Edit current grammar");
 	/** The button to launch the turtle */
 	private JButton btnLaunch = new JButton("Launch!");
-	/** Le text pane où sont affichés les symboles générés */
-	private JTextPane textPane = new JTextPane();
+	/** zone where display the generated symbols */
+	private JTextArea txtrGeneratedSymbols = new JTextArea();
 
 	/**
 	 * Create the frame.
@@ -106,13 +108,9 @@ public class MainFrame extends JFrame
 			}
 		});
 		contentPane.add(panel3d, BorderLayout.CENTER);
-		textPane.setEnabled(false);
-		textPane.setToolTipText("Generated symbols");
-		
-		textPane.setEditable(false);
-		contentPane.add(textPane, BorderLayout.SOUTH);
 
 		setEnable(false);
+		
 		pack();
 	}
 
@@ -160,15 +158,16 @@ public class MainFrame extends JFrame
 			setEnable(true);
 		}
 	}
-	
+
 	/**
 	 * display in the textPane the symbols generated
+	 * 
 	 * @param symbols
 	 */
 	public void setSymbolsGenerated (String symbols)
 	{
-		textPane.setText(symbols);
-		textPane.setEnabled(true);
+		txtrGeneratedSymbols.setText(symbols);
+		txtrGeneratedSymbols.setEnabled(true);
 	}
 
 	/**
@@ -207,6 +206,8 @@ public class MainFrame extends JFrame
 		}
 		else
 		{
+			txtrGeneratedSymbols.setEnabled(false);
+			txtrGeneratedSymbols.setText("Generated symbols...");
 			comboBoxInterpretations.setToolTipText("You have to import a file defining grammars first");
 			comboBoxGrammars.setToolTipText("You have to import a file defining grammars first");
 		}
@@ -342,10 +343,23 @@ public class MainFrame extends JFrame
 			public void actionPerformed (ActionEvent e)
 			{
 				launchTurtle();
+				txtrGeneratedSymbols.setEnabled(true);
 			}
 		});
 
 		toolBar.add(btnLaunch);
+		txtrGeneratedSymbols.setText("Generated symbols...");
+		txtrGeneratedSymbols.setToolTipText("Generated symbols");
+		txtrGeneratedSymbols.setEditable(false);
+		txtrGeneratedSymbols.setTabSize(4);
+		txtrGeneratedSymbols.setRows(4);
+		txtrGeneratedSymbols.setLineWrap(true);
+
+		txtrGeneratedSymbols.setEnabled(false);
+
+		JScrollPane scrollPane = new JScrollPane();
+		contentPane.add(scrollPane, BorderLayout.SOUTH);
+		scrollPane.setViewportView(txtrGeneratedSymbols);
 	}
 
 }
