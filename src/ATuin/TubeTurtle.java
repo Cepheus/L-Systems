@@ -14,9 +14,10 @@
 
 package ATuin;
 
+import java.util.Stack;
+
 import parser.ListSymbols;
 import parser.Symbol;
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -188,44 +189,83 @@ public class TubeTurtle extends Turtle {
 		material.setFloat("Shininess", 1); // shininess from 1-128
 		material.setColor("GlowColor", color);
 
+		Node tmp;
 		Node node = new Node();
-		Node saveNode = drawer.getRootNode();
 		Node returnNode = node;
-		returnNode.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
-		drawer.getRootNode().attachChild(returnNode);
+		Stack<Node> saveNode = new Stack<Node>();
+		returnNode.rotate(90 * FastMath.DEG_TO_RAD, 0, 0);
+		returnNode.attachChild(node);
 		for (Symbol symbol : symbols.getSymbols()) {
 			switch (symbol.getInterpretation()) {
 			case Symbol.S_FORWARD:
 				drawTube(node);
-				Node tmp = new Node();
+				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_TURNLEFT:
 				node.rotate(0, angle * FastMath.DEG_TO_RAD, 0);
+				System.out.println("Rotate"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
 				break;
 			case Symbol.S_TURNRIGHT:
 				node.rotate(0, -angle * FastMath.DEG_TO_RAD, 0);
+				System.out.println("Rotate"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
 				break;
 			case Symbol.S_TURNUP:
 				node.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
+				System.out.println("Rotate"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
 				break;
 			case Symbol.S_TURNDOWN:
 				node.rotate(-angle * FastMath.DEG_TO_RAD, 0, 0);
+				System.out.println("Rotate"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
 				break;
 			case Symbol.S_ROLLLEFT:
 				node.rotate(0, 0, angle * FastMath.DEG_TO_RAD);
+				System.out.println("Rotate"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
 				break;
 			case Symbol.S_ROLLRIGHT:
 				node.rotate(0, 0, -angle * FastMath.DEG_TO_RAD);
+				System.out.println("Rotate"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
 				break;
 			case Symbol.S_ABOUTTURN:
 				node.rotate(0, 180, 0 * FastMath.DEG_TO_RAD);
+				System.out.println("Rotate"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
 				break;
 			case Symbol.S_SAVEPOSITION:
-				saveNode = node;
+				saveNode.push(node);
+				System.out.println("Save"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
+				break;
 			case Symbol.S_RESTOREPOSITION:
-				node = saveNode;
+				node = saveNode.pop();
+				System.out.println("Restore"+node.getLocalRotation());
+				tmp = new Node();
+				node.attachChild(tmp);
+				node = tmp;
+				break;
 			case 0: // UNDEFINED
 				break;
 			default:
@@ -246,7 +286,7 @@ public class TubeTurtle extends Turtle {
 		Cylinder tube = new Cylinder(10, 10, width, length, true);
 		Geometry geom = new Geometry("Tube", tube);
 		geom.setMaterial(material);
-		geom.setLocalTranslation(0, 0, -length / 2);
+		geom.setLocalTranslation(0, 0, length / 2);
 		node.setLocalTranslation(0, 0, -length);
 		node.attachChild(geom);
 	}
