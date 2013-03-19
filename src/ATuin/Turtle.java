@@ -85,13 +85,15 @@ public abstract class Turtle {
 	 * @throws BadInterpretationException
 	 */
 	public void drawSymbols() throws BadInterpretationException {
-		final Node root = drawer.getRootNode();
+		final Node root = drawer.getRootNode(), nodeTmp;
+		nodeTmp = drawScene();
+		
 		drawer.enqueue(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				root.detachAllChildren();
 				rootNode.detachAllChildren();
-				rootNode.attachChild(drawScene());
+				rootNode.attachChild(nodeTmp);
 				root.attachChild(rootNode);
 				return null;
 			}
