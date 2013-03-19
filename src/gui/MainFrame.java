@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -46,6 +45,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
 import ATuin.BadInterpretationException;
+import javax.swing.JTextPane;
 
 
 // important line : JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -79,6 +79,8 @@ public class MainFrame extends JFrame
 	private JMenuItem mntmEditCurrentGrammar = new JMenuItem("Edit current grammar");
 	/** The button to launch the turtle */
 	private JButton btnLaunch = new JButton("Launch!");
+	/** Le text pane où sont affichés les symboles générés */
+	private JTextPane textPane = new JTextPane();
 
 	/**
 	 * Create the frame.
@@ -104,6 +106,11 @@ public class MainFrame extends JFrame
 			}
 		});
 		contentPane.add(panel3d, BorderLayout.CENTER);
+		textPane.setEnabled(false);
+		textPane.setToolTipText("Generated symbols");
+		
+		textPane.setEditable(false);
+		contentPane.add(textPane, BorderLayout.SOUTH);
 
 		setEnable(false);
 		pack();
@@ -152,6 +159,16 @@ public class MainFrame extends JFrame
 			// on active le bouzin
 			setEnable(true);
 		}
+	}
+	
+	/**
+	 * display in the textPane the symbols generated
+	 * @param symbols
+	 */
+	public void setSymbolsGenerated (String symbols)
+	{
+		textPane.setText(symbols);
+		textPane.setEnabled(true);
 	}
 
 	/**
@@ -226,7 +243,7 @@ public class MainFrame extends JFrame
 
 	private void showException (Exception e, String title)
 	{
-		JEditorPane editor = new JEditorPane();
+		JTextPane editor = new JTextPane();
 		editor.setText(e.getMessage());
 		editor.setEditable(false);
 

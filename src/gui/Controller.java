@@ -150,7 +150,7 @@ public class Controller
 		generator.setTotalIteration(nbIterations);
 		generator.generate();
 
-		System.out.println(generator.getGenerated());
+		mainFrame.setSymbolsGenerated(generator.getGenerated().toString());
 
 		// on donne la salade à la tortue
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
