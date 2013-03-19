@@ -183,6 +183,7 @@ public class MainFrame extends JFrame
 		{
 			showException(e, "Bad interpretation");
 		}
+		txtrGeneratedSymbols.setEnabled(true);
 	}
 
 	/**
@@ -343,7 +344,6 @@ public class MainFrame extends JFrame
 			public void actionPerformed (ActionEvent e)
 			{
 				launchTurtle();
-				txtrGeneratedSymbols.setEnabled(true);
 			}
 		});
 
