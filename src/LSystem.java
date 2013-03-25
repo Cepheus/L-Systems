@@ -1,3 +1,5 @@
+import java.util.logging.Level;
+
 import gui.Controller;
 
 import javax.swing.JPopupMenu;
@@ -23,6 +25,8 @@ public class LSystem
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 		// set the look and feel because swing's default one is just so ugly
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		// we desactive the spam of JME
+		java.util.logging.Logger.getLogger("").setLevel(Level.WARNING);
 
 		// On lance le programme
 		Controller controller = new Controller();

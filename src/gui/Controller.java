@@ -146,7 +146,8 @@ public class Controller
 	{
 		generator = null;
 		// on génère les symboles
-		generator = new Generator(grammars.get(indexOfCurrentGrammar));
+		Grammar grammar = grammars.get(indexOfCurrentGrammar);
+		generator = new Generator(grammar);
 		generator.setTotalIteration(nbIterations);
 		generator.generate();
 
@@ -155,7 +156,7 @@ public class Controller
 		// on donne la salade à la tortue
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
 		turtle.setSymbols(generator.getGenerated());
-		((TubeTurtle) turtle).setParameters(10f, 0.5f, 90, ColorRGBA.Green);
+		((TubeTurtle) turtle).setParameters(10f, 0.5f, grammar.getAngle(), ColorRGBA.Green);
 		
 		turtle.drawSymbols();
 	}
@@ -250,6 +251,9 @@ public class Controller
 			public Void call ()
 			{
 				application3d.getFlyByCamera().setDragToRotate(true);
+				// we turn off the statistics
+				//application3d.setDisplayFps(false); // to hide the FPS
+				application3d.setDisplayStatView(false); // to hide the statistics
 				return null;
 			}
 		});

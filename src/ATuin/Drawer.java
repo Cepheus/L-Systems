@@ -14,6 +14,10 @@
 package ATuin;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -26,7 +30,12 @@ import com.jme3.system.AppSettings;
  * @author Caelum Class for 3D object drawing.
  */
 public class Drawer extends SimpleApplication {
-	DirectionalLight sun;
+	/** A white, directional light source */
+	protected DirectionalLight sun;
+	/** The listener used to react with analogic inputs */
+	protected AnalogListener analogListener;
+	/** The listener used to react with numeric inputs */
+	protected ActionListener actionListener;
 
 	/**
 	 * Default constructor.
@@ -81,41 +90,58 @@ public class Drawer extends SimpleApplication {
 	 * Initialize the inputs (keybord and mouse)
 	 */
 	protected final void initInputs() {
+		// register useful keys
+		inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_Z));
+		inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_Q));
+		inputManager.addMapping("Bottom", new KeyTrigger(KeyInput.KEY_S));
+		inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
+		
+		// we create the action listener
+		actionListener = new ActionListener()
+		{
+			@Override
+			public void onAction (String name, boolean keyPressed, float tpf)
+			{
+				System.out.println("haha");
+			}
+		};
+		
+		// we create the analogic listener
+		analogListener = new AnalogListener()
+		{
+			@Override
+			public void onAnalog (String name, float value, float tpf)
+			{
+				System.out.println("héhé");
+			}
+		};
+		
+		// finally, we tell which listener to use
+		inputManager.addListener(actionListener, new String[] { "Nothing", "Up", "Left", "Bottom", "Right" });
+		inputManager.addListener(analogListener, new String[] { "Nothing" });
 	}
 
 	/**
 	 * Initialize the scene (camera position, lights...)
 	 */
 	protected final void initScene() {
-		/** A white ambient light source. */
-		/*
-		 * AmbientLight ambient = new AmbientLight();
-		 * ambient.setColor(ColorRGBA.White); rootNode.addLight(ambient);
-		 */
-
-		/** A white, directional light source */
+		// LIGHT
 		sun = new DirectionalLight();
 		sun.setDirection(getCamera().getDirection());
 		sun.setColor(ColorRGBA.White);
 		rootNode.addLight(sun);
-
-		flyCam.setMoveSpeed(100);
-		getCamera().setLocation(new Vector3f(0,0,100));
 		
-		
-		// Second light
-		/*
-		 * DirectionalLight sun2 = new DirectionalLight();
-		 * sun2.setDirection((new Vector3f(0.5f, 0.5f, 0.5f)).normalizeLocal());
-		 * sun2.setColor(ColorRGBA.White); rootNode.addLight(sun2);
-		 */
-
+		// BLOOM
 		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 		BloomFilter bloom = new BloomFilter();
 		// bloom.setBlurScale(2.5f);
 		// bloom.setBloomIntensity(10f);
 		fpp.addFilter(bloom);
 		viewPort.addProcessor(fpp);
+
+		// CAMERA
+		flyCam.setMoveSpeed(100);
+		getCamera().setLocation(new Vector3f(0,0,100));
 	}
 
 }
