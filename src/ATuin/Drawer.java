@@ -99,7 +99,7 @@ public class Drawer extends SimpleApplication {
 		sun.setColor(ColorRGBA.White);
 		rootNode.addLight(sun);
 
-		flyCam.setMoveSpeed(40);
+		flyCam.setMoveSpeed(100);
 		getCamera().setLocation(new Vector3f(0,0,100));
 		
 		
