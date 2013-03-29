@@ -15,9 +15,12 @@ package ATuin;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
+import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.input.controls.MouseAxisTrigger;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -93,6 +96,9 @@ public class Drawer extends SimpleApplication
 	 */
 	public final void initInputs ()
 	{
+		String mappings[] =
+				new String[] { "FLYCAM_Forward", "FLYCAM_StrafeLeft", "FLYCAM_Backward", "FLYCAM_StrafeRight", "FLYCAM_ZoomIn",
+						"FLYCAM_ZoomOut", "FLYCAM_Left", "FLYCAM_Right", "FLYCAM_Up", "FLYCAM_Down", "FLYCAM_RotateDrag" };
 		// first we remove all the listeners
 		inputManager.clearMappings();
 		// register useful keys
@@ -100,6 +106,13 @@ public class Drawer extends SimpleApplication
 		inputManager.addMapping("FLYCAM_StrafeLeft", new KeyTrigger(KeyInput.KEY_Q));
 		inputManager.addMapping("FLYCAM_Backward", new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addMapping("FLYCAM_StrafeRight", new KeyTrigger(KeyInput.KEY_D));
+		inputManager.addMapping("FLYCAM_ZoomIn", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
+		inputManager.addMapping("FLYCAM_ZoomOut", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
+		inputManager.addMapping("FLYCAM_Left", new MouseAxisTrigger(0, true));
+		inputManager.addMapping("FLYCAM_Right", new MouseAxisTrigger(0, false));
+		inputManager.addMapping("FLYCAM_Up", new MouseAxisTrigger(1, false));
+		inputManager.addMapping("FLYCAM_Down", new MouseAxisTrigger(1, true));
+		inputManager.addMapping("FLYCAM_RotateDrag", new MouseButtonTrigger(0));
 
 		// we create the action listener
 		actionListener = new ActionListener()
@@ -121,7 +134,7 @@ public class Drawer extends SimpleApplication
 		};
 
 		// finally, we tell which listener to use
-		inputManager.addListener(flyCam, new String[] { "FLYCAM_Forward", "FLYCAM_Backward", "FLYCAM_StrafeLeft", "FLYCAM_StrafeRight" });
+		inputManager.addListener(flyCam, mappings);
 		inputManager.addListener(actionListener, new String[] { "Up", "Left", "Bottom", "Right" });
 		inputManager.addListener(analogListener, new String[] {});
 	}
@@ -147,6 +160,7 @@ public class Drawer extends SimpleApplication
 
 		// CAMERA
 		flyCam.setMoveSpeed(100);
+		flyCam.setZoomSpeed(50);
 		getCamera().setLocation(new Vector3f(0, 0, 100));
 	}
 
