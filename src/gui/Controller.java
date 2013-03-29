@@ -254,9 +254,28 @@ public class Controller
 				// we turn off the statistics
 				//application3d.setDisplayFps(false); // to hide the FPS
 				application3d.setDisplayStatView(false); // to hide the statistics
+				// on initialise le bouzin
+				application3d.initScene();
 				return null;
 			}
 		});
+		Thread t = new Thread()
+		{
+			public void run ()
+			{
+				try
+				{
+					sleep(3000);
+				}
+				catch (InterruptedException ie)
+				{
+					System.out.println(ie.getMessage());
+				}
+				application3d.initInputs();
+				System.out.println("inputs deleted!");
+			}
+		};
+		t.start();
 	}
 
 	/**

@@ -26,10 +26,12 @@ import com.jme3.post.filters.BloomFilter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.system.AppSettings;
 
+
 /**
  * @author Caelum Class for 3D object drawing.
  */
-public class Drawer extends SimpleApplication {
+public class Drawer extends SimpleApplication
+{
 	/** A white, directional light source */
 	protected DirectionalLight sun;
 	/** The listener used to react with analogic inputs */
@@ -40,17 +42,18 @@ public class Drawer extends SimpleApplication {
 	/**
 	 * Default constructor.
 	 */
-	public Drawer() {
+	public Drawer ()
+	{
 		setPauseOnLostFocus(false);
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param settings
-	 *            The settings such as the size
+	 * @param settings The settings such as the size
 	 */
-	public Drawer(AppSettings settings) {
+	public Drawer (AppSettings settings)
+	{
 		this();
 		setSettings(settings);
 	}
@@ -59,53 +62,54 @@ public class Drawer extends SimpleApplication {
 	 * Initiale creation of the scene.
 	 */
 	@Override
-	public void simpleInitApp() {
-		initInputs();
-		initScene();
+	public void simpleInitApp ()
+	{
 	}
 
 	/**
 	 * Update loop.
 	 * 
-	 * @param tpf
-	 *            time per frame
+	 * @param tpf time per frame
 	 */
 	@Override
-	public void simpleUpdate(float tpf) {
+	public void simpleUpdate (float tpf)
+	{
 		sun.setDirection(getCamera().getDirection());
 	}
 
 	/**
 	 * Render loop.
 	 * 
-	 * @param rm
-	 *            Render Manager
+	 * @param rm Render Manager
 	 */
 	@Override
-	public void simpleRender(RenderManager rm) {
+	public void simpleRender (RenderManager rm)
+	{
 
 	}
 
 	/**
 	 * Initialize the inputs (keybord and mouse)
 	 */
-	protected final void initInputs() {
+	public final void initInputs ()
+	{
+		// first we remove all the listeners
+		inputManager.clearMappings();
 		// register useful keys
-		inputManager.addMapping("Up", new KeyTrigger(KeyInput.KEY_Z));
-		inputManager.addMapping("Left", new KeyTrigger(KeyInput.KEY_Q));
-		inputManager.addMapping("Bottom", new KeyTrigger(KeyInput.KEY_S));
-		inputManager.addMapping("Right", new KeyTrigger(KeyInput.KEY_D));
-		
+		inputManager.addMapping("FLYCAM_Forward", new KeyTrigger(KeyInput.KEY_Z));
+		inputManager.addMapping("FLYCAM_StrafeLeft", new KeyTrigger(KeyInput.KEY_Q));
+		inputManager.addMapping("FLYCAM_Backward", new KeyTrigger(KeyInput.KEY_S));
+		inputManager.addMapping("FLYCAM_StrafeRight", new KeyTrigger(KeyInput.KEY_D));
+
 		// we create the action listener
 		actionListener = new ActionListener()
 		{
 			@Override
 			public void onAction (String name, boolean keyPressed, float tpf)
 			{
-				//System.out.println("haha");
 			}
 		};
-		
+
 		// we create the analogic listener
 		analogListener = new AnalogListener()
 		{
@@ -115,22 +119,24 @@ public class Drawer extends SimpleApplication {
 				System.out.println("héhé");
 			}
 		};
-		
+
 		// finally, we tell which listener to use
-		inputManager.addListener(actionListener, new String[] { "Nothing", "Up", "Left", "Bottom", "Right" });
-		inputManager.addListener(analogListener, new String[] { "Nothing" });
+		inputManager.addListener(flyCam, new String[] { "FLYCAM_Forward", "FLYCAM_Backward", "FLYCAM_StrafeLeft", "FLYCAM_StrafeRight" });
+		inputManager.addListener(actionListener, new String[] { "Up", "Left", "Bottom", "Right" });
+		inputManager.addListener(analogListener, new String[] {});
 	}
 
 	/**
 	 * Initialize the scene (camera position, lights...)
 	 */
-	protected final void initScene() {
+	public final void initScene ()
+	{
 		// LIGHT
 		sun = new DirectionalLight();
 		sun.setDirection(getCamera().getDirection());
 		sun.setColor(ColorRGBA.White);
 		rootNode.addLight(sun);
-		
+
 		// BLOOM
 		FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
 		BloomFilter bloom = new BloomFilter();
@@ -141,7 +147,7 @@ public class Drawer extends SimpleApplication {
 
 		// CAMERA
 		flyCam.setMoveSpeed(100);
-		getCamera().setLocation(new Vector3f(0,0,100));
+		getCamera().setLocation(new Vector3f(0, 0, 100));
 	}
 
 }
