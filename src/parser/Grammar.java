@@ -51,6 +51,29 @@ public class Grammar
 	private String name = "";
 
 	/**
+	 * change the given string in a list of symbols
+	 * @param string
+	 * @return the list of symbols
+	 * @throws BadSymbolException if string contains a character that does not exists in usableSymbols
+	 */
+	public ListSymbols stringToListSymbols (final String string) throws BadSymbolException
+	{
+		final int size = string.length();
+		ListSymbols list = new ListSymbols();
+		Symbol sym;
+		
+		for (int i = 0; i < size; i++)
+		{
+			sym = usableSymbols.find(string.charAt(i));
+			if (sym == null)
+				throw new BadSymbolException("Symbol '" + string.charAt(i) + "' is not allowed in the current grammar.");
+			list.append(sym);
+		}
+		
+		return list;
+	}
+	
+	/**
 	 * @return the usableSymbols
 	 */
 	public ListSymbols getUsableSymbols ()

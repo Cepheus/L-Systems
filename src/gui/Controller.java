@@ -22,12 +22,12 @@ import java.util.concurrent.Callable;
 
 import javax.swing.SwingUtilities;
 
+import parser.BadSymbolException;
 import parser.Generator;
 import parser.Grammar;
 import parser.IOmanager.Analyzer;
 import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
-import ATuin.BadInterpretationException;
 import ATuin.Drawer;
 import ATuin.TubeTurtle;
 import ATuin.Turtle;
@@ -140,9 +140,9 @@ public class Controller
 	 * Launch the grammar generator, and then call the turtle to draw.
 	 * 
 	 * @param nbIterations the number of iterations to make in the generetor
-	 * @throws BadInterpretationException
+	 * @throws BadSymbolException
 	 */
-	public void launchTurtle (int nbIterations) throws BadInterpretationException
+	public void launchTurtle (int nbIterations) throws BadSymbolException
 	{
 		generator = null;
 		// on génère les symboles
@@ -157,7 +157,26 @@ public class Controller
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
 		turtle.setSymbols(generator.getGenerated());
 		((TubeTurtle) turtle).setParameters(10f, 0.5f, grammar.getAngle(), ColorRGBA.Green);
-		
+
+		turtle.drawSymbols();
+	}
+
+	/**
+	 * Launch the turtle with the given symols
+	 * 
+	 * @param salade the list of symbols to interpret
+	 * @throws BadSymbolException if there is an unknown symbol
+	 */
+	public void launchTurtle (String salade) throws BadSymbolException
+	{
+		Grammar grammar = grammars.get(indexOfCurrentGrammar);
+		mainFrame.setSymbolsGenerated(salade);
+
+		// on donne la salade à la tortue
+		Turtle turtle = turtles.get(indexOfCurrentTurtle);
+		turtle.setSymbols(grammar.stringToListSymbols(salade));
+		((TubeTurtle) turtle).setParameters(10f, 0.5f, grammar.getAngle(), ColorRGBA.Green);
+
 		turtle.drawSymbols();
 	}
 
@@ -252,7 +271,7 @@ public class Controller
 			{
 				application3d.getFlyByCamera().setDragToRotate(true);
 				// we turn off the statistics
-				//application3d.setDisplayFps(false); // to hide the FPS
+				// application3d.setDisplayFps(false); // to hide the FPS
 				application3d.setDisplayStatView(false); // to hide the statistics
 				// on initialise le bouzin
 				application3d.initScene();
@@ -272,7 +291,6 @@ public class Controller
 					System.out.println(ie.getMessage());
 				}
 				application3d.initInputs();
-				System.out.println("inputs deleted!");
 			}
 		};
 		t.start();

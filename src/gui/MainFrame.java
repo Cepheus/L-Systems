@@ -43,9 +43,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import parser.BadSymbolException;
 import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
-import ATuin.BadInterpretationException;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 
@@ -83,6 +83,8 @@ public class MainFrame extends JFrame
 	private JButton btnLaunch = new JButton("Launch!");
 	/** zone where display the generated symbols */
 	private JTextArea txtrGeneratedSymbols = new JTextArea();
+	/** the button to apply modifications made in the text area */
+	private JButton btnApplyModifs;
 
 	/**
 	 * Create the frame.
@@ -110,7 +112,7 @@ public class MainFrame extends JFrame
 		contentPane.add(panel3d, BorderLayout.CENTER);
 
 		setEnable(false);
-		
+
 		pack();
 	}
 
@@ -168,6 +170,7 @@ public class MainFrame extends JFrame
 	{
 		txtrGeneratedSymbols.setText(symbols);
 		txtrGeneratedSymbols.setEnabled(true);
+		btnApplyModifs.setEnabled(true);
 	}
 
 	/**
@@ -178,12 +181,30 @@ public class MainFrame extends JFrame
 		try
 		{
 			controller.launchTurtle((int) spinnerNbIt.getValue());
+			txtrGeneratedSymbols.setEnabled(true);
+			btnApplyModifs.setEnabled(true);
 		}
-		catch (BadInterpretationException e)
+		catch (BadSymbolException e)
 		{
 			showException(e, "Bad interpretation");
 		}
-		txtrGeneratedSymbols.setEnabled(true);
+	}
+
+	/**
+	 * called when click on Apply button. Launch the turtle with the edited string, calling the controller
+	 */
+	private void launchTurtleApplyingModifications ()
+	{
+		try
+		{
+			controller.launchTurtle(txtrGeneratedSymbols.getText());
+			txtrGeneratedSymbols.setEnabled(true);
+			btnApplyModifs.setEnabled(true);
+		}
+		catch (BadSymbolException e)
+		{
+			showException(e, "Bad interpretation");
+		}
 	}
 
 	/**
@@ -208,6 +229,7 @@ public class MainFrame extends JFrame
 		else
 		{
 			txtrGeneratedSymbols.setEnabled(false);
+			btnApplyModifs.setEnabled(false);
 			txtrGeneratedSymbols.setText("Generated symbols...");
 			comboBoxInterpretations.setToolTipText("You have to import a file defining grammars first");
 			comboBoxGrammars.setToolTipText("You have to import a file defining grammars first");
@@ -348,18 +370,33 @@ public class MainFrame extends JFrame
 		});
 
 		toolBar.add(btnLaunch);
+
+		JPanel panel = new JPanel();
+		contentPane.add(panel, BorderLayout.SOUTH);
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setViewportView(txtrGeneratedSymbols);
+		panel.setLayout(new BorderLayout(0, 0));
+		panel.add(scrollPane, BorderLayout.CENTER);
 		txtrGeneratedSymbols.setText("Generated symbols...");
 		txtrGeneratedSymbols.setToolTipText("Generated symbols");
-		txtrGeneratedSymbols.setEditable(false);
+		txtrGeneratedSymbols.setEditable(true);
 		txtrGeneratedSymbols.setTabSize(4);
 		txtrGeneratedSymbols.setRows(4);
 		txtrGeneratedSymbols.setLineWrap(true);
 
 		txtrGeneratedSymbols.setEnabled(false);
 
-		JScrollPane scrollPane = new JScrollPane();
-		contentPane.add(scrollPane, BorderLayout.SOUTH);
-		scrollPane.setViewportView(txtrGeneratedSymbols);
+		btnApplyModifs = new JButton("Apply");
+		btnApplyModifs.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent e)
+			{
+				launchTurtleApplyingModifications();
+			}
+		});
+		btnApplyModifs.setEnabled(false);
+		panel.add(btnApplyModifs, BorderLayout.SOUTH);
 	}
 
 }
