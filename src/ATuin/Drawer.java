@@ -102,7 +102,7 @@ public class Drawer extends SimpleApplication {
 			@Override
 			public void onAction (String name, boolean keyPressed, float tpf)
 			{
-				System.out.println("haha");
+				//System.out.println("haha");
 			}
 		};
 		

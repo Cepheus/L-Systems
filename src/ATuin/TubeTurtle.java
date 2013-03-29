@@ -188,6 +188,9 @@ public class TubeTurtle extends Turtle {
 		material.setColor("Diffuse", color); // needed for shininess
 		material.setFloat("Shininess", 1); // shininess from 1-128
 		material.setColor("GlowColor", color);
+		
+		minCoord.zero();
+		maxCoord.zero();
 
 		Node tmp;
 		Node node = new Node();
@@ -201,67 +204,59 @@ public class TubeTurtle extends Turtle {
 				drawTube(node);
 				tmp = new Node();
 				node.attachChild(tmp);
-				node = tmp;
+				node = tmp;	
+				updateBoundsCoordinates(node.localToWorld(new Vector3f(0,0,0), null));
 				break;
 			case Symbol.S_TURNLEFT:
 				node.rotate(0, angle * FastMath.DEG_TO_RAD, 0);
-				System.out.println("Rotate"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_TURNRIGHT:
 				node.rotate(0, -angle * FastMath.DEG_TO_RAD, 0);
-				System.out.println("Rotate"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_TURNUP:
 				node.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
-				System.out.println("Rotate"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_TURNDOWN:
 				node.rotate(-angle * FastMath.DEG_TO_RAD, 0, 0);
-				System.out.println("Rotate"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_ROLLLEFT:
 				node.rotate(0, 0, angle * FastMath.DEG_TO_RAD);
-				System.out.println("Rotate"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_ROLLRIGHT:
 				node.rotate(0, 0, -angle * FastMath.DEG_TO_RAD);
-				System.out.println("Rotate"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_ABOUTTURN:
 				node.rotate(0, 180, 0 * FastMath.DEG_TO_RAD);
-				System.out.println("Rotate"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_SAVEPOSITION:
 				saveNode.push(node);
-				System.out.println("Save"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
 				break;
 			case Symbol.S_RESTOREPOSITION:
 				node = saveNode.pop();
-				System.out.println("Restore"+node.getLocalRotation());
 				tmp = new Node();
 				node.attachChild(tmp);
 				node = tmp;
@@ -273,6 +268,11 @@ public class TubeTurtle extends Turtle {
 						"The turle has uncounter a symbol impossible to draw!"));
 			}
 		}
+
+		Vector3f middlePoint = new Vector3f((maxCoord.x-minCoord.x)/2,(maxCoord.y-minCoord.y)/2,(maxCoord.z-minCoord.z)/2);
+		float diff = Math.max(maxCoord.x-minCoord.x, maxCoord.y-minCoord.y);
+		drawer.getCamera().setLocation(new Vector3f(middlePoint.x, middlePoint.y, middlePoint.z - diff*3.5f));
+		drawer.getCamera().lookAt(middlePoint, new Vector3f(0,1,0));  
 		return returnNode;
 	}
 

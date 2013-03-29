@@ -15,6 +15,7 @@ package ATuin;
 
 import java.util.concurrent.Callable;
 
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 import parser.ListSymbols;
@@ -42,6 +43,10 @@ public abstract class Turtle {
 	protected Drawer drawer;
 	/** The node to add in the scene when display this turtle */
 	private final Node rootNode = new Node();
+	/** The minimum coordinates of the drawing */
+	protected Vector3f minCoord = new Vector3f(0,0,0);
+	/** The maximum coordinates of the drawing */
+	protected Vector3f maxCoord = new Vector3f(0,0,0);
 
 	/**
 	 * Default constructor.
@@ -107,7 +112,27 @@ public abstract class Turtle {
 	 * @throws BadInterpretationException
 	 */
 	protected abstract Node drawScene() throws BadInterpretationException;
-
+	
+	/**
+	 * Update the max and min coordinates of the drawing. This is used to position de camera at the center of the 
+	 * drawing.
+	 * @param position the last position drawn
+	 */
+	protected void updateBoundsCoordinates(Vector3f position) {
+		if(position.x < minCoord.x)
+			minCoord.x = position.x;
+		if(position.y < minCoord.y)
+			minCoord.y = position.y;
+		if(position.z < minCoord.z)
+			minCoord.z = position.z;
+		if(position.x > maxCoord.x)
+			maxCoord.x = position.x;
+		if(position.y > maxCoord.y)
+			maxCoord.y = position.y;
+		if(position.z > maxCoord.z)
+			maxCoord.z = position.z;
+	}
+	
 	/**
 	 * @param drawer
 	 *            the drawer to set
