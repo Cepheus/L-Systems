@@ -23,6 +23,7 @@ import com.jme3.input.controls.MouseAxisTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.post.FilterPostProcessor;
 import com.jme3.post.filters.BloomFilter;
@@ -33,14 +34,12 @@ import com.jme3.system.AppSettings;
 /**
  * @author Caelum Class for 3D object drawing.
  */
-public class Drawer extends SimpleApplication
+public class Drawer extends SimpleApplication implements AnalogListener, ActionListener
 {
 	/** A white, directional light source */
 	protected DirectionalLight sun;
-	/** The listener used to react with analogic inputs */
-	protected AnalogListener analogListener;
-	/** The listener used to react with numeric inputs */
-	protected ActionListener actionListener;
+	/** if true we must rotate rootnode */
+	protected boolean canRotate = false;
 
 	/**
 	 * Default constructor.
@@ -88,11 +87,11 @@ public class Drawer extends SimpleApplication
 	@Override
 	public void simpleRender (RenderManager rm)
 	{
-
 	}
 
 	/**
-	 * Initialize the inputs (keybord and mouse)
+	 * Initialize the inputs (keybord and mouse). NOTE: this method is called after all is correctly initialized in JME. So, we can call
+	 * here all the methods that need the application to be fully launched.
 	 */
 	public final void initInputs ()
 	{
@@ -100,6 +99,8 @@ public class Drawer extends SimpleApplication
 				new String[] { "FLYCAM_Forward", "FLYCAM_StrafeLeft", "FLYCAM_Backward", "FLYCAM_StrafeRight", "FLYCAM_Rise",
 						"FLYCAM_Lower", "FLYCAM_ZoomIn", "FLYCAM_ZoomOut", "FLYCAM_Left", "FLYCAM_Right", "FLYCAM_Up", "FLYCAM_Down",
 						"FLYCAM_RotateDrag" };
+		String mappingsPerso[] =
+				new String[] { "NODE_Left", "NODE_Right", "NODE_Up", "NODE_Down", "NODE_RotateDrag", "NODE_ReinitPosition" };
 		// first we remove all the listeners
 		inputManager.clearMappings();
 		// register useful keys for flycam
@@ -116,30 +117,17 @@ public class Drawer extends SimpleApplication
 		inputManager.addMapping("FLYCAM_Up", new MouseAxisTrigger(MouseInput.AXIS_Y, false));
 		inputManager.addMapping("FLYCAM_Down", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
 		inputManager.addMapping("FLYCAM_RotateDrag", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-
-		// we create the action listener
-		actionListener = new ActionListener()
-		{
-			@Override
-			public void onAction (String name, boolean keyPressed, float tpf)
-			{
-			}
-		};
-
-		// we create the analogic listener
-		analogListener = new AnalogListener()
-		{
-			@Override
-			public void onAnalog (String name, float value, float tpf)
-			{
-				System.out.println("héhé");
-			}
-		};
+		// register perso
+		inputManager.addMapping("NODE_Left", new MouseAxisTrigger(MouseInput.AXIS_X, true));
+		inputManager.addMapping("NODE_Right", new MouseAxisTrigger(MouseInput.AXIS_X, false));
+		inputManager.addMapping("NODE_Up", new MouseAxisTrigger(MouseInput.AXIS_Y, false));
+		inputManager.addMapping("NODE_Down", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
+		inputManager.addMapping("NODE_RotateDrag", new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+		inputManager.addMapping("NODE_ReinitPosition", new MouseButtonTrigger(MouseInput.BUTTON_MIDDLE));
 
 		// finally, we tell which listener to use
+		inputManager.addListener(this, mappingsPerso);
 		inputManager.addListener(flyCam, mappingsFlyCam);
-		inputManager.addListener(actionListener, new String[] { "Up", "Left", "Bottom", "Right" });
-		inputManager.addListener(analogListener, new String[] {});
 	}
 
 	/**
@@ -166,6 +154,45 @@ public class Drawer extends SimpleApplication
 		flyCam.setZoomSpeed(25);
 		cam.setFrustumFar(10000);
 		getCamera().setLocation(new Vector3f(0, 0, 100));
+	}
+
+	/**
+	 * rotate the root node on the given axis
+	 * 
+	 * @param value the value of rotation on the 3 axis
+	 */
+	protected void rotateNode (Vector3f value)
+	{
+		if (canRotate)
+			rootNode.rotate(value.x, value.y, value.z);
+	}
+
+	@Override
+	public void onAction (String name, boolean keyPressed, float tpf)
+	{
+		if (name.equals("NODE_RotateDrag"))
+		{
+			canRotate = keyPressed;
+			inputManager.setCursorVisible(!keyPressed);
+		}
+		else if (name.equals("NODE_ReinitPosition") && keyPressed)
+		{
+			rootNode.center();
+			rootNode.setLocalRotation(Quaternion.DIRECTION_Z);
+		}
+	}
+
+	@Override
+	public void onAnalog (String name, float value, float tpf)
+	{
+		if (name.equals("NODE_Left"))
+			rotateNode(Vector3f.UNIT_Y.mult(-value).mult(flyCam.getRotationSpeed()));
+		if (name.equals("NODE_Right"))
+			rotateNode(Vector3f.UNIT_Y.mult(value).mult(flyCam.getRotationSpeed()));
+		if (name.equals("NODE_Up"))
+			rotateNode(Vector3f.UNIT_X.mult(value).mult(flyCam.getRotationSpeed()));
+		if (name.equals("NODE_Down"))
+			rotateNode(Vector3f.UNIT_X.mult(-value).mult(flyCam.getRotationSpeed()));
 	}
 
 }
