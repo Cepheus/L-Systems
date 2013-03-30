@@ -24,6 +24,7 @@ import javax.swing.SwingUtilities;
 
 import parser.BadSymbolException;
 import parser.Generator;
+import parser.GeneratorPseudoListener;
 import parser.Grammar;
 import parser.IOmanager.Analyzer;
 import parser.IOmanager.BadFileException;
@@ -41,7 +42,7 @@ import com.jme3.system.AppSettings;
  * 
  * @author xinouch
  */
-public class Controller
+public class Controller implements GeneratorPseudoListener
 {
 	/** The list of grammar launched in the program */
 	private ArrayList<Grammar> grammars = new ArrayList<Grammar>();
@@ -149,16 +150,21 @@ public class Controller
 		Grammar grammar = grammars.get(indexOfCurrentGrammar);
 		generator = new Generator(grammar);
 		generator.setTotalIteration(nbIterations);
-		generator.generate();
-
-		mainFrame.setSymbolsGenerated(generator.getGenerated().toString());
-
-		// on donne la salade à la tortue
-		Turtle turtle = turtles.get(indexOfCurrentTurtle);
-		turtle.setSymbols(generator.getGenerated());
-		((TubeTurtle) turtle).setParameters(10f, 0.5f, grammar.getAngle(), ColorRGBA.Green);
-
-		turtle.drawSymbols();
+		Thread t = new Thread()
+		{
+			public void run ()
+			{
+				try
+				{
+					generator.generate(me);
+				}
+				catch (BadSymbolException e)
+				{
+					mainFrame.showException(e, "Error while generating symbols");
+				}
+			}
+		};
+		t.start(); // from here, we wait for the generator to finish, it will call finished()
 	}
 
 	/**
@@ -272,7 +278,7 @@ public class Controller
 				application3d.getFlyByCamera().setDragToRotate(true);
 				// we turn off the statistics
 				// application3d.setDisplayFps(false); // to hide the FPS
-				application3d.setDisplayStatView(false); // to hide the statistics
+				//application3d.setDisplayStatView(false); // to hide the statistics
 				// on initialise le bouzin
 				application3d.initScene();
 				return null;
@@ -314,5 +320,24 @@ public class Controller
 			}
 			mainFrame.setListInterpretations(its);
 		}
+	}
+
+	@Override
+	public void setStep (int step, int totalStep)
+	{
+		System.out.println("étape " + step + " sur " + totalStep + "...");
+	}
+
+	@Override
+	public void finished () throws BadSymbolException
+	{
+		mainFrame.setSymbolsGenerated(generator.getGenerated().toString());
+		// on donne la salade à la tortue
+		Turtle turtle = turtles.get(indexOfCurrentTurtle);
+		turtle.setSymbols(generator.getGenerated());
+		if (turtle.getName() == "Tube Turtle")
+			((TubeTurtle) turtle).setParameters(10f, 0.5f, grammars.get(indexOfCurrentGrammar).getAngle(), ColorRGBA.Green);
+
+		turtle.drawSymbols();
 	}
 }

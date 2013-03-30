@@ -50,24 +50,27 @@ public class Generator
 
 	/**
 	 * generate a word from the grammar. The number of iteration to create the word can be precised with setTotalIt(), the default is 3.
+	 * @param listener the object that will receive the messages of advancement
+	 * @throws BadSymbolException 
 	 */
-	public void generate ()
+	public void generate (GeneratorPseudoListener listener) throws BadSymbolException
 	{
 		switch (grammar.getType())
 		{
 			case Grammar.TYPE_DOL:
-				generateDOL();
+				generateDOL(listener);
 				break;
 			case Grammar.TYPE_SOL:
-				generateSOL();
+				generateSOL(listener);
 				break;
 			case Grammar.TYPE_DIL:
-				generateDIL();
+				generateDIL(listener);
 				break;
 			case Grammar.TYPE_SIL:
-				generateSIL();
+				generateSIL(listener);
 				break;
 		}
+		listener.finished();
 	}
 
 	/**
@@ -130,8 +133,9 @@ public class Generator
 
 	/**
 	 * generate the words when the grammar is DOL
+	 * @param listener 
 	 */
-	private void generateDOL ()
+	private void generateDOL (GeneratorPseudoListener listener)
 	{
 		ArrayList<Rule> rules = grammar.getRules();
 		final int sizeRules = rules.size();
@@ -163,13 +167,15 @@ public class Generator
 					i++;
 				indexOld++;
 			}
+			listener.setStep(actualIt + 1, totalIt);
 		}
 	}
 
 	/**
 	 * generate the words when the grammar is SOL
+	 * @param listener 
 	 */
-	private void generateSOL ()
+	private void generateSOL (GeneratorPseudoListener listener)
 	{
 		ArrayList<Rule> rules = grammar.getRules();
 		final int sizeRules = rules.size();
@@ -205,13 +211,15 @@ public class Generator
 					i++;
 				indexOld++;
 			}
+			listener.setStep(actualIt + 1, totalIt);
 		}
 	}
 
 	/**
 	 * generate the words when the grammar is DXL
+	 * @param listener 
 	 */
-	private void generateDIL ()
+	private void generateDIL (GeneratorPseudoListener listener)
 	{
 		ArrayList<OLRule> rulesOL = new ArrayList<OLRule>();
 		ArrayList<ILRule> rulesIL = new ArrayList<ILRule>();
@@ -269,13 +277,15 @@ public class Generator
 					i++;
 				indexOld++;
 			}
+			listener.setStep(actualIt + 1, totalIt);
 		}
 	}
 
 	/**
 	 * generate the words when the grammar is SXL
+	 * @param listener 
 	 */
-	private void generateSIL ()
+	private void generateSIL (GeneratorPseudoListener listener)
 	{
 		ArrayList<OLRule> rulesOL = new ArrayList<OLRule>();
 		ArrayList<ILRule> rulesIL = new ArrayList<ILRule>();
@@ -333,6 +343,7 @@ public class Generator
 					i++;
 				indexOld++;
 			}
+			listener.setStep(actualIt + 1, totalIt);
 		}
 	}
 

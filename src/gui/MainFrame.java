@@ -117,6 +117,20 @@ public class MainFrame extends JFrame
 	}
 
 	/**
+	 * display the message o the exception in a dialog with the title title
+	 * @param e the exception
+	 * @param title tje title of the dialog
+	 */
+	public void showException (Exception e, String title)
+	{
+		JTextPane editor = new JTextPane();
+		editor.setText(e.getMessage());
+		editor.setEditable(false);
+
+		JOptionPane.showMessageDialog(me, editor, title, JOptionPane.ERROR_MESSAGE);
+	}
+
+	/**
 	 * Import the list of grammars in the combobox
 	 * 
 	 * @param grammars
@@ -263,15 +277,6 @@ public class MainFrame extends JFrame
 						+ "\":\n" + e.getMessage()), "Parsing error in the file");
 			}
 		}
-	}
-
-	private void showException (Exception e, String title)
-	{
-		JTextPane editor = new JTextPane();
-		editor.setText(e.getMessage());
-		editor.setEditable(false);
-
-		JOptionPane.showMessageDialog(me, editor, title, JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
