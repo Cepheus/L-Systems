@@ -96,23 +96,26 @@ public class Drawer extends SimpleApplication
 	 */
 	public final void initInputs ()
 	{
-		String mappings[] =
-				new String[] { "FLYCAM_Forward", "FLYCAM_StrafeLeft", "FLYCAM_Backward", "FLYCAM_StrafeRight", "FLYCAM_ZoomIn",
-						"FLYCAM_ZoomOut", "FLYCAM_Left", "FLYCAM_Right", "FLYCAM_Up", "FLYCAM_Down", "FLYCAM_RotateDrag" };
+		String mappingsFlyCam[] =
+				new String[] { "FLYCAM_Forward", "FLYCAM_StrafeLeft", "FLYCAM_Backward", "FLYCAM_StrafeRight", "FLYCAM_Rise",
+						"FLYCAM_Lower", "FLYCAM_ZoomIn", "FLYCAM_ZoomOut", "FLYCAM_Left", "FLYCAM_Right", "FLYCAM_Up", "FLYCAM_Down",
+						"FLYCAM_RotateDrag" };
 		// first we remove all the listeners
 		inputManager.clearMappings();
-		// register useful keys
+		// register useful keys for flycam
 		inputManager.addMapping("FLYCAM_Forward", new KeyTrigger(KeyInput.KEY_Z));
 		inputManager.addMapping("FLYCAM_StrafeLeft", new KeyTrigger(KeyInput.KEY_Q));
 		inputManager.addMapping("FLYCAM_Backward", new KeyTrigger(KeyInput.KEY_S));
 		inputManager.addMapping("FLYCAM_StrafeRight", new KeyTrigger(KeyInput.KEY_D));
-		inputManager.addMapping("FLYCAM_ZoomIn", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
-		inputManager.addMapping("FLYCAM_ZoomOut", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
-		inputManager.addMapping("FLYCAM_Left", new MouseAxisTrigger(0, true));
-		inputManager.addMapping("FLYCAM_Right", new MouseAxisTrigger(0, false));
-		inputManager.addMapping("FLYCAM_Up", new MouseAxisTrigger(1, false));
-		inputManager.addMapping("FLYCAM_Down", new MouseAxisTrigger(1, true));
-		inputManager.addMapping("FLYCAM_RotateDrag", new MouseButtonTrigger(0));
+		inputManager.addMapping("FLYCAM_Rise", new KeyTrigger(KeyInput.KEY_SPACE));
+		inputManager.addMapping("FLYCAM_Lower", new KeyTrigger(KeyInput.KEY_LSHIFT));
+		inputManager.addMapping("FLYCAM_ZoomIn", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));
+		inputManager.addMapping("FLYCAM_ZoomOut", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, false));
+		inputManager.addMapping("FLYCAM_Left", new MouseAxisTrigger(MouseInput.AXIS_X, true));
+		inputManager.addMapping("FLYCAM_Right", new MouseAxisTrigger(MouseInput.AXIS_X, false));
+		inputManager.addMapping("FLYCAM_Up", new MouseAxisTrigger(MouseInput.AXIS_Y, false));
+		inputManager.addMapping("FLYCAM_Down", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
+		inputManager.addMapping("FLYCAM_RotateDrag", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 
 		// we create the action listener
 		actionListener = new ActionListener()
@@ -134,7 +137,7 @@ public class Drawer extends SimpleApplication
 		};
 
 		// finally, we tell which listener to use
-		inputManager.addListener(flyCam, mappings);
+		inputManager.addListener(flyCam, mappingsFlyCam);
 		inputManager.addListener(actionListener, new String[] { "Up", "Left", "Bottom", "Right" });
 		inputManager.addListener(analogListener, new String[] {});
 	}
@@ -160,7 +163,8 @@ public class Drawer extends SimpleApplication
 
 		// CAMERA
 		flyCam.setMoveSpeed(100);
-		flyCam.setZoomSpeed(50);
+		flyCam.setZoomSpeed(25);
+		cam.setFrustumFar(10000);
 		getCamera().setLocation(new Vector3f(0, 0, 100));
 	}
 

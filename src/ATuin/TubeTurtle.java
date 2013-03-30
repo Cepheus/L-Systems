@@ -281,7 +281,7 @@ public class TubeTurtle extends Turtle
 
 		Vector3f middlePoint = new Vector3f((maxCoord.x - minCoord.x) / 2, (maxCoord.y - minCoord.y) / 2, (maxCoord.z - minCoord.z) / 2);
 		float diff = Math.max(maxCoord.x - minCoord.x, maxCoord.y - minCoord.y);
-		drawer.getCamera().setLocation(new Vector3f(middlePoint.x, middlePoint.y, middlePoint.z - diff * 3.5f));
+		drawer.getCamera().setLocation(new Vector3f(middlePoint.x, middlePoint.y, middlePoint.z - diff * 2.5f));
 		drawer.getCamera().lookAt(middlePoint, new Vector3f(0, 1, 0));
 		return returnNode;
 	}
