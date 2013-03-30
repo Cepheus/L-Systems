@@ -55,6 +55,7 @@ public class Generator
 	 */
 	public void generate (GeneratorPseudoListener listener) throws BadSymbolException
 	{
+		listener.begin();
 		switch (grammar.getType())
 		{
 			case Grammar.TYPE_DOL:

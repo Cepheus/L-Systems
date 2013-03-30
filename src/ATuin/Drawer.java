@@ -103,10 +103,10 @@ public class Drawer extends SimpleApplication
 		// first we remove all the listeners
 		inputManager.clearMappings();
 		// register useful keys for flycam
-		inputManager.addMapping("FLYCAM_Forward", new KeyTrigger(KeyInput.KEY_Z));
-		inputManager.addMapping("FLYCAM_StrafeLeft", new KeyTrigger(KeyInput.KEY_Q));
-		inputManager.addMapping("FLYCAM_Backward", new KeyTrigger(KeyInput.KEY_S));
-		inputManager.addMapping("FLYCAM_StrafeRight", new KeyTrigger(KeyInput.KEY_D));
+		inputManager.addMapping("FLYCAM_Forward", new KeyTrigger(KeyInput.KEY_Z), new KeyTrigger(KeyInput.KEY_UP));
+		inputManager.addMapping("FLYCAM_StrafeLeft", new KeyTrigger(KeyInput.KEY_Q), new KeyTrigger(KeyInput.KEY_LEFT));
+		inputManager.addMapping("FLYCAM_Backward", new KeyTrigger(KeyInput.KEY_S), new KeyTrigger(KeyInput.KEY_DOWN));
+		inputManager.addMapping("FLYCAM_StrafeRight", new KeyTrigger(KeyInput.KEY_D), new KeyTrigger(KeyInput.KEY_RIGHT));
 		inputManager.addMapping("FLYCAM_Rise", new KeyTrigger(KeyInput.KEY_SPACE));
 		inputManager.addMapping("FLYCAM_Lower", new KeyTrigger(KeyInput.KEY_LSHIFT));
 		inputManager.addMapping("FLYCAM_ZoomIn", new MouseAxisTrigger(MouseInput.AXIS_WHEEL, true));

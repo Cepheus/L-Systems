@@ -44,6 +44,11 @@ import com.jme3.system.AppSettings;
  */
 public class Controller implements GeneratorPseudoListener
 {
+	/** Size of the panel where the 3D appears (width) */
+	public static int canvasJMEWidth = 1024;
+	/** Size of the panel where the 3D appears (height) */
+	public static int canvasJMEHeight = 768;
+
 	/** The list of grammar launched in the program */
 	private ArrayList<Grammar> grammars = new ArrayList<Grammar>();
 	/** The list of the interpretations launched in the program */
@@ -62,10 +67,6 @@ public class Controller implements GeneratorPseudoListener
 	private Drawer application3d;
 	/** pointer on this */
 	private final Controller me = this;
-	/** Size of the panel where the 3D appears (width) */
-	public static int canvasJMEWidth = 1024;
-	/** Size of the panel where the 3D appears (height) */
-	public static int canvasJMEHeight = 768;
 
 	/**
 	 * Constructor
@@ -278,7 +279,7 @@ public class Controller implements GeneratorPseudoListener
 				application3d.getFlyByCamera().setDragToRotate(true);
 				// we turn off the statistics
 				// application3d.setDisplayFps(false); // to hide the FPS
-				//application3d.setDisplayStatView(false); // to hide the statistics
+				// application3d.setDisplayStatView(false); // to hide the statistics
 				// on initialise le bouzin
 				application3d.initScene();
 				return null;
@@ -325,19 +326,31 @@ public class Controller implements GeneratorPseudoListener
 	@Override
 	public void setStep (int step, int totalStep)
 	{
-		System.out.println("étape " + step + " sur " + totalStep + "...");
+		if (generator != null)
+			mainFrame.setProgressBar(step * 100 / totalStep, "Generation: ");
 	}
 
 	@Override
 	public void finished () throws BadSymbolException
 	{
-		mainFrame.setSymbolsGenerated(generator.getGenerated().toString());
-		// on donne la salade à la tortue
-		Turtle turtle = turtles.get(indexOfCurrentTurtle);
-		turtle.setSymbols(generator.getGenerated());
-		if (turtle.getName() == "Tube Turtle")
-			((TubeTurtle) turtle).setParameters(10f, 0.5f, grammars.get(indexOfCurrentGrammar).getAngle(), ColorRGBA.Green);
+		mainFrame.setProgressBar(100, null);
+		if (generator != null)
+		{
+			mainFrame.setSymbolsGenerated(generator.getGenerated().toString());
+			// on donne la salade à la tortue
+			Turtle turtle = turtles.get(indexOfCurrentTurtle);
+			turtle.setSymbols(generator.getGenerated());
+			generator = null;
+			if (turtle.getName() == "Tube Turtle")
+				((TubeTurtle) turtle).setParameters(10f, 0.5f, grammars.get(indexOfCurrentGrammar).getAngle(), ColorRGBA.Green);
+			turtle.drawSymbols();
+		}
+	}
 
-		turtle.drawSymbols();
+	@Override
+	public void begin () throws BadSymbolException
+	{
+		if (generator != null)
+			mainFrame.setProgressBar(-1, "Generation: ");
 	}
 }

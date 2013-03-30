@@ -47,4 +47,10 @@ public interface GeneratorPseudoListener
 	 * @throws BadSymbolException 
 	 */
 	void finished () throws BadSymbolException;
+	
+	/**
+	 * Method called by the generator when it begins to generate
+	 * @throws BadSymbolException
+	 */
+	void begin () throws BadSymbolException;
 }

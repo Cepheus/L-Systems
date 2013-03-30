@@ -34,6 +34,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JToolBar;
@@ -85,11 +86,13 @@ public class MainFrame extends JFrame
 	private JTextArea txtrGeneratedSymbols = new JTextArea();
 	/** the button to apply modifications made in the text area */
 	private JButton btnApplyModifs;
+	/** the progress bar */
+	private JProgressBar progressBar;
 
 	/**
 	 * Create the frame.
 	 * 
-	 * @param c le controller de la fen^etre à appeler lors de manipulation spéciales
+	 * @param c le controller de la fenêtre à appeler lors de manipulation spéciales
 	 * @param panel the 3D application
 	 */
 	public MainFrame (Controller c, Panel3D panel)
@@ -118,8 +121,9 @@ public class MainFrame extends JFrame
 
 	/**
 	 * display the message o the exception in a dialog with the title title
+	 * 
 	 * @param e the exception
-	 * @param title tje title of the dialog
+	 * @param title the title of the dialog
 	 */
 	public void showException (Exception e, String title)
 	{
@@ -128,6 +132,43 @@ public class MainFrame extends JFrame
 		editor.setEditable(false);
 
 		JOptionPane.showMessageDialog(me, editor, title, JOptionPane.ERROR_MESSAGE);
+	}
+
+	/**
+	 * display a progress bar and put its progression on percent / 100. as the application should be doing something important, the buttuns
+	 * Apply and Launch! are disabled
+	 * 
+	 * @param percent must be in [0, 100[. if percent < 0, progress bar in indeterminate state. Otherwise, the progress bar is hidden
+	 * @param toBeDisplayed a string that can be displayed. if null, default string ("percent %"), otherwise "String percent %"
+	 */
+	public void setProgressBar (int percent, String toBeDisplayed)
+	{
+		if (percent < 0)
+		{
+			if (!progressBar.isVisible())
+				progressBar.setVisible(true);
+			progressBar.setIndeterminate(true);
+			progressBar.setString(toBeDisplayed);
+		}
+		if (percent < 100)
+		{
+			if (!progressBar.isVisible())
+				progressBar.setVisible(true);
+			progressBar.setIndeterminate(false);
+			progressBar.setValue(percent);
+			btnApplyModifs.setEnabled(false);
+			btnLaunch.setEnabled(false);
+			if (toBeDisplayed != null && ! toBeDisplayed.isEmpty())
+				progressBar.setString(toBeDisplayed + percent + " %");
+		}
+		else
+		{
+			progressBar.setVisible(false);
+			progressBar.setIndeterminate(false);
+			btnApplyModifs.setEnabled(true);
+			btnLaunch.setEnabled(true);
+			progressBar.setValue(0);
+		}
 	}
 
 	/**
@@ -195,8 +236,6 @@ public class MainFrame extends JFrame
 		try
 		{
 			controller.launchTurtle((int) spinnerNbIt.getValue());
-			txtrGeneratedSymbols.setEnabled(true);
-			btnApplyModifs.setEnabled(true);
 		}
 		catch (BadSymbolException e)
 		{
@@ -212,8 +251,6 @@ public class MainFrame extends JFrame
 		try
 		{
 			controller.launchTurtle(txtrGeneratedSymbols.getText());
-			txtrGeneratedSymbols.setEnabled(true);
-			btnApplyModifs.setEnabled(true);
 		}
 		catch (BadSymbolException e)
 		{
@@ -362,7 +399,7 @@ public class MainFrame extends JFrame
 		toolBar.add(lblNumberOfIterations);
 
 		spinnerNbIt.setEnabled(false);
-		spinnerNbIt.setToolTipText("Number of iterations");
+		spinnerNbIt.setToolTipText("Number of iterations. Maximum is 999");
 		spinnerNbIt.setModel(new SpinnerNumberModel(2, 0, 999, 1));
 		toolBar.add(spinnerNbIt);
 		btnLaunch.setEnabled(false);
@@ -402,6 +439,11 @@ public class MainFrame extends JFrame
 		});
 		btnApplyModifs.setEnabled(false);
 		panel.add(btnApplyModifs, BorderLayout.SOUTH);
+
+		progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
+		progressBar.setVisible(false);
+		panel.add(progressBar, BorderLayout.NORTH);
 	}
 
 }

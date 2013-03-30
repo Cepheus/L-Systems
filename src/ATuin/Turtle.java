@@ -95,6 +95,7 @@ public abstract class Turtle
 	 */
 	public void drawSymbols () throws BadSymbolException
 	{
+		System.out.println("step 1");
 		final Node root = drawer.getRootNode(), nodeTmp;
 		nodeTmp = drawScene();
 
@@ -102,7 +103,7 @@ public abstract class Turtle
 		{
 			@Override
 			public Void call () throws Exception
-			{
+			{System.out.println("step 2");
 				root.detachAllChildren();
 				rootNode.detachAllChildren();
 				rootNode.attachChild(nodeTmp);
