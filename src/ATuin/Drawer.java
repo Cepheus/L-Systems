@@ -100,7 +100,7 @@ public class Drawer extends SimpleApplication implements AnalogListener, ActionL
 						"FLYCAM_Lower", "FLYCAM_ZoomIn", "FLYCAM_ZoomOut", "FLYCAM_Left", "FLYCAM_Right", "FLYCAM_Up", "FLYCAM_Down",
 						"FLYCAM_RotateDrag" };
 		String mappingsPerso[] =
-				new String[] { "NODE_Left", "NODE_Right", "NODE_Up", "NODE_Down", "NODE_RotateDrag", "NODE_ReinitPosition" };
+				new String[] { "FLYCAM_Accelerate", "NODE_Left", "NODE_Right", "NODE_Up", "NODE_Down", "NODE_RotateDrag", "NODE_ReinitPosition" };
 		// first we remove all the listeners
 		inputManager.clearMappings();
 		// register useful keys for flycam
@@ -118,6 +118,7 @@ public class Drawer extends SimpleApplication implements AnalogListener, ActionL
 		inputManager.addMapping("FLYCAM_Down", new MouseAxisTrigger(MouseInput.AXIS_Y, true));
 		inputManager.addMapping("FLYCAM_RotateDrag", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
 		// register perso
+		inputManager.addMapping("FLYCAM_Accelerate", new KeyTrigger(KeyInput.KEY_LCONTROL));
 		inputManager.addMapping("NODE_Left", new MouseAxisTrigger(MouseInput.AXIS_X, true));
 		inputManager.addMapping("NODE_Right", new MouseAxisTrigger(MouseInput.AXIS_X, false));
 		inputManager.addMapping("NODE_Up", new MouseAxisTrigger(MouseInput.AXIS_Y, false));
@@ -181,6 +182,13 @@ public class Drawer extends SimpleApplication implements AnalogListener, ActionL
 			rootNode.setLocalRotation(Quaternion.DIRECTION_Z);
 			rootNode.center();
 			rootNode.setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
+		}
+		else if (name.equals("FLYCAM_Accelerate"))
+		{
+			if (keyPressed)
+				flyCam.setMoveSpeed(flyCam.getMoveSpeed() * 5);
+			else
+				flyCam.setMoveSpeed(flyCam.getMoveSpeed() / 5);
 		}
 	}
 

@@ -349,7 +349,7 @@ public class Controller implements GeneratorPseudoListener
 				
 				for (Parameter p : turtle.getParameters())
 				{
-					if (p.getName() == "Angle")
+					if (p.getName().equals("Angle"))
 						p.setValue(grammars.get(indexOfCurrentGrammar).getAngle());
 				}
 				
