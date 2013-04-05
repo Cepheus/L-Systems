@@ -179,20 +179,23 @@ public class Drawer extends SimpleApplication implements AnalogListener, ActionL
 		{
 			rootNode.center();
 			rootNode.setLocalRotation(Quaternion.DIRECTION_Z);
+			rootNode.center();
+			rootNode.setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
 		}
 	}
 
 	@Override
 	public void onAnalog (String name, float value, float tpf)
 	{
+		cam.normalize();
 		if (name.equals("NODE_Left"))
-			rotateNode(Vector3f.UNIT_Y.mult(-value).mult(flyCam.getRotationSpeed()));
+			rotateNode(cam.getUp().mult(-value).mult(flyCam.getRotationSpeed()));
 		if (name.equals("NODE_Right"))
-			rotateNode(Vector3f.UNIT_Y.mult(value).mult(flyCam.getRotationSpeed()));
+			rotateNode(cam.getUp().mult(value).mult(flyCam.getRotationSpeed()));
 		if (name.equals("NODE_Up"))
-			rotateNode(Vector3f.UNIT_X.mult(value).mult(flyCam.getRotationSpeed()));
+			rotateNode(cam.getLeft().mult(value).mult(flyCam.getRotationSpeed()));
 		if (name.equals("NODE_Down"))
-			rotateNode(Vector3f.UNIT_X.mult(-value).mult(flyCam.getRotationSpeed()));
+			rotateNode(cam.getLeft().mult(-value).mult(flyCam.getRotationSpeed()));
 	}
 
 }

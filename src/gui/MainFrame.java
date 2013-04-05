@@ -80,6 +80,8 @@ public class MainFrame extends JFrame
 	private JSpinner spinnerNbIt = new JSpinner();
 	/** Menu item edit current grammar */
 	private JMenuItem mntmEditCurrentGrammar = new JMenuItem("Edit current grammar");
+	/** Menu item edit the turtle */
+	private JMenuItem mntmEditCurrentTurtle = new JMenuItem("Edit current turtle");
 	/** The button to launch the turtle */
 	private JButton btnLaunch = new JButton("Launch!");
 	/** zone where display the generated symbols */
@@ -158,7 +160,7 @@ public class MainFrame extends JFrame
 			progressBar.setValue(percent);
 			btnApplyModifs.setEnabled(false);
 			btnLaunch.setEnabled(false);
-			if (toBeDisplayed != null && ! toBeDisplayed.isEmpty())
+			if (toBeDisplayed != null && !toBeDisplayed.isEmpty())
 				progressBar.setString(toBeDisplayed + percent + " %");
 		}
 		else
@@ -186,6 +188,7 @@ public class MainFrame extends JFrame
 		// on active le bouzin
 		comboBoxGrammars.setEnabled(true);
 		mntmEditCurrentGrammar.setEnabled(true);
+		mntmEditCurrentTurtle.setEnabled(true);
 		comboBoxGrammars.setToolTipText("Select the wanted grammar");
 	}
 
@@ -270,6 +273,7 @@ public class MainFrame extends JFrame
 		lblNumberOfIterations.setEnabled(enabled);
 		spinnerNbIt.setEnabled(enabled);
 		mntmEditCurrentGrammar.setEnabled(enabled);
+		mntmEditCurrentTurtle.setEnabled(enabled);
 		btnLaunch.setEnabled(enabled);
 
 		if (enabled)
@@ -317,6 +321,28 @@ public class MainFrame extends JFrame
 	}
 
 	/**
+	 * Open the parameter dialog for the current turtle
+	 */
+	private void openParameterDialog ()
+	{
+		ParameterDialog dialog =
+				new ParameterDialog("Edit " + controller.getCurrentTurtle().getName(), controller.getCurrentTurtle().getParameters());
+		dialog.setVisible(true);
+
+		if (dialog.isValidated())
+		{
+			try
+			{
+				controller.setCurrentTurtleParameters(dialog.getParameters());
+			}
+			catch (BadSymbolException e)
+			{
+				showException(e, "Bad exception");
+			}
+		}
+	}
+
+	/**
 	 * Create the window with the buttons...
 	 */
 	private void initFrame ()
@@ -356,7 +382,16 @@ public class MainFrame extends JFrame
 		menuBar.add(mnTools);
 
 		mntmEditCurrentGrammar.setEnabled(false);
+		mntmEditCurrentTurtle.setEnabled(false);
+		mntmEditCurrentTurtle.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				openParameterDialog();
+			}
+		});
 		mnTools.add(mntmEditCurrentGrammar);
+		mnTools.add(mntmEditCurrentTurtle);
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
@@ -387,6 +422,7 @@ public class MainFrame extends JFrame
 			public void actionPerformed (ActionEvent e)
 			{
 				controller.setIndexOfCurrentTurtle(comboBoxInterpretations.getSelectedIndex());
+				// mntmEditCurrentTurtle.setText("Edit the turtle " + controller.getCurrentTurtle().getName());
 			}
 		});
 

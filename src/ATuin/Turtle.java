@@ -13,8 +13,10 @@
 
 package ATuin;
 
+import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
@@ -43,6 +45,8 @@ public abstract class Turtle
 	protected int type = TYPE_UNKNOWN;
 	/** The list of symbols to interpret */
 	public ListSymbols symbols;
+	/** the parameters of this turtle */
+	protected ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 	/** The Drawer of the 3D scene */
 	protected Drawer drawer;
 	/** The node to add in the scene when display this turtle */
@@ -107,6 +111,10 @@ public abstract class Turtle
 				rootNode.detachAllChildren();
 				rootNode.attachChild(nodeTmp);
 				root.attachChild(rootNode);
+				drawer.getRootNode().center();
+				drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z);
+				drawer.getRootNode().center();
+				drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
 				return null;
 			}
 		});
@@ -172,4 +180,18 @@ public abstract class Turtle
 	{
 		return type;
 	}
+
+	/**
+	 * @return the parameters
+	 */
+	public ArrayList<Parameter> getParameters ()
+	{
+		return parameters;
+	}
+	
+	/**
+	 * set the parameters
+	 * @param params
+	 */
+	public abstract void setParameters (ArrayList<Parameter> params);
 }

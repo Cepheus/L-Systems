@@ -14,11 +14,14 @@
 
 package ATuin;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import parser.BadSymbolException;
 import parser.ListSymbols;
 import parser.Symbol;
+
+import ATuin.Parameter.ParameterType;
 
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
@@ -109,6 +112,11 @@ public class TubeTurtle extends Turtle
 		super();
 		name = "Tube Turtle";
 		type = TYPE_TUBE;
+		
+		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, angle));
+		parameters.add(new Parameter("Length", ParameterType.TYPE_DOUBLE, length));
+		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, width));
+		parameters.add(new Parameter("Color", ParameterType.TYPE_COLOR, color));
 	}
 
 	/**
@@ -121,6 +129,11 @@ public class TubeTurtle extends Turtle
 		super(drawer);
 		name = "Tube Turtle";
 		type = TYPE_TUBE;
+		
+		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, angle));
+		parameters.add(new Parameter("Length", ParameterType.TYPE_DOUBLE, new Double(length)));
+		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, width));
+		parameters.add(new Parameter("Color", ParameterType.TYPE_COLOR, color));
 	}
 
 	/**
@@ -319,19 +332,14 @@ public class TubeTurtle extends Turtle
 		node.attachChild(geom);
 	}
 
-	/**
-	 * Sets the parameters for the object to be drawn
-	 * 
-	 * @param length The length of the tubes
-	 * @param width The width of the tubes
-	 * @param angle The angle of the rotations
-	 * @param color The color of the tubes
-	 */
-	public void setParameters (float length, float width, float angle, ColorRGBA color)
+	@Override
+	public void setParameters (ArrayList<Parameter> params)
 	{
-		this.length = length;
-		this.width = width;
-		this.angle = angle;
-		this.color = color;
+		parameters = params;
+		
+		angle = ((Integer) parameters.get(0).getValue()).floatValue();
+		length = ((Double) parameters.get(1).getValue()).floatValue();
+		width = ((Double) parameters.get(2).getValue()).floatValue();
+		color = (ColorRGBA) parameters.get(3).getValue();
 	}
 }

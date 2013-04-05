@@ -29,11 +29,9 @@ import parser.Grammar;
 import parser.IOmanager.Analyzer;
 import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
-import ATuin.Drawer;
-import ATuin.TubeTurtle;
-import ATuin.Turtle;
 
-import com.jme3.math.ColorRGBA;
+import ATuin.*;
+
 import com.jme3.system.AppSettings;
 
 
@@ -56,9 +54,9 @@ public class Controller implements GeneratorPseudoListener
 	/** The generator for the current grammar */
 	private Generator generator = null;
 	/** index of the current grammar that we're working on */
-	private int indexOfCurrentGrammar = -1;
+	private int indexOfCurrentGrammar = 0;
 	/** index of the current interpretation that we're working on */
-	private int indexOfCurrentTurtle = -1;
+	private int indexOfCurrentTurtle = 0;
 	/** The main window */
 	private MainFrame mainFrame;
 	/** The panel 3D containing the JME application */
@@ -182,7 +180,6 @@ public class Controller implements GeneratorPseudoListener
 		// on donne la salade à la tortue
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
 		turtle.setSymbols(grammar.stringToListSymbols(salade));
-		((TubeTurtle) turtle).setParameters(10f, 0.5f, grammar.getAngle(), ColorRGBA.Green);
 
 		turtle.drawSymbols();
 	}
@@ -245,6 +242,14 @@ public class Controller implements GeneratorPseudoListener
 	{
 		return grammars.get(indexOfCurrentGrammar);
 	}
+	
+	/**
+	 * @return the current turtle
+	 */
+	public Turtle getCurrentTurtle ()
+	{
+		return turtles.get(indexOfCurrentTurtle);
+	}
 
 	/**
 	 * @return the indexOfCurrentTurtle
@@ -260,6 +265,31 @@ public class Controller implements GeneratorPseudoListener
 	public void setIndexOfCurrentTurtle (int indexOfCurrentTurtle)
 	{
 		this.indexOfCurrentTurtle = indexOfCurrentTurtle;
+	}
+	
+	/**
+	 * @return the parameters of the current turtle
+	 */
+	public ArrayList<Parameter> getCurrentTurtleParameters ()
+	{
+		return turtles.get(indexOfCurrentTurtle).getParameters();
+	}
+	
+	/**
+	 * set the current turtle parameters
+	 * @param params
+	 * @throws BadSymbolException 
+	 */
+	public void setCurrentTurtleParameters (ArrayList<Parameter> params) throws BadSymbolException
+	{
+		turtles.get(indexOfCurrentTurtle).setParameters(params);
+		for (Parameter p : params)
+		{
+			if (p.getName().equals("Angle"))
+				grammars.get(indexOfCurrentGrammar).setAngle(((Integer) p.getValue()).intValue());
+		}
+		if (generator != null)
+			turtles.get(indexOfCurrentTurtle).drawSymbols();
 	}
 
 	/**
@@ -279,7 +309,7 @@ public class Controller implements GeneratorPseudoListener
 				application3d.getFlyByCamera().setDragToRotate(true);
 				// we turn off the statistics
 				// application3d.setDisplayFps(false); // to hide the FPS
-				// application3d.setDisplayStatView(false); // to hide the statistics
+				application3d.setDisplayStatView(false); // to hide the statistics
 				// on initialise le bouzin
 				application3d.initScene();
 				return null;
@@ -316,6 +346,13 @@ public class Controller implements GeneratorPseudoListener
 			if (TubeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbolsWithoutNull()))
 			{
 				turtle = new TubeTurtle(application3d);
+				
+				for (Parameter p : turtle.getParameters())
+				{
+					if (p.getName() == "Angle")
+						p.setValue(grammars.get(indexOfCurrentGrammar).getAngle());
+				}
+				
 				turtles.add(turtle);
 				its.add(turtle.getName());
 			}
@@ -340,9 +377,8 @@ public class Controller implements GeneratorPseudoListener
 			// on donne la salade à la tortue
 			Turtle turtle = turtles.get(indexOfCurrentTurtle);
 			turtle.setSymbols(generator.getGenerated());
-			generator = null;
-			if (turtle.getName() == "Tube Turtle")
-				((TubeTurtle) turtle).setParameters(10f, 0.5f, grammars.get(indexOfCurrentGrammar).getAngle(), ColorRGBA.Green);
+			//generator = null;
+			
 			turtle.drawSymbols();
 		}
 	}
