@@ -162,6 +162,7 @@ public class Controller implements GeneratorPseudoListener
 				}
 				catch (BadSymbolException e)
 				{
+					mainFrame.setProgressBar(100, null);
 					mainFrame.showException(e, "Error while generating symbols");
 				}
 			}
@@ -391,7 +392,6 @@ public class Controller implements GeneratorPseudoListener
 		mainFrame.setProgressBar(100, null);
 		if (!isDisplaying && generator.isCorrectlyFinished())
 		{
-			mainFrame.setProgressBar(100, null);
 			// on affiche le generated dans la mainwindow. As it takes long time, we do it in a thread.
 			Thread t = new Thread()
 			{
@@ -408,10 +408,6 @@ public class Controller implements GeneratorPseudoListener
 
 			isDisplaying = true;
 			turtle.drawSymbols(this);
-		}
-		else if (isDisplaying)
-		{
-			mainFrame.setProgressBar(100, null);
 		}
 	}
 

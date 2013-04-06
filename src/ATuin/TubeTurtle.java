@@ -112,7 +112,7 @@ public class TubeTurtle extends Turtle
 		super();
 		name = "Tube Turtle";
 		type = TYPE_TUBE;
-		
+
 		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, new Integer((int) angle)));
 		parameters.add(new Parameter("Length", ParameterType.TYPE_DOUBLE, new Double(length)));
 		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, new Double(width)));
@@ -129,7 +129,7 @@ public class TubeTurtle extends Turtle
 		super(drawer);
 		name = "Tube Turtle";
 		type = TYPE_TUBE;
-		
+
 		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, new Integer((int) angle)));
 		parameters.add(new Parameter("Length", ParameterType.TYPE_DOUBLE, new Double(length)));
 		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, new Double(width)));
@@ -214,7 +214,7 @@ public class TubeTurtle extends Turtle
 		Node returnNode = node;
 		Stack<Node> saveNode = new Stack<Node>();
 		returnNode.rotate(-90 * FastMath.DEG_TO_RAD, 0, 0);
-		
+
 		for (Symbol symbol : symbols.getSymbols())
 		{
 			switch (symbol.getInterpretation())
@@ -270,8 +270,13 @@ public class TubeTurtle extends Turtle
 					throw (new BadSymbolException("The turle has uncounter a symbol impossible to draw: " + symbol.toString()));
 			}
 			if (i > MAX_OBJECTS)
+			{
+				node.detachAllChildren();
+				symbols.clear();
 				throw new BadSymbolException("The maximum number of objects in the scene has been reached: " + MAX_OBJECTS
 						+ ".\n Please, remove some symbols or decrease the number of iterations.");
+			}
+
 		}
 
 		Vector3f middlePoint = new Vector3f((maxCoord.x - minCoord.x) / 2, 0, (maxCoord.z - minCoord.z) / 2);
@@ -318,7 +323,7 @@ public class TubeTurtle extends Turtle
 	public void setParameters (ArrayList<Parameter> params)
 	{
 		parameters = params;
-		
+
 		angle = ((Integer) parameters.get(0).getValue()).floatValue();
 		length = ((Double) parameters.get(1).getValue()).floatValue();
 		width = ((Double) parameters.get(2).getValue()).floatValue();
