@@ -21,6 +21,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 import parser.BadSymbolException;
+import parser.GeneratorPseudoListener;
 import parser.ListSymbols;
 
 
@@ -37,7 +38,7 @@ public abstract class Turtle
 	/** The turtle is a TubeTurlte */
 	public final static int TYPE_TUBE = 1;
 	/** the maximal number of objects we can display at once */
-	public static int MAX_OBJECTS = 2000;
+	public static int MAX_OBJECTS = 50000;
 
 	/** The name of the turtle */
 	protected String name = "";
@@ -94,12 +95,14 @@ public abstract class Turtle
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
+	 * @param listener the listener to tell the advencement
 	 * 
 	 * @throws BadSymbolException
 	 */
-	public void drawSymbols () throws BadSymbolException
+	public void drawSymbols (final GeneratorPseudoListener listener) throws BadSymbolException
 	{
 		final Node root = drawer.getRootNode(), nodeTmp;
+		listener.begin();
 		nodeTmp = drawScene();
 
 		drawer.enqueue(new Callable<Void>()
@@ -111,10 +114,29 @@ public abstract class Turtle
 				rootNode.detachAllChildren();
 				rootNode.attachChild(nodeTmp);
 				root.attachChild(rootNode);
-				drawer.getRootNode().center();
-				drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z);
-				drawer.getRootNode().center();
-				drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
+				root.center();
+				root.setLocalRotation(Quaternion.DIRECTION_Z);
+				root.center();
+				root.setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
+				listener.finished();
+				return null;
+			}
+		});
+	}
+
+	/**
+	 * clear the scene: remove all the objects
+	 */
+	public void clearScene ()
+	{
+		final Node root = drawer.getRootNode();
+
+		drawer.enqueue(new Callable<Void>()
+		{
+			@Override
+			public Void call () throws Exception
+			{
+				root.detachAllChildren();
 				return null;
 			}
 		});
@@ -188,9 +210,10 @@ public abstract class Turtle
 	{
 		return parameters;
 	}
-	
+
 	/**
 	 * set the parameters
+	 * 
 	 * @param params
 	 */
 	public abstract void setParameters (ArrayList<Parameter> params);

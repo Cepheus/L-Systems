@@ -53,6 +53,8 @@ public class Controller implements GeneratorPseudoListener
 	private ArrayList<Turtle> turtles = new ArrayList<Turtle>();
 	/** The generator for the current grammar */
 	private Generator generator = null;
+	/** if true we are currently displaying a turtle */
+	private boolean isdisplaying = false;
 	/** index of the current grammar that we're working on */
 	private int indexOfCurrentGrammar = 0;
 	/** index of the current interpretation that we're working on */
@@ -140,11 +142,14 @@ public class Controller implements GeneratorPseudoListener
 	 * Launch the grammar generator, and then call the turtle to draw.
 	 * 
 	 * @param nbIterations the number of iterations to make in the generetor
-	 * @throws BadSymbolException
 	 */
-	public void launchTurtle (int nbIterations) throws BadSymbolException
+	public void launchTurtle (int nbIterations)
 	{
 		generator = null;
+		// on nettoie la scène
+		final Turtle turtle = turtles.get(indexOfCurrentTurtle);
+		isdisplaying = false;
+		turtle.clearScene();
 		// on génère les symboles
 		Grammar grammar = grammars.get(indexOfCurrentGrammar);
 		generator = new Generator(grammar);
@@ -179,9 +184,11 @@ public class Controller implements GeneratorPseudoListener
 
 		// on donne la salade à la tortue
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
+		isdisplaying = false;
+		turtle.clearScene();
 		turtle.setSymbols(grammar.stringToListSymbols(salade));
-
-		turtle.drawSymbols();
+		isdisplaying = true;
+		turtle.drawSymbols(this);
 	}
 
 	/**
@@ -242,7 +249,7 @@ public class Controller implements GeneratorPseudoListener
 	{
 		return grammars.get(indexOfCurrentGrammar);
 	}
-	
+
 	/**
 	 * @return the current turtle
 	 */
@@ -266,7 +273,7 @@ public class Controller implements GeneratorPseudoListener
 	{
 		this.indexOfCurrentTurtle = indexOfCurrentTurtle;
 	}
-	
+
 	/**
 	 * @return the parameters of the current turtle
 	 */
@@ -274,11 +281,12 @@ public class Controller implements GeneratorPseudoListener
 	{
 		return turtles.get(indexOfCurrentTurtle).getParameters();
 	}
-	
+
 	/**
 	 * set the current turtle parameters
+	 * 
 	 * @param params
-	 * @throws BadSymbolException 
+	 * @throws BadSymbolException
 	 */
 	public void setCurrentTurtleParameters (ArrayList<Parameter> params) throws BadSymbolException
 	{
@@ -288,8 +296,8 @@ public class Controller implements GeneratorPseudoListener
 			if (p.getName().equals("Angle"))
 				grammars.get(indexOfCurrentGrammar).setAngle(((Integer) p.getValue()).intValue());
 		}
-		if (generator != null)
-			turtles.get(indexOfCurrentTurtle).drawSymbols();
+		if (isdisplaying)
+			turtles.get(indexOfCurrentTurtle).drawSymbols(this);
 	}
 
 	/**
@@ -309,7 +317,7 @@ public class Controller implements GeneratorPseudoListener
 				application3d.getFlyByCamera().setDragToRotate(true);
 				// we turn off the statistics
 				// application3d.setDisplayFps(false); // to hide the FPS
-				//application3d.setDisplayStatView(false); // to hide the statistics
+				// application3d.setDisplayStatView(false); // to hide the statistics
 				// on initialise le bouzin
 				application3d.initScene();
 				return null;
@@ -339,7 +347,7 @@ public class Controller implements GeneratorPseudoListener
 	private ArrayList<String> chooseInterpretations ()
 	{
 		ArrayList<String> its = new ArrayList<String>();
-		
+
 		if (indexOfCurrentGrammar >= 0 && !grammars.isEmpty())
 		{
 			Turtle turtle;
@@ -347,14 +355,14 @@ public class Controller implements GeneratorPseudoListener
 			if (TubeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbolsWithoutNull()))
 			{
 				turtle = new TubeTurtle(application3d);
-				
+
 				for (Parameter p : turtle.getParameters())
 				{
 					if (p.getName().equals("Angle"))
 						p.setValue(new Integer(grammars.get(indexOfCurrentGrammar).getAngle()));
 				}
 				turtle.setParameters(turtle.getParameters());
-				
+
 				turtles.add(turtle);
 				its.add(turtle.getName());
 			}
@@ -365,30 +373,48 @@ public class Controller implements GeneratorPseudoListener
 	@Override
 	public void setStep (int step, int totalStep)
 	{
-		if (generator != null)
-			mainFrame.setProgressBar(step * 100 / totalStep, "Generation: ");
+		if (!isdisplaying)
+			mainFrame.setProgressBar(step * 100 / totalStep, "Generation - iteration " + (step + 1) + ": ");
+		else
+			mainFrame.setProgressBar(step * 100 / totalStep, "Scene creation " + (step + 1) + ": ");
 	}
 
 	@Override
 	public void finished () throws BadSymbolException
 	{
 		mainFrame.setProgressBar(100, null);
-		if (generator != null)
+		if (!isdisplaying)
 		{
-			mainFrame.setSymbolsGenerated(generator.getGenerated().toString());
+			mainFrame.setProgressBar(100, null);
+			// on affiche le generated dans la mainwindow. As it takes long time, we do it in a thread.
+			Thread t = new Thread()
+			{
+				public void run ()
+				{
+					mainFrame.setSymbolsGenerated(generator.getGenerated().toString());
+				}
+			};
+			t.start();
 			// on donne la salade à la tortue
 			Turtle turtle = turtles.get(indexOfCurrentTurtle);
 			turtle.setSymbols(generator.getGenerated());
-			//generator = null;
-			
-			turtle.drawSymbols();
+			// generator = null;
+
+			isdisplaying = true;
+			turtle.drawSymbols(this);
+		}
+		else
+		{
+			mainFrame.setProgressBar(100, null);
 		}
 	}
 
 	@Override
 	public void begin () throws BadSymbolException
 	{
-		if (generator != null)
-			mainFrame.setProgressBar(-1, "Generation: ");
+		if (!isdisplaying)
+			mainFrame.setProgressBar(-1, "Generation");
+		else
+			mainFrame.setProgressBar(-1, "Scene construction");
 	}
 }

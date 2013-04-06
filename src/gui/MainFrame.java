@@ -152,12 +152,15 @@ public class MainFrame extends JFrame
 			progressBar.setIndeterminate(true);
 			progressBar.setString(toBeDisplayed);
 		}
-		if (percent < 100)
+		else if (percent < 100)
 		{
 			if (!progressBar.isVisible())
 				progressBar.setVisible(true);
 			progressBar.setIndeterminate(false);
 			progressBar.setValue(percent);
+			txtrGeneratedSymbols.setText("Generating symbols...");
+			// the button and the text field will be enabled when we'll call setSybolsGenerated()
+			txtrGeneratedSymbols.setEnabled(false);
 			btnApplyModifs.setEnabled(false);
 			btnLaunch.setEnabled(false);
 			if (toBeDisplayed != null && !toBeDisplayed.isEmpty())
@@ -167,7 +170,7 @@ public class MainFrame extends JFrame
 		{
 			progressBar.setVisible(false);
 			progressBar.setIndeterminate(false);
-			btnApplyModifs.setEnabled(true);
+			//btnApplyModifs.setEnabled(true);
 			btnLaunch.setEnabled(true);
 			progressBar.setValue(0);
 		}
@@ -236,14 +239,7 @@ public class MainFrame extends JFrame
 	 */
 	private void launchTurtle ()
 	{
-		try
-		{
-			controller.launchTurtle((int) spinnerNbIt.getValue());
-		}
-		catch (BadSymbolException e)
-		{
-			showException(e, "Bad interpretation");
-		}
+		controller.launchTurtle((int) spinnerNbIt.getValue());
 	}
 
 	/**
