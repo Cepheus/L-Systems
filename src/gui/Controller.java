@@ -232,7 +232,7 @@ public class Controller implements GeneratorPseudoListener
 	public void setIndexOfCurrentGrammar (int indexOfCurrentGrammar)
 	{
 		this.indexOfCurrentGrammar = indexOfCurrentGrammar;
-		chooseInterpretations();
+		mainFrame.setListInterpretations(chooseInterpretations());
 	}
 
 	/**
@@ -309,7 +309,7 @@ public class Controller implements GeneratorPseudoListener
 				application3d.getFlyByCamera().setDragToRotate(true);
 				// we turn off the statistics
 				// application3d.setDisplayFps(false); // to hide the FPS
-				application3d.setDisplayStatView(false); // to hide the statistics
+				//application3d.setDisplayStatView(false); // to hide the statistics
 				// on initialise le bouzin
 				application3d.initScene();
 				return null;
@@ -336,11 +336,12 @@ public class Controller implements GeneratorPseudoListener
 	/**
 	 * Choose the interpretations compatible with the current grammar and put it in the window.
 	 */
-	private void chooseInterpretations ()
+	private ArrayList<String> chooseInterpretations ()
 	{
+		ArrayList<String> its = new ArrayList<String>();
+		
 		if (indexOfCurrentGrammar >= 0 && !grammars.isEmpty())
 		{
-			ArrayList<String> its = new ArrayList<String>();
 			Turtle turtle;
 			turtles.clear();
 			if (TubeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbolsWithoutNull()))
@@ -350,14 +351,15 @@ public class Controller implements GeneratorPseudoListener
 				for (Parameter p : turtle.getParameters())
 				{
 					if (p.getName().equals("Angle"))
-						p.setValue(grammars.get(indexOfCurrentGrammar).getAngle());
+						p.setValue(new Integer(grammars.get(indexOfCurrentGrammar).getAngle()));
 				}
+				turtle.setParameters(turtle.getParameters());
 				
 				turtles.add(turtle);
 				its.add(turtle.getName());
 			}
-			mainFrame.setListInterpretations(its);
 		}
+		return its;
 	}
 
 	@Override

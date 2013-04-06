@@ -113,9 +113,9 @@ public class TubeTurtle extends Turtle
 		name = "Tube Turtle";
 		type = TYPE_TUBE;
 		
-		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, angle));
-		parameters.add(new Parameter("Length", ParameterType.TYPE_DOUBLE, length));
-		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, width));
+		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, new Integer((int) angle)));
+		parameters.add(new Parameter("Length", ParameterType.TYPE_DOUBLE, new Double(length)));
+		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, new Double(width)));
 		parameters.add(new Parameter("Color", ParameterType.TYPE_COLOR, color));
 	}
 
@@ -130,9 +130,9 @@ public class TubeTurtle extends Turtle
 		name = "Tube Turtle";
 		type = TYPE_TUBE;
 		
-		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, angle));
+		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, new Integer((int) angle)));
 		parameters.add(new Parameter("Length", ParameterType.TYPE_DOUBLE, new Double(length)));
-		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, width));
+		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, new Double(width)));
 		parameters.add(new Parameter("Color", ParameterType.TYPE_COLOR, color));
 	}
 
