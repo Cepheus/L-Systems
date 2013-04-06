@@ -114,10 +114,13 @@ public abstract class Turtle
 				rootNode.detachAllChildren();
 				rootNode.attachChild(nodeTmp);
 				root.attachChild(rootNode);
-				root.center();
-				root.setLocalRotation(Quaternion.DIRECTION_Z);
-				root.center();
-				root.setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
+				if (root.getChildren().size() > 3)
+				{
+					root.center();
+					root.setLocalRotation(Quaternion.DIRECTION_Z);
+					root.center();
+					root.setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
+				}
 				listener.finished();
 				return null;
 			}

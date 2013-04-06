@@ -178,6 +178,8 @@ public class Generator
 					if (offset != 0)
 					{
 						i += offset;
+						if (i < 0)
+							i = 0;
 						sizeGenerated = generated.size();
 						isModified = true;
 					}
