@@ -213,8 +213,7 @@ public class TubeTurtle extends Turtle
 		Node node = new Node();
 		Node returnNode = node;
 		Stack<Node> saveNode = new Stack<Node>();
-		returnNode.rotate(90 * FastMath.DEG_TO_RAD, 0, 0);
-		returnNode.attachChild(node);
+		returnNode.rotate(-90 * FastMath.DEG_TO_RAD, 0, 0);
 		
 		for (Symbol symbol : symbols.getSymbols())
 		{
@@ -224,59 +223,39 @@ public class TubeTurtle extends Turtle
 					drawTube(node);
 					i++;
 					tmp = new Node();
+					tmp.setLocalTranslation(0, 0, length);
 					node.attachChild(tmp);
 					node = tmp;
 					updateBoundsCoordinates(node.localToWorld(new Vector3f(0, 0, 0), null));
 					break;
 				case Symbol.S_TURNLEFT:
 					node.rotate(0, angle * FastMath.DEG_TO_RAD, 0);
-					tmp = new Node();
-					node.attachChild(tmp);
-					node = tmp;
 					break;
 				case Symbol.S_TURNRIGHT:
 					node.rotate(0, -angle * FastMath.DEG_TO_RAD, 0);
-					tmp = new Node();
-					node.attachChild(tmp);
-					node = tmp;
 					break;
 				case Symbol.S_TURNUP:
 					node.rotate(angle * FastMath.DEG_TO_RAD, 0, 0);
-					tmp = new Node();
-					node.attachChild(tmp);
-					node = tmp;
 					break;
 				case Symbol.S_TURNDOWN:
 					node.rotate(-angle * FastMath.DEG_TO_RAD, 0, 0);
-					tmp = new Node();
-					node.attachChild(tmp);
-					node = tmp;
 					break;
 				case Symbol.S_ROLLLEFT:
 					node.rotate(0, 0, angle * FastMath.DEG_TO_RAD);
-					tmp = new Node();
-					node.attachChild(tmp);
-					node = tmp;
 					break;
 				case Symbol.S_ROLLRIGHT:
 					node.rotate(0, 0, -angle * FastMath.DEG_TO_RAD);
-					tmp = new Node();
-					node.attachChild(tmp);
-					node = tmp;
 					break;
 				case Symbol.S_ABOUTTURN:
-					node.rotate(0, 180, 0 * FastMath.DEG_TO_RAD);
-					tmp = new Node();
-					node.attachChild(tmp);
-					node = tmp;
+					node.rotate(0, 180 * FastMath.DEG_TO_RAD, 0);
 					break;
-				case Symbol.S_SAVEPOSITION:
+				case Symbol.S_SAVEPOSITION: // easier to create 3 node than only one keeping the rotation matrix
 					saveNode.push(node);
 					tmp = new Node();
 					node.attachChild(tmp);
 					node = tmp;
 					break;
-				case Symbol.S_RESTOREPOSITION:
+				case Symbol.S_RESTOREPOSITION: // easier to create 3 node than only one keeping the rotation matrix
 					node = saveNode.pop();
 					tmp = new Node();
 					node.attachChild(tmp);
@@ -292,7 +271,7 @@ public class TubeTurtle extends Turtle
 						+ ".\n Please, remove some symbols or decrease the number of iterations.");
 		}
 
-		Vector3f middlePoint = new Vector3f((maxCoord.x - minCoord.x) / 2, (maxCoord.y - minCoord.y) / 2, (maxCoord.z - minCoord.z) / 2);
+		Vector3f middlePoint = new Vector3f((maxCoord.x - minCoord.x) / 2, 0, (maxCoord.z - minCoord.z) / 2);
 		float diff = Math.max(maxCoord.x - minCoord.x, maxCoord.y - minCoord.y);
 		drawer.getCamera().setLocation(new Vector3f(middlePoint.x, middlePoint.y, middlePoint.z - diff * 2.5f));
 		drawer.getCamera().lookAt(middlePoint, new Vector3f(0, 1, 0));
@@ -310,7 +289,6 @@ public class TubeTurtle extends Turtle
 		Geometry geom = new Geometry("Tube", tube);
 		geom.setMaterial(material);
 		geom.setLocalTranslation(0, 0, length / 2);
-		node.setLocalTranslation(0, 0, -length);
 		node.attachChild(geom);
 	}
 
@@ -318,6 +296,7 @@ public class TubeTurtle extends Turtle
 	 * Draws a line
 	 * 
 	 * @param node The node to link the drawn line to
+	 * @deprecated use drawTube with a length of 0.
 	 */
 	@SuppressWarnings ("unused")
 	private void drawLine (Node node)
