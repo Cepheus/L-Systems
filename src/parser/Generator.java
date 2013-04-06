@@ -35,6 +35,8 @@ public class Generator
 	private int actualIt = 0;
 	/** The number of iteration to realize */
 	private int totalIt = 3;
+	/** true if it has been correctly finished, false if the user stop it by calling stopGenerating() */
+	private boolean correctlyFinished = false;
 
 	/**
 	 * constructor
@@ -55,6 +57,7 @@ public class Generator
 	 */
 	public void generate (GeneratorPseudoListener listener) throws BadSymbolException
 	{
+		correctlyFinished = true;
 		listener.begin();
 		switch (grammar.getType())
 		{
@@ -133,6 +136,22 @@ public class Generator
 	}
 
 	/**
+	 * @return the correctlyFinished
+	 */
+	public boolean isCorrectlyFinished ()
+	{
+		return correctlyFinished;
+	}
+	
+	/**
+	 * stop the generation, isCorreclyFinished will return false
+	 */
+	public void stopGenerating ()
+	{
+		correctlyFinished = false;
+	}
+
+	/**
 	 * generate the words when the grammar is DOL
 	 * @param listener 
 	 */
@@ -143,7 +162,7 @@ public class Generator
 		int sizeGenerated, i, j, offset, indexOld;
 		boolean isModified;
 
-		for (actualIt = 0; actualIt < totalIt; actualIt++)
+		for (actualIt = 0; actualIt < totalIt && correctlyFinished; actualIt++)
 		{
 			lastGenerated = generated.clone();
 			sizeGenerated = generated.size();
@@ -182,7 +201,7 @@ public class Generator
 		final int sizeRules = rules.size();
 		int sizeGenerated, i, j, offset, indexOld;
 
-		for (actualIt = 0; actualIt < totalIt; actualIt++)
+		for (actualIt = 0; actualIt < totalIt && correctlyFinished; actualIt++)
 		{
 			lastGenerated = generated.clone();
 			sizeGenerated = generated.size();
@@ -238,7 +257,7 @@ public class Generator
 		}
 		final int sizeIL = rulesIL.size(), sizeOL = rulesOL.size();
 
-		for (actualIt = 0; actualIt < totalIt; actualIt++)
+		for (actualIt = 0; actualIt < totalIt && correctlyFinished; actualIt++)
 		{
 			lastGenerated = generated.clone();
 			sizeGenerated = generated.size();
@@ -303,7 +322,7 @@ public class Generator
 		}
 		final int sizeIL = rulesIL.size(), sizeOL = rulesOL.size();
 
-		for (actualIt = 0; actualIt < totalIt; actualIt++)
+		for (actualIt = 0; actualIt < totalIt && correctlyFinished; actualIt++)
 		{
 			lastGenerated = generated.clone();
 			sizeGenerated = generated.size();

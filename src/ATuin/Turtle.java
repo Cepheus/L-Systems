@@ -45,7 +45,7 @@ public abstract class Turtle
 	/** The type of the turtle */
 	protected int type = TYPE_UNKNOWN;
 	/** The list of symbols to interpret */
-	public ListSymbols symbols;
+	protected ListSymbols symbols;
 	/** the parameters of this turtle */
 	protected ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 	/** The Drawer of the 3D scene */
@@ -130,6 +130,7 @@ public abstract class Turtle
 	public void clearScene ()
 	{
 		final Node root = drawer.getRootNode();
+		symbols.clear();
 
 		drawer.enqueue(new Callable<Void>()
 		{
@@ -185,6 +186,14 @@ public abstract class Turtle
 	public void setSymbols (ListSymbols symbols)
 	{
 		this.symbols = symbols;
+	}
+
+	/**
+	 * @return the symbols
+	 */
+	public ListSymbols getSymbols ()
+	{
+		return symbols;
 	}
 
 	/**

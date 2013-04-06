@@ -149,6 +149,14 @@ public class ListSymbols implements Cloneable
 	{
 		symbols.remove(index);
 	}
+	
+	/**
+	 * remove all the symbols
+	 */
+	public void clear ()
+	{
+		symbols.clear();
+	}
 
 	/**
 	 * change the symbol at index by the symbol sym

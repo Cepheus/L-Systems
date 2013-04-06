@@ -256,10 +256,13 @@ public class TubeTurtle extends Turtle
 					node = tmp;
 					break;
 				case Symbol.S_RESTOREPOSITION: // easier to create 3 node than only one keeping the rotation matrix
-					node = saveNode.pop();
-					tmp = new Node();
-					node.attachChild(tmp);
-					node = tmp;
+					if (!saveNode.isEmpty())
+					{
+						node = saveNode.pop();
+						tmp = new Node();
+						node.attachChild(tmp);
+						node = tmp;
+					}
 					break;
 				case 0: // UNDEFINED
 					break;

@@ -84,12 +84,18 @@ public class MainFrame extends JFrame
 	private JMenuItem mntmEditCurrentTurtle = new JMenuItem("Edit current turtle");
 	/** The button to launch the turtle */
 	private JButton btnLaunch = new JButton("Launch!");
+	/** button to clear the scene */
+	JButton btnClearScene = new JButton("Clear Scene");
+	/** cancel the generation of symbols */
+	private JButton btnCancel = new JButton("Cancel");
 	/** zone where display the generated symbols */
 	private JTextArea txtrGeneratedSymbols = new JTextArea();
 	/** the button to apply modifications made in the text area */
 	private JButton btnApplyModifs;
 	/** the progress bar */
 	private JProgressBar progressBar;
+	/** The panel containing the progress bar */
+	private JPanel panelProgressBar = new JPanel();
 
 	/**
 	 * Create the frame.
@@ -147,15 +153,16 @@ public class MainFrame extends JFrame
 	{
 		if (percent < 0)
 		{
-			if (!progressBar.isVisible())
-				progressBar.setVisible(true);
+			if (!panelProgressBar.isVisible())
+				panelProgressBar.setVisible(true);
 			progressBar.setIndeterminate(true);
 			progressBar.setString(toBeDisplayed);
+			btnCancel.setEnabled(false);
 		}
 		else if (percent < 100)
 		{
-			if (!progressBar.isVisible())
-				progressBar.setVisible(true);
+			if (!panelProgressBar.isVisible())
+				panelProgressBar.setVisible(true);
 			progressBar.setIndeterminate(false);
 			progressBar.setValue(percent);
 			txtrGeneratedSymbols.setText("Generating symbols...");
@@ -163,15 +170,21 @@ public class MainFrame extends JFrame
 			txtrGeneratedSymbols.setEnabled(false);
 			btnApplyModifs.setEnabled(false);
 			btnLaunch.setEnabled(false);
+			btnClearScene.setEnabled(false);
+			spinnerNbIt.setEnabled(false);
 			if (toBeDisplayed != null && !toBeDisplayed.isEmpty())
 				progressBar.setString(toBeDisplayed + percent + " %");
+			btnCancel.setEnabled(true);
 		}
 		else
 		{
-			progressBar.setVisible(false);
+			panelProgressBar.setVisible(false);
 			progressBar.setIndeterminate(false);
-			//btnApplyModifs.setEnabled(true);
+			// btnApplyModifs.setEnabled(true);
+			btnCancel.setEnabled(false);
 			btnLaunch.setEnabled(true);
+			btnClearScene.setEnabled(true);
+			spinnerNbIt.setEnabled(true);
 			progressBar.setValue(0);
 		}
 	}
@@ -208,6 +221,8 @@ public class MainFrame extends JFrame
 			lblNumberOfIterations.setEnabled(false);
 			spinnerNbIt.setEnabled(false);
 			btnLaunch.setEnabled(false);
+			btnClearScene.setEnabled(false);
+			spinnerNbIt.setEnabled(false);
 
 			comboBoxInterpretations.setToolTipText("No Interpretation fits with the current grammar. Change the symbols!");
 		}
@@ -271,6 +286,7 @@ public class MainFrame extends JFrame
 		mntmEditCurrentGrammar.setEnabled(enabled);
 		mntmEditCurrentTurtle.setEnabled(enabled);
 		btnLaunch.setEnabled(enabled);
+		btnClearScene.setEnabled(enabled);
 
 		if (enabled)
 		{
@@ -432,7 +448,7 @@ public class MainFrame extends JFrame
 
 		spinnerNbIt.setEnabled(false);
 		spinnerNbIt.setToolTipText("Number of iterations. Maximum is 999");
-		spinnerNbIt.setModel(new SpinnerNumberModel(2, 0, 999, 1));
+		spinnerNbIt.setModel(new SpinnerNumberModel(2, 1, 999, 1));
 		toolBar.add(spinnerNbIt);
 		btnLaunch.setEnabled(false);
 		btnLaunch.addActionListener(new ActionListener()
@@ -461,7 +477,12 @@ public class MainFrame extends JFrame
 
 		txtrGeneratedSymbols.setEnabled(false);
 
+		JPanel panel_1 = new JPanel();
+		panel.add(panel_1, BorderLayout.SOUTH);
+		panel_1.setLayout(new BorderLayout(0, 0));
+
 		btnApplyModifs = new JButton("Apply");
+		panel_1.add(btnApplyModifs);
 		btnApplyModifs.addActionListener(new ActionListener()
 		{
 			public void actionPerformed (ActionEvent e)
@@ -470,12 +491,34 @@ public class MainFrame extends JFrame
 			}
 		});
 		btnApplyModifs.setEnabled(false);
-		panel.add(btnApplyModifs, BorderLayout.SOUTH);
+
+		btnClearScene.setEnabled(false);
+		btnClearScene.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				controller.getCurrentTurtle().clearScene();
+			}
+		});
+		panel_1.add(btnClearScene, BorderLayout.EAST);
+
+		panelProgressBar.setVisible(false);
+		panel.add(panelProgressBar, BorderLayout.NORTH);
+		panelProgressBar.setLayout(new BorderLayout(0, 0));
 
 		progressBar = new JProgressBar();
+		panelProgressBar.add(progressBar);
 		progressBar.setStringPainted(true);
-		progressBar.setVisible(false);
-		panel.add(progressBar, BorderLayout.NORTH);
+
+		btnCancel.setEnabled(false);
+		btnCancel.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				controller.stopGeneration();
+			}
+		});
+		panelProgressBar.add(btnCancel, BorderLayout.EAST);
 	}
 
 }
