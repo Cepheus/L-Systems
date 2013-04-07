@@ -8,15 +8,16 @@ DOL
 {
 	SYMBOLS
 	{
-		a
-		b
+		F : FORWARD
+		a : TURNLEFT
+		b : TURNRIGHT
 	}
 
 	AXIOM: a
 
 	RULES
 	{
-		a -> ab
+		a -> aFbF
 		b -> a
 	}
 }
@@ -30,8 +31,8 @@ DOL
 	{
 		# we precise the interpretation #
 		F: FORWARD
-		+: TURNLEFT
-		-: TURNRIGHT
+		+: TURNRIGHT
+		-: TURNLEFT
 	}
 
 	AXIOM: F
@@ -44,20 +45,50 @@ DOL
 	}
 }
 
+# Based on the last one but in 3D #
+SECOND_EXAMPLE_2
+DOL
+{
+	SYMBOLS
+	{
+		# we precise the interpretation #
+		F: FORWARD
+		+: TURNRIGHT
+		-: TURNLEFT
+		^: TURNUP
+		v: TURNDOWN
+		A
+		B
+		C
+		D
+	}
+
+	AXIOM: A
+
+	RULES
+	{
+		A -> B-F+CFC+F-DvF^D-F+vvCFC+F+B
+		B -> AvF^CFB^F^D^^-F-D^--F^B--FC^F^A
+		C -> --D^--F^B-F+C^F^AvvFAvF^C+F+B^+^F^D
+		D -> --CFB-F+B--FAvF^AvvFB-F+B--FC
+	}
+}
+
 # a SOL example from http://www.techno-science.net/?onglet=glossaire&definition=11374 #
 SOL_Example
 SOL
 {
 	SYMBOLS
 	{
-		F
+		F : FORWARD
 		X
-		+
-		-
-		[
-		]
+		+ : TURNLEFT
+		- : TURNRIGHT
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
 	}
 	AXIOM: X
+	ANGLE: 20
 	RULES
 	{
 		X -> F[++X]F[-X]+X: 0.2
@@ -72,13 +103,13 @@ DIL
 {
 	SYMBOLS
 	{
-		A
-		B
-		C
-		+
-		-
-		[
-		]
+		A : FORWARD
+		B : FORWARD
+		C : FORWARD
+		+ : TURNRIGHT
+		- : TURNLEFT
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
 	}
 	PHRASE: B[+C]A[-A]A[+C]A
 	RULES
@@ -102,9 +133,9 @@ SIL
 	# we have 3 symbols: a, b and c #
 	SYMBOLS
 	{
-		a: FORWARD
+		a
 		# we don't precise an interpretation for b, the program will ask us for one #
-		b
+		b: FORWARD
 		c: ABOUTTURN
 	}
 
@@ -132,3 +163,160 @@ SIL
 # 1. bbbbbbacbacb #
 # 2. bbcbbbbacbb #
 # 3. cbcbb and it stay stable on this state #
+
+# BELOW some examples of more realistic grammars #
+
+TREE
+SOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		^ : TURNUP
+		v : TURNDOWN
+		F : FORWARD
+		A : FORWARD
+	}
+
+	AXIOM: A
+	ANGLE: 10
+
+	RULES
+	{
+		F -> FF
+		A -> F[+A]-A: 0.25
+		A -> F[++A]--A: 0.25
+		A -> F[+++A]---A: 0.25
+		A -> F[++++A]----A: 0.25
+		A -> AA: 0.5
+		
+	}
+}
+
+# make 13 iterations on this, taken from http://www.geekyblogger.com/2008/04/tree-and-l-system.html #
+SpecificTreeA
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		^ : TURNUP
+		v : TURNDOWN
+		( : ROLLLEFT
+		) : ROLLRIGHT
+		f : FORWARD
+		A
+		B
+		C
+	}
+	AXIOM: C
+	ANGLE: 15
+	RULES
+	{
+		A -> ^fB)))B)))))B
+		B -> [^^f))))))A]
+		C -> fA
+	}
+}
+
+# make 10 iterations on this, taken from http://www.geekyblogger.com/2008/04/tree-and-l-system.html #
+SpecificTreeB
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		^ : TURNUP
+		v : TURNDOWN
+		( : ROLLLEFT
+		) : ROLLRIGHT
+		f : FORWARD
+		l
+		A
+		B
+		C
+	}
+	AXIOM: C
+	ANGLE: 30
+	RULES
+	{
+		A -> f[^Bl]))[^Bl]))A
+		B -> f[-Bl]B
+		C -> fA
+	}
+}
+
+# make 6 iterations on this, taken from http://www.geekyblogger.com/2008/04/tree-and-l-system.html #
+SpecificTreeC
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		^ : TURNUP
+		v : TURNDOWN
+		( : ROLLLEFT
+		) : ROLLRIGHT
+		f : FORWARD
+		l
+		A
+		B
+		C
+	}
+	AXIOM: C
+	ANGLE: 25
+	RULES
+	{
+		A -> f[++Al][--Al])))A
+		C -> fffffA
+	}
+}
+
+#RÉMI grammar fuck yeah! #
+RÉMI
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		^ : TURNUP
+		v : TURNDOWN
+		F : FORWARD
+		A
+		B
+		C
+	}
+
+	AXIOM: A
+	ANGLE: 45
+
+	RULES
+	{
+		A -> B
+		B -> FFFFF++F+F+F+F+F---FFFF---[FF[FF[^^FFFFFFFFFvvFvvFFFFFFFFF^^+FF]++FFF]++FF]++FFF--FFF+++FF--FF+++FFF^^FFFFFFFFF--F--FFFFFFFFF^^FFFF^^FFFFFFFFFvvFvvFFFFFFFFF^^C
+		[ -> ε
+		] -> ε
+		+ -> ε
+		- -> ε
+		^ -> ε
+		v -> ε
+		F -> ε
+		C -> ++F++F+F[+F+F+FFF+F+F+F+F]---^^FFFFFFFFFFFvvFvvFFFFFFFFFFF^^--FF[++FF]F+F+F+F+FFF--^^FFFFFFFFFFFvvFvvFFFFFFFFFFF^^[--FF[++F]FF[^^FFFFFFFFFFvv+F[+FvvFFFFFFFFFF]vvFFFFFFFFFF]++FF]FF[--FFF]FF[--FFF]++F--FF[--FF[++F]FF++FF]FFA
+	}
+}
+
