@@ -24,6 +24,8 @@ package parser;
 public class Symbol
 {
 	/** Turtle interpretation: make the turtle go forward */
+	public static final int S_UNDETERMINATE = 0;
+	/** Turtle interpretation: make the turtle go forward */
 	public static final int S_FORWARD = 1;
 	/** Turtle interpretation: make the turtle turn left */
 	public static final int S_TURNLEFT = 2;
@@ -50,6 +52,8 @@ public class Symbol
 	private char character = '\0';
 	/** Interpretation */
 	private int interpretation = 0;
+	/** The name of the symbol */
+	private String name = "";
 
 	/**
 	 * default constructor
@@ -80,49 +84,72 @@ public class Symbol
 		interpretation = inter;
 	}
 
+	/**
+	 * @brief return the list of the standard symbols.
+	 * The last value is the symbol S_NULLCHARACTER. it can easily be removed, and it is the only one that have a character (ε)
+	 * @return the list of the standard symbols
+	 */
+	public static ListSymbols standardsSymbols ()
+	{
+		ListSymbols ls = new ListSymbols();
+		Symbol sym;
+
+		sym = new Symbol();
+		sym.setInterpretation(S_FORWARD);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_TURNLEFT);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_TURNRIGHT);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_TURNUP);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_TURNDOWN);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_ROLLLEFT);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_ROLLRIGHT);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_ABOUTTURN);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_SAVEPOSITION);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_RESTOREPOSITION);
+		ls.append(sym);
+
+		sym = new Symbol();
+		sym.setInterpretation(S_NULLCHARACTER);
+		sym.setCharacter('ε');
+		ls.append(sym);
+
+		return ls;
+	}
+
 	@Override
 	public String toString ()
 	{
 		String s = "";
 
 		s += String.valueOf(character);
-		if ((interpretation != 0) && (interpretation != S_NULLCHARACTER))
-		{
-			s += ": ";
-			switch (interpretation)
-			{
-				case S_FORWARD:
-					s += "FORWARD";
-					break;
-				case S_TURNLEFT:
-					s += "TURNLEFT";
-					break;
-				case S_TURNRIGHT:
-					s += "TURNRIGHT";
-					break;
-				case S_TURNUP:
-					s += "TURNUP";
-					break;
-				case S_TURNDOWN:
-					s += "TURNDOWN";
-					break;
-				case S_ROLLLEFT:
-					s += "ROLLLEFT";
-					break;
-				case S_ROLLRIGHT:
-					s += "ROLLRIGHT";
-					break;
-				case S_ABOUTTURN:
-					s += "ABOUTTURN";
-					break;
-				case S_SAVEPOSITION:
-					s += "SAVEPOSITION";
-					break;
-				case S_RESTOREPOSITION:
-					s += "RESTOREPOSITION";
-					break;
-			}
-		}
+		if ((interpretation > 0) && (interpretation != S_NULLCHARACTER) && (interpretation < 20))
+			s += ": " + name;
 
 		return s;
 	}
@@ -152,10 +179,78 @@ public class Symbol
 	}
 
 	/**
+	 * update the interpretation and the name
+	 * 
 	 * @param interpretation the interpretation to set
 	 */
 	public void setInterpretation (int interpretation)
 	{
 		this.interpretation = interpretation;
+		findNameFromInterpretation();
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName ()
+	{
+		return name;
+	}
+
+	/**
+	 * THIS MUST BE CALLED ONLY WHEN DEFINE NEW SYMBOLS!
+	 * 
+	 * @param name the name to set
+	 */
+	public void setName (String name)
+	{
+		this.name = name;
+	}
+
+	/**
+	 * Update the name in function of the interpretation. if the interpretation is not one of the constat class value, the name is set to
+	 * "".
+	 */
+	private void findNameFromInterpretation ()
+	{
+		switch (interpretation)
+		{
+			case S_FORWARD:
+				name = "FORWARD";
+				break;
+			case S_TURNLEFT:
+				name = "TURNLEFT";
+				break;
+			case S_TURNRIGHT:
+				name = "TURNRIGHT";
+				break;
+			case S_TURNUP:
+				name = "TURNUP";
+				break;
+			case S_TURNDOWN:
+				name = "TURNDOWN";
+				break;
+			case S_ROLLLEFT:
+				name = "ROLLLEFT";
+				break;
+			case S_ROLLRIGHT:
+				name = "ROLLRIGHT";
+				break;
+			case S_ABOUTTURN:
+				name = "ABOUTTURN";
+				break;
+			case S_SAVEPOSITION:
+				name = "SAVEPOSITION";
+				break;
+			case S_RESTOREPOSITION:
+				name = "RESTOREPOSITION";
+				break;
+			case S_UNDETERMINATE:
+				name = "UNDETERMINATE";
+				break;
+			default:
+				name = "UNDETERMINATE";
+				break;
+		}
 	}
 }

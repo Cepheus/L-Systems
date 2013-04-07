@@ -85,7 +85,7 @@ public class MainFrame extends JFrame
 	/** The button to launch the turtle */
 	private JButton btnLaunch = new JButton("Launch!");
 	/** button to clear the scene */
-	JButton btnClearScene = new JButton("Clear Scene");
+	private JButton btnClearScene = new JButton("Clear Scene");
 	/** cancel the generation of symbols */
 	private JButton btnCancel = new JButton("Cancel");
 	/** zone where display the generated symbols */

@@ -155,6 +155,11 @@ public abstract class Turtle
 	 * @throws BadSymbolException
 	 */
 	protected abstract Node drawScene () throws BadSymbolException;
+	
+	/**
+	 * Initiation of the paramters of the turtle
+	 */
+	protected abstract void initParameters();
 
 	/**
 	 * Update the max and min coordinates of the drawing. This is used to position de camera at the center of the drawing.
@@ -231,4 +236,12 @@ public abstract class Turtle
 	 * @param params
 	 */
 	public abstract void setParameters (ArrayList<Parameter> params);
+	
+	/**
+	 * @brief the list of symbols that can be displayed by this turtle.
+	 * 
+	 * If you use a interpretation that is does not exists in this list, the turtle won't draw and will throw an exception.
+	 * @return the list of symbols that can be displayed by this turtle.
+	 */
+	public abstract ListSymbols getAuthorizedInterpretation ();
 }

@@ -55,7 +55,7 @@ public class TubeTurtle extends Turtle
 	private Material material;
 
 	/** The list of symbols known by the interpretation */
-	public final static ListSymbols authorizedSymbols;
+	private final static ListSymbols authorizedSymbols;
 
 	// Initialisation of the authorized symbols list
 	static
@@ -124,10 +124,8 @@ public class TubeTurtle extends Turtle
 		initParameters();
 	}
 	
-	/**
-	 * Initiation of the paramters of the turtle
-	 */
-	private void initParameters() {
+	@Override
+	protected void initParameters() {
 		name = "Tube Turtle";
 		type = TYPE_TUBE;
 		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, new Integer((int) angle)));
@@ -153,7 +151,7 @@ public class TubeTurtle extends Turtle
 			found = false;
 			for (int j = 0; j < sizeInterpretation; j++)
 			{
-				if ((symbols.get(i).getInterpretation() == 0 || (symbols.get(i).getInterpretation() == authorizedSymbols.get(j)
+				if ((symbols.get(i).getInterpretation() == Symbol.S_UNDETERMINATE || (symbols.get(i).getInterpretation() == authorizedSymbols.get(j)
 						.getInterpretation())))
 					found = true;
 			}
@@ -264,7 +262,7 @@ public class TubeTurtle extends Turtle
 						node = tmp;
 					}
 					break;
-				case 0: // UNDEFINED
+				case Symbol.S_UNDETERMINATE: // UNDEFINED
 					break;
 				default:
 					throw (new BadSymbolException("The turle has uncounter a symbol impossible to draw: " + symbol.toString()));
@@ -328,5 +326,11 @@ public class TubeTurtle extends Turtle
 		length = ((Double) parameters.get(1).getValue()).floatValue();
 		width = ((Double) parameters.get(2).getValue()).floatValue();
 		color = (ColorRGBA) parameters.get(3).getValue();
+	}
+
+	@Override
+	public ListSymbols getAuthorizedInterpretation ()
+	{
+		return authorizedSymbols;
 	}
 }

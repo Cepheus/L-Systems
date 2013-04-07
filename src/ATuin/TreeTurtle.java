@@ -37,6 +37,7 @@ import com.jme3.scene.shape.Cylinder;
  */
 public class TreeTurtle extends Turtle
 {
+	/** Turtle interpretation: make the turtle draw a leaf */
 	public static final int S_LEAF = 21;
 
 	/** The angle for the rotations between the tubes */
@@ -46,7 +47,7 @@ public class TreeTurtle extends Turtle
 	private float length = 10f;
 	
 	/** The reduction of the length of the branches in % */
-	private float lengthReduction = 13;
+	private float lengthReduction = 0;
 
 	/** The width of the tubes */
 	private float width = 0.5f;
@@ -61,7 +62,7 @@ public class TreeTurtle extends Turtle
 	private Material material;
 
 	/** The list of symbols known by the interpretation */
-	public final static ListSymbols authorizedSymbols;
+	private final static ListSymbols authorizedSymbols;
 
 	// Initialisation of the authorized symbols list
 	static
@@ -111,6 +112,7 @@ public class TreeTurtle extends Turtle
 		
 		sym = new Symbol();
 		sym.setInterpretation(S_LEAF);
+		sym.setName("LEAF");
 		authorizedSymbols.append(sym);
 	}
 
@@ -134,10 +136,8 @@ public class TreeTurtle extends Turtle
 		initParameters();
 	}
 	
-	/**
-	 * Initiation of the paramters of the turtle
-	 */
-	private void initParameters() {
+	@Override
+	protected void initParameters() {
 		name = "Tree Turtle";
 		type = TYPE_TREE;
 		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, new Integer((int) angle)));
@@ -165,7 +165,7 @@ public class TreeTurtle extends Turtle
 			found = false;
 			for (int j = 0; j < sizeInterpretation; j++)
 			{
-				if ((symbols.get(i).getInterpretation() == 0 || (symbols.get(i).getInterpretation() == authorizedSymbols.get(j)
+				if ((symbols.get(i).getInterpretation() == Symbol.S_UNDETERMINATE || (symbols.get(i).getInterpretation() == authorizedSymbols.get(j)
 						.getInterpretation())))
 					found = true;
 			}
@@ -286,7 +286,7 @@ public class TreeTurtle extends Turtle
 						length = saveLength.pop();
 					}
 					break;
-				case 0: // UNDEFINED
+				case Symbol.S_UNDETERMINATE: // UNDEFINED
 					break;
 				default:
 					throw (new BadSymbolException("The turle has uncounter a symbol impossible to draw: " + symbol.toString()));
@@ -316,8 +316,7 @@ public class TreeTurtle extends Turtle
 	 * @param length The length of the branch to be drawn
 	 */
 	private void drawBranch (Node node, float width, float length)
-	{	
-		System.out.println(width+" "+length);
+	{
 		Cylinder tube = new Cylinder(10, 10, width, length, true);
 		Geometry geom = new Geometry("Branch", tube);
 		geom.setMaterial(material);
@@ -336,5 +335,11 @@ public class TreeTurtle extends Turtle
 		width = ((Double) parameters.get(3).getValue()).floatValue();
 		widthReduction = ((Double) parameters.get(4).getValue()).floatValue();
 		branchColor = (ColorRGBA) parameters.get(5).getValue();
+	}
+
+	@Override
+	public ListSymbols getAuthorizedInterpretation ()
+	{
+		return authorizedSymbols;
 	}
 }
