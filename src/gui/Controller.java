@@ -373,6 +373,20 @@ public class Controller implements GeneratorPseudoListener
 				turtles.add(turtle);
 				its.add(turtle.getName());
 			}
+			if (TreeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbolsWithoutNull()))
+			{
+				turtle = new TreeTurtle(application3d);
+
+				for (Parameter p : turtle.getParameters())
+				{
+					if (p.getName().equals("Angle"))
+						p.setValue(new Integer(grammars.get(indexOfCurrentGrammar).getAngle()));
+				}
+				turtle.setParameters(turtle.getParameters());
+
+				turtles.add(turtle);
+				its.add(turtle.getName());
+			}
 		}
 		return its;
 	}

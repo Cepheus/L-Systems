@@ -30,26 +30,32 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Cylinder;
-import com.jme3.scene.shape.Line;
 
 
 /**
  * @author Caelum
  */
-public class TubeTurtle extends Turtle
+public class TreeTurtle extends Turtle
 {
+	public static final int S_LEAF = 21;
 
 	/** The angle for the rotations between the tubes */
-	private float angle = 90;
+	private float angle = 25;
 
 	/** The length of the tubes */
-	private float length = 10;
+	private float length = 10f;
+	
+	/** The reduction of the length of the branches in % */
+	private float lengthReduction = 13;
 
 	/** The width of the tubes */
 	private float width = 0.5f;
-
-	/** The color of the tubes */
-	private ColorRGBA color = ColorRGBA.Green;
+	
+	/** The reduction of the width of the branches in % */
+	private float widthReduction = 13;
+	
+	/** The color of the Branch */
+	private ColorRGBA branchColor = ColorRGBA.Blue;
 
 	/** The material of the drawn objects */
 	private Material material;
@@ -102,12 +108,16 @@ public class TubeTurtle extends Turtle
 		sym = new Symbol();
 		sym.setInterpretation(Symbol.S_RESTOREPOSITION);
 		authorizedSymbols.append(sym);
+		
+		sym = new Symbol();
+		sym.setInterpretation(S_LEAF);
+		authorizedSymbols.append(sym);
 	}
 
 	/**
 	 * Default constructor.
 	 */
-	public TubeTurtle ()
+	public TreeTurtle ()
 	{
 		super();
 		initParameters();
@@ -118,7 +128,7 @@ public class TubeTurtle extends Turtle
 	 * 
 	 * @param drawer The object drawer of the scene
 	 */
-	public TubeTurtle (Drawer drawer)
+	public TreeTurtle (Drawer drawer)
 	{
 		super(drawer);
 		initParameters();
@@ -128,12 +138,14 @@ public class TubeTurtle extends Turtle
 	 * Initiation of the paramters of the turtle
 	 */
 	private void initParameters() {
-		name = "Tube Turtle";
-		type = TYPE_TUBE;
+		name = "Tree Turtle";
+		type = TYPE_TREE;
 		parameters.add(new Parameter("Angle", ParameterType.TYPE_INTEGER, new Integer((int) angle)));
 		parameters.add(new Parameter("Length", ParameterType.TYPE_DOUBLE, new Double(length)));
+		parameters.add(new Parameter("Length reduction (in %)", ParameterType.TYPE_DOUBLE, new Double(lengthReduction)));
 		parameters.add(new Parameter("Width", ParameterType.TYPE_DOUBLE, new Double(width)));
-		parameters.add(new Parameter("Color", ParameterType.TYPE_COLOR, color));
+		parameters.add(new Parameter("Width reduction (in %)", ParameterType.TYPE_DOUBLE, new Double(widthReduction)));
+		parameters.add(new Parameter("Branch color", ParameterType.TYPE_COLOR, branchColor));
 	}
 
 	/**
@@ -189,7 +201,7 @@ public class TubeTurtle extends Turtle
 	 * @param drawer The object drawer of the scene
 	 * @param symbols The symbols to represent
 	 */
-	public TubeTurtle (Drawer drawer, ListSymbols symbols)
+	public TreeTurtle (Drawer drawer, ListSymbols symbols)
 	{
 		super(drawer, symbols);
 		name = "Tube Turle";
@@ -201,10 +213,10 @@ public class TubeTurtle extends Turtle
 		int i = 0;
 		material = new Material(drawer.getAssetManager(), "Common/MatDefs/Light/Lighting.j3md");
 		material.setBoolean("UseMaterialColors", true); // needed for shininess
-		material.setColor("Specular", color); // needed for shininess
-		material.setColor("Diffuse", color); // needed for shininess
+		material.setColor("Specular", branchColor); // needed for shininess
+		material.setColor("Diffuse", branchColor); // needed for shininess
 		material.setFloat("Shininess", 1); // shininess from 1-128
-		material.setColor("GlowColor", color);
+		material.setColor("GlowColor", branchColor);
 
 		minCoord.zero();
 		maxCoord.zero();
@@ -213,6 +225,10 @@ public class TubeTurtle extends Turtle
 		Node node = new Node();
 		Node returnNode = node;
 		Stack<Node> saveNode = new Stack<Node>();
+		Stack<Float> saveWidth = new Stack<Float>();
+		Stack<Float> saveLength = new Stack<Float>();
+		float width = this.width;
+		float length = this.length;
 		returnNode.rotate(-90 * FastMath.DEG_TO_RAD, 0, 0);
 
 		for (Symbol symbol : symbols.getSymbols())
@@ -220,7 +236,9 @@ public class TubeTurtle extends Turtle
 			switch (symbol.getInterpretation())
 			{
 				case Symbol.S_FORWARD:
-					drawTube(node);
+					drawBranch(node, width, length);
+					width-=width*widthReduction/100;
+					length-=length*lengthReduction/100;
 					i++;
 					tmp = new Node();
 					tmp.setLocalTranslation(0, 0, length);
@@ -254,6 +272,8 @@ public class TubeTurtle extends Turtle
 					tmp = new Node();
 					node.attachChild(tmp);
 					node = tmp;
+					saveWidth.push(width);
+					saveLength.push(length);
 					break;
 				case Symbol.S_RESTOREPOSITION: // easier to create 3 node than only one keeping the rotation matrix
 					if (!saveNode.isEmpty())
@@ -262,6 +282,8 @@ public class TubeTurtle extends Turtle
 						tmp = new Node();
 						node.attachChild(tmp);
 						node = tmp;
+						width = saveWidth.pop();
+						length = saveLength.pop();
 					}
 					break;
 				case 0: // UNDEFINED
@@ -287,35 +309,19 @@ public class TubeTurtle extends Turtle
 	}
 
 	/**
-	 * Draws a tube
+	 * Draws a branch
 	 * 
-	 * @param node The node to link the drawn tube to
+	 * @param node The node to link the drawn branch to
+	 * @param width The width of the branch to be drawn
+	 * @param length The length of the branch to be drawn
 	 */
-	private void drawTube (Node node)
-	{
+	private void drawBranch (Node node, float width, float length)
+	{	
+		System.out.println(width+" "+length);
 		Cylinder tube = new Cylinder(10, 10, width, length, true);
-		Geometry geom = new Geometry("Tube", tube);
+		Geometry geom = new Geometry("Branch", tube);
 		geom.setMaterial(material);
 		geom.setLocalTranslation(0, 0, length / 2);
-		node.attachChild(geom);
-	}
-
-	/**
-	 * Draws a line
-	 * 
-	 * @param node The node to link the drawn line to
-	 * @deprecated use drawTube with a length of 0.
-	 */
-	@SuppressWarnings ("unused")
-	private void drawLine (Node node)
-	{
-		Vector3f start = new Vector3f(0, 0, 0);
-		Vector3f end = new Vector3f(0, 0, -length);
-		Line line = new Line(start, end);
-		line.setLineWidth(width);
-		Geometry geom = new Geometry("Line", line);
-		geom.setMaterial(material);
-		node.setLocalTranslation(end);
 		node.attachChild(geom);
 	}
 
@@ -326,7 +332,9 @@ public class TubeTurtle extends Turtle
 
 		angle = ((Integer) parameters.get(0).getValue()).floatValue();
 		length = ((Double) parameters.get(1).getValue()).floatValue();
-		width = ((Double) parameters.get(2).getValue()).floatValue();
-		color = (ColorRGBA) parameters.get(3).getValue();
+		lengthReduction = ((Double) parameters.get(2).getValue()).floatValue();
+		width = ((Double) parameters.get(3).getValue()).floatValue();
+		widthReduction = ((Double) parameters.get(4).getValue()).floatValue();
+		branchColor = (ColorRGBA) parameters.get(5).getValue();
 	}
 }

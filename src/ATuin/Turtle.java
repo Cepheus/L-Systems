@@ -35,8 +35,10 @@ public abstract class Turtle
 {
 	/** Type of the turtle is unknown */
 	public final static int TYPE_UNKNOWN = 0;
-	/** The turtle is a TubeTurlte */
+	/** The turtle is a TubeTurtle */
 	public final static int TYPE_TUBE = 1;
+	/** The turtle is a TreeTurtle */
+	public final static int TYPE_TREE = 2;
 	/** the maximal number of objects we can display at once */
 	public static int MAX_OBJECTS = 50000;
 
