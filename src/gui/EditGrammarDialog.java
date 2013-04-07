@@ -214,11 +214,18 @@ public class EditGrammarDialog extends JDialog
 
 		for (int i = 0; i < sizei; i++)
 		{
-			selectedItem = 0;
+			selectedItem = -1;
 			boxes.get(i).removeAllItems();
 			for (int j = 0; j < sizej; j++)
 			{
-				boxes.get(i).addItem(interpretations.get(j).getName());
+				if (interpretations.get(j).getInterpretation() == Symbol.S_UNDETERMINATE)
+				{
+					boxes.get(i).addItem("UNDETERMINATE");
+					if (selectedItem == -1)
+						selectedItem = j;
+				}
+				else
+					boxes.get(i).addItem(interpretations.get(j).getName());
 				if (interpretations.get(j).getInterpretation() == grammarSymbols.get(i).getInterpretation())
 					selectedItem = j;
 			}

@@ -49,12 +49,12 @@ public class TreeTurtle extends Turtle {
 	private float lengthReduction = 13;
 
 	/** The width of the tubes */
-	private float width = 0.5f;
-
+	float width = 1.5f;
+	
 	/** The reduction of the width of the branches in % */
 	private float widthReduction = 13;
 
-	/** The color of the leaf */
+	/** The color of the branch */
 	private ColorRGBA colorBranch = ColorRGBA.Brown;
 
 	/** The color of the leaf */
@@ -114,6 +114,10 @@ public class TreeTurtle extends Turtle {
 		sym.setInterpretation(Symbol.S_RESTOREPOSITION);
 		authorizedSymbols.append(sym);
 
+		sym = new Symbol();
+		sym.setInterpretation(Symbol.S_UNDETERMINATE);
+		authorizedSymbols.append(sym);
+		
 		sym = new Symbol();
 		sym.setInterpretation(S_LEAF);
 		sym.setName("LEAF");
