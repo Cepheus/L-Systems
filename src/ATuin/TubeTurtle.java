@@ -102,6 +102,10 @@ public class TubeTurtle extends Turtle
 		sym = new Symbol();
 		sym.setInterpretation(Symbol.S_RESTOREPOSITION);
 		authorizedSymbols.append(sym);
+		
+		sym = new Symbol();
+		sym.setInterpretation(Symbol.S_UNDETERMINATE);
+		authorizedSymbols.append(sym);
 	}
 
 	/**

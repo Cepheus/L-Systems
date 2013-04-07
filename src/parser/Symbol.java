@@ -135,6 +135,10 @@ public class Symbol
 		ls.append(sym);
 
 		sym = new Symbol();
+		sym.setInterpretation(S_UNDETERMINATE);
+		ls.append(sym);
+
+		sym = new Symbol();
 		sym.setInterpretation(S_NULLCHARACTER);
 		sym.setCharacter('ε');
 		ls.append(sym);
