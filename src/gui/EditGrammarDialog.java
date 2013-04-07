@@ -238,7 +238,6 @@ public class EditGrammarDialog extends JDialog
 		{
 			// we set the grammar symbol with the standard or turtle interpretation selected in the combobox
 			grammarSymbols.get(i).setInterpretation(validatedSymbols.get(boxes.get(i).getSelectedIndex()).getInterpretation());
-			System.out.println(grammarSymbols.get(i).toString());
 		}
 	}
 }
