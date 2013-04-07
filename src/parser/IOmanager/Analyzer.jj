@@ -468,7 +468,12 @@ private void validationRules () throws BadFileException, NumberFormatException:
 		(
 			<COLON>
 			t = <FLOAT>
-			{ rule.setProba(Double.parseDouble(t.image)); }
+			{
+				if (current.getType() == Grammar.TYPE_DOL || current.getType() == Grammar.TYPE_DIL)
+					throw new BadFileException("In rules definition:\n" +
+							"a next constraint has been given while the grammar is 0L:" + t.image + ".");
+				rule.setProba(Double.parseDouble(t.image));
+			}
 		)?
 		(<ENDL>)+
 		{ current.getRules().add(rule); }

@@ -151,41 +151,44 @@ public class MainFrame extends JFrame
 	 */
 	public void setProgressBar (int percent, String toBeDisplayed)
 	{
-		if (percent < 0)
+		if (progressBar != null && panelProgressBar != null)
 		{
-			if (!panelProgressBar.isVisible())
-				panelProgressBar.setVisible(true);
-			progressBar.setIndeterminate(true);
-			progressBar.setString(toBeDisplayed);
-			btnCancel.setEnabled(false);
-		}
-		else if (percent < 100)
-		{
-			if (!panelProgressBar.isVisible())
-				panelProgressBar.setVisible(true);
-			progressBar.setIndeterminate(false);
-			progressBar.setValue(percent);
-			txtrGeneratedSymbols.setText("Generating symbols...");
-			// the button and the text field will be enabled when we'll call setSybolsGenerated()
-			txtrGeneratedSymbols.setEnabled(false);
-			btnApplyModifs.setEnabled(false);
-			btnLaunch.setEnabled(false);
-			btnClearScene.setEnabled(false);
-			spinnerNbIt.setEnabled(false);
-			if (toBeDisplayed != null && !toBeDisplayed.isEmpty())
-				progressBar.setString(toBeDisplayed + percent + " %");
-			btnCancel.setEnabled(true);
-		}
-		else
-		{
-			panelProgressBar.setVisible(false);
-			progressBar.setIndeterminate(false);
-			// btnApplyModifs.setEnabled(true);
-			btnCancel.setEnabled(false);
-			btnLaunch.setEnabled(true);
-			btnClearScene.setEnabled(true);
-			spinnerNbIt.setEnabled(true);
-			progressBar.setValue(0);
+			if (percent < 0)
+			{
+				if (!panelProgressBar.isVisible())
+					panelProgressBar.setVisible(true);
+				progressBar.setIndeterminate(true);
+				progressBar.setString(toBeDisplayed);
+				btnCancel.setEnabled(false);
+			}
+			else if (percent < 100)
+			{
+				if (!panelProgressBar.isVisible())
+					panelProgressBar.setVisible(true);
+				progressBar.setIndeterminate(false);
+				progressBar.setValue(percent);
+				txtrGeneratedSymbols.setText("Generating symbols...");
+				// the button and the text field will be enabled when we'll call setSybolsGenerated()
+				txtrGeneratedSymbols.setEnabled(false);
+				btnApplyModifs.setEnabled(false);
+				btnLaunch.setEnabled(false);
+				btnClearScene.setEnabled(false);
+				spinnerNbIt.setEnabled(false);
+				if (toBeDisplayed != null && !toBeDisplayed.isEmpty())
+					progressBar.setString(toBeDisplayed + percent + " %");
+				btnCancel.setEnabled(true);
+			}
+			else
+			{
+				panelProgressBar.setVisible(false);
+				progressBar.setIndeterminate(false);
+				// btnApplyModifs.setEnabled(true);
+				btnCancel.setEnabled(false);
+				btnLaunch.setEnabled(true);
+				btnClearScene.setEnabled(true);
+				spinnerNbIt.setEnabled(true);
+				progressBar.setValue(0);
+			}
 		}
 	}
 

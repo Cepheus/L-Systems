@@ -114,7 +114,7 @@ public abstract class Turtle
 				rootNode.detachAllChildren();
 				rootNode.attachChild(nodeTmp);
 				root.attachChild(rootNode);
-				if (root.getChildren().size() > 3)
+				if (nodeTmp.getChildren().size() > 0)
 				{
 					root.center();
 					root.setLocalRotation(Quaternion.DIRECTION_Z);

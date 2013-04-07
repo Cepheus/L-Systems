@@ -168,11 +168,11 @@ public class Generator
 			sizeGenerated = generated.size();
 			i = 0;
 			indexOld = 0;
-			while (i < sizeGenerated) // loop for the generated phrase
+			while (i < sizeGenerated && correctlyFinished) // loop for the generated phrase
 			{
 				j = 0;
 				isModified = false;
-				while ((!isModified) && (j < sizeRules)) // loop to apply each rules on each symbols of the phrase
+				while ((!isModified) && (j < sizeRules) && correctlyFinished) // loop to apply each rules on each symbols of the phrase
 				{
 					offset = rules.get(j).applyOnce(indexOld, lastGenerated, i, generated);
 					if (offset != 0)
@@ -209,12 +209,12 @@ public class Generator
 			sizeGenerated = generated.size();
 			i = 0;
 			indexOld = 0;
-			while (i < sizeGenerated) // loop for the generated phrase
+			while (i < sizeGenerated && correctlyFinished) // loop for the generated phrase
 			{
 				ArrayList<Rule> rulesApplicable = new ArrayList<Rule>();
 				offset = 0;
 				// We look at all rules that can be applied
-				for (j = 0; j < sizeRules; j++)
+				for (j = 0; j < sizeRules && correctlyFinished; j++)
 				{
 					if (rules.get(j).canBeApplied(indexOld, lastGenerated))
 						rulesApplicable.add(rules.get(j));
@@ -265,12 +265,12 @@ public class Generator
 			sizeGenerated = generated.size();
 			i = 0;
 			indexOld = 0;
-			while (i < sizeGenerated) // loop for the generated phrase
+			while (i < sizeGenerated && correctlyFinished) // loop for the generated phrase
 			{
 				j = 0;
 				isModified = false;
 				// we start with IL rules
-				while ((!isModified) && (j < sizeIL)) // loop to apply each rules on each symbols of the phrase
+				while ((!isModified) && (j < sizeIL) && correctlyFinished) // loop to apply each rules on each symbols of the phrase
 				{
 					offset = rulesIL.get(j).applyOnce(indexOld, lastGenerated, i, generated);
 					if (offset != 0)
@@ -283,7 +283,7 @@ public class Generator
 				}
 				j = 0;
 				// If none have been applied, we try with OL rules
-				while ((!isModified) && (j < sizeOL)) // loop to apply each rules on each symbols of the phrase
+				while ((!isModified) && (j < sizeOL) && correctlyFinished) // loop to apply each rules on each symbols of the phrase
 				{
 					offset = rulesOL.get(j).applyOnce(indexOld, lastGenerated, i, generated);
 					if (offset != 0)
@@ -330,13 +330,13 @@ public class Generator
 			sizeGenerated = generated.size();
 			i = 0;
 			indexOld = 0;
-			while (i < sizeGenerated) // loop for the generated phrase
+			while (i < sizeGenerated && correctlyFinished) // loop for the generated phrase
 			{
 				ArrayList<Rule> rulesApplicable = new ArrayList<Rule>();
 				offset = 0;
 				// We look at all rules that can be applied
 				// we start with IL rules
-				for (j = 0; j < sizeIL; j++)
+				for (j = 0; j < sizeIL && correctlyFinished; j++)
 				{
 					if (rulesIL.get(j).canBeApplied(indexOld, lastGenerated))
 						rulesApplicable.add(rulesIL.get(j));
@@ -345,7 +345,7 @@ public class Generator
 				if (rulesApplicable.isEmpty())
 				{
 					j = 0;
-					for (j = 0; j < sizeOL; j++)
+					for (j = 0; j < sizeOL && correctlyFinished; j++)
 					{
 						if (rulesOL.get(j).canBeApplied(indexOld, lastGenerated))
 							rulesApplicable.add(rulesOL.get(j));
