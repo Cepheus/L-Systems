@@ -341,7 +341,7 @@ public class MainFrame extends JFrame
 	private void openParameterDialog ()
 	{
 		ParameterDialog dialog =
-				new ParameterDialog("Edit " + controller.getCurrentTurtle().getName(), controller.getCurrentTurtle().getParameters());
+				new ParameterDialog(me, "Edit " + controller.getCurrentTurtle().getName(), controller.getCurrentTurtle().getParameters());
 		dialog.setVisible(true);
 
 		if (dialog.isValidated())
@@ -355,6 +355,20 @@ public class MainFrame extends JFrame
 				showException(e, "Bad exception");
 			}
 		}
+	}
+
+	/**
+	 * open a dialog to edit the interpretations of the current grammar.
+	 */
+	private void openEditGrammarDialog ()
+	{
+		EditGrammarDialog dialog =
+				new EditGrammarDialog(me, "Edit " + controller.getCurrentGrammar().getName(), controller.getCurrentGrammar(),
+						controller.getCurrentTurtle());
+		dialog.setVisible(true);
+		
+		if (dialog.isValidated())
+			controller.setIndexOfCurrentGrammar(comboBoxGrammars.getSelectedIndex());
 	}
 
 	/**
@@ -398,6 +412,13 @@ public class MainFrame extends JFrame
 
 		mntmEditCurrentGrammar.setEnabled(false);
 		mntmEditCurrentTurtle.setEnabled(false);
+		mntmEditCurrentGrammar.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				openEditGrammarDialog();
+			}
+		});
 		mntmEditCurrentTurtle.addActionListener(new ActionListener()
 		{
 			public void actionPerformed (ActionEvent arg0)

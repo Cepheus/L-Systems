@@ -286,6 +286,9 @@ public class TreeTurtle extends Turtle
 						length = saveLength.pop();
 					}
 					break;
+				case S_LEAF:
+					System.out.println("LEAF");
+					break;
 				case Symbol.S_UNDETERMINATE: // UNDEFINED
 					break;
 				default:

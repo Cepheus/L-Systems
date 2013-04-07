@@ -17,6 +17,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -47,7 +48,7 @@ import java.io.File;
 
 
 /**
- * Adaptative panel to change the parameters of a@SuppressWarnings ("serial") turtle
+ * Adaptative panel to change the parameters of a turtle
  * 
  * @author xinouch
  */
@@ -64,12 +65,13 @@ public class ParameterDialog extends JDialog
 
 	/**
 	 * Create the dialog.
-	 * 
+	 * @param owner the owner of this dialog
 	 * @param title the title of the window
 	 * @param params the params
 	 */
-	public ParameterDialog (String title, ArrayList<Parameter> params)
+	public ParameterDialog (Frame owner, String title, ArrayList<Parameter> params)
 	{
+		super(owner);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setModal(true);
