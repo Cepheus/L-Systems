@@ -58,7 +58,7 @@ public interface Rule
 	 * </p>
 	 * <ul>
 	 * <li>0 if nothing has been changed</li>
-	 * <li>-1 if there has been one deletion (-3 for 3)</li>
+	 * <li>-1 if there has been one deletion</li>
 	 * <li>1 if a character has been changed</li>
 	 * <li>x if x characters have been inserted</li>
 	 * </ul>

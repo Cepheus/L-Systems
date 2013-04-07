@@ -47,7 +47,7 @@ public abstract class Turtle
 	/** The type of the turtle */
 	protected int type = TYPE_UNKNOWN;
 	/** The list of symbols to interpret */
-	protected ListSymbols symbols;
+	protected ListSymbols symbols = new ListSymbols();
 	/** the parameters of this turtle */
 	protected ArrayList<Parameter> parameters = new ArrayList<Parameter>();
 	/** The Drawer of the 3D scene */

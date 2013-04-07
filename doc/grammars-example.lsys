@@ -284,6 +284,37 @@ DOL
 	}
 }
 
+# advanced tree with context dependent grammar #
+AdvancedTree
+SIL
+{
+	SYMBOLS
+	{
+		F : FORWARD
+		A
+		B
+		+ : TURNRIGHT
+		- : TURNLEFT
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+	}
+	PHRASE: FAFAFA
+	ANGLE: 26
+	RULES
+	{
+		B < B > B -> A
+		B < B > A -> A[-FAFA]
+		A < B > B -> A
+		A < B > A -> A
+		B < A > B -> B
+		B < A > A -> AFA
+		A < A > B -> A
+		A < A > A -> B
+		+ -> -
+		- -> +
+	}
+}
+
 #RÉMI grammar fuck yeah! #
 RÉMI
 DOL
@@ -307,8 +338,10 @@ DOL
 
 	RULES
 	{
+		# A -> BFFFF+++FFFFFF---FFFFF+F+F+F+FFFF+F+F+F+FFFF+F+F+F--F+F+F+FFFF+F+F+F+FFFF+F+F+F-FF++FFFFF----FFFFF++FF #
 		A -> B
-		B -> FFFFF++F+F+F+F+F---FFFF---[FF[FF[^^FFFFFFFFFvvFvvFFFFFFFFF^^+FF]++FFF]++FF]++FFF--FFF+++FF--FF+++FFF^^FFFFFFFFF--F--FFFFFFFFF^^FFFF^^FFFFFFFFFvvFvvFFFFFFFFF^^C
+		B -> CFFFFF++F+F+F+F+F---FFFF---[FF[FF[^^FFFFFFFFFvvFvvFFFFFFFFF^^+FF]++FFF]++FF]++FFF--FFF+++FF--FF+++FFF^^FFFFFFFFF--F--FFFFFFFFF^^FFFF^^FFFFFFFFFvvFvvFFFFFFFFF^^
+		C -> A++F++F+F[+F+F+FFF+F+F+F+F]---^^FFFFFFFFFFFvvFvvFFFFFFFFFFF^^--FF[++FF]F+F+F+F+FFF--^^FFFFFFFFFFFvvFvvFFFFFFFFFFF^^[--FF[++F]FF[^^FFFFFFFFFFvv+F[+FvvFFFFFFFFFF]vvFFFFFFFFFF]++FF]FF[--FFF]FF[--FFF]++F--FF[--FF[++F]FF++FF]FF
 		[ -> ε
 		] -> ε
 		+ -> ε
@@ -316,7 +349,6 @@ DOL
 		^ -> ε
 		v -> ε
 		F -> ε
-		C -> ++F++F+F[+F+F+FFF+F+F+F+F]---^^FFFFFFFFFFFvvFvvFFFFFFFFFFF^^--FF[++FF]F+F+F+F+FFF--^^FFFFFFFFFFFvvFvvFFFFFFFFFFF^^[--FF[++F]FF[^^FFFFFFFFFFvv+F[+FvvFFFFFFFFFF]vvFFFFFFFFFF]++FF]FF[--FFF]FF[--FFF]++F--FF[--FF[++F]FF++FF]FFA
 	}
 }
 

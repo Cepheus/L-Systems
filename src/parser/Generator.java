@@ -177,7 +177,7 @@ public class Generator
 					offset = rules.get(j).applyOnce(indexOld, lastGenerated, i, generated);
 					if (offset != 0)
 					{
-						i += offset;
+						i += offset > 0 ? offset : 0;
 						if (i < 0)
 							i = 0;
 						sizeGenerated = generated.size();

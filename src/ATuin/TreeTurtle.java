@@ -46,7 +46,7 @@ public class TreeTurtle extends Turtle {
 	private float length = 10f;
 
 	/** The reduction of the length of the branches in % */
-	private float lengthReduction = 13;
+	private float lengthReduction = 1; // pour te faire plaisir
 
 	/** The width of the tubes */
 	float width = 1.5f;
