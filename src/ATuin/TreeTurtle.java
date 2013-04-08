@@ -341,14 +341,12 @@ public class TreeTurtle extends Turtle {
 			}
 
 		}
-
 		Vector3f middlePoint = new Vector3f();
 		middlePoint.x = (maxCoord.x - minCoord.x) / 2 + minCoord.x;
 		middlePoint.y = (maxCoord.y - minCoord.y) / 2 + minCoord.y;
 		middlePoint.z = (maxCoord.z - minCoord.z) / 2 + minCoord.z;
-		float diff = Math.max((maxCoord.x - minCoord.x) * 0.65f,
-				(maxCoord.y - minCoord.y) * 1.35f);
-
+		float diff = Math.max((maxCoord.x -minCoord.x)*0.65f,
+				(maxCoord.y - minCoord.y)*1.35f);
 		cameraPosition = new Vector3f(middlePoint.x, middlePoint.y,
 				middlePoint.z - diff);
 		return returnNode;

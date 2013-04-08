@@ -199,7 +199,7 @@ public class TubeTurtle extends Turtle {
 	}
 
 	@Override
-	protected Node drawScene() throws BadSymbolException {
+	protected Node drawScene() throws BadSymbolException {		
 		int i = 0;
 		material = new Material(drawer.getAssetManager(),
 				"Common/MatDefs/Light/Lighting.j3md");
@@ -217,7 +217,7 @@ public class TubeTurtle extends Turtle {
 		Node returnNode = node;
 		Stack<Node> saveNode = new Stack<Node>();
 		returnNode.rotate(-90 * FastMath.DEG_TO_RAD, 0, 0);
-
+		
 		for (Symbol symbol : symbols.getSymbols()) {
 			switch (symbol.getInterpretation()) {
 			case Symbol.S_FORWARD:

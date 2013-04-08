@@ -76,7 +76,7 @@ public abstract class Turtle
 	public Turtle (Drawer drawer)
 	{
 		this.drawer = drawer;
-		cameraPosition = drawer.getCamera().getLocation();
+		cameraPosition = drawer.getCamera().getLocation();		
 	}
 
 	/**
@@ -258,6 +258,7 @@ public abstract class Turtle
 				{
 					drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z);
 					drawer.getRootNode().center();
+					drawer.getRootNode().setLocalTranslation(0f,0f,0f);
 				}
 				return null;
 			}
