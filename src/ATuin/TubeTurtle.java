@@ -287,10 +287,10 @@ public class TubeTurtle extends Turtle {
 		middlePoint.x = (maxCoord.x - minCoord.x) / 2 + minCoord.x;
 		middlePoint.y = (maxCoord.y - minCoord.y) / 2 + minCoord.y;
 		middlePoint.z = (maxCoord.z - minCoord.z) / 2 + minCoord.z;
-		float diff = Math.max(maxCoord.x -minCoord.x,
-				maxCoord.y - minCoord.y);
+		float diff = Math.max((maxCoord.x -minCoord.x)*0.65f,
+				(maxCoord.y - minCoord.y)*1.35f);
 		cameraPosition = new Vector3f(middlePoint.x, middlePoint.y,
-				middlePoint.z - diff * 2.5f);
+				middlePoint.z - diff);
 		return returnNode;
 	}
 
