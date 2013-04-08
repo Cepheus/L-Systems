@@ -180,10 +180,8 @@ public class Drawer extends SimpleApplication implements AnalogListener, ActionL
 		{
 			if (rootNode.getTriangleCount() > 0)
 			{
-				rootNode.center();
 				rootNode.setLocalRotation(Quaternion.DIRECTION_Z);
 				rootNode.center();
-				rootNode.setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
 			}
 		}
 		else if (name.equals("FLYCAM_Accelerate"))
