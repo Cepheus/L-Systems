@@ -58,6 +58,8 @@ public abstract class Turtle
 	protected Vector3f minCoord = new Vector3f(0, 0, 0);
 	/** The maximum coordinates of the drawing */
 	protected Vector3f maxCoord = new Vector3f(0, 0, 0);
+	/** The initial position of the camera */
+	protected Vector3f cameraPosition;
 
 	/**
 	 * Default constructor.
@@ -74,6 +76,7 @@ public abstract class Turtle
 	public Turtle (Drawer drawer)
 	{
 		this.drawer = drawer;
+		cameraPosition = drawer.getCamera().getLocation();
 	}
 
 	/**
@@ -244,4 +247,13 @@ public abstract class Turtle
 	 * @return the list of symbols that can be displayed by this turtle.
 	 */
 	public abstract ListSymbols getAuthorizedInterpretation ();
+	
+	/**
+	 * Sets the position of the camera to the attribute cameraPosition. This attribute should be modified
+	 * within the turtles to have a proper value
+	 */
+	public void setCameraPosition() {
+		drawer.getCamera().setLocation(cameraPosition);
+		drawer.getCamera().lookAt(cameraPosition, new Vector3f(0, 1, 0));
+	}
 }

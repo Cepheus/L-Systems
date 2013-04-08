@@ -50,10 +50,10 @@ public class TreeTurtle extends Turtle {
 
 	/** The width of the tubes */
 	private float width = 1.5f;
-	
+
 	/** The reduction of the width of the branches in % */
 	private float widthReduction = 13;
-	
+
 	/** The width of the PQTorus leaves */
 	private float widthLeaf = 1.5f;
 
@@ -120,7 +120,7 @@ public class TreeTurtle extends Turtle {
 		sym = new Symbol();
 		sym.setInterpretation(Symbol.S_UNDETERMINATE);
 		authorizedSymbols.append(sym);
-		
+
 		sym = new Symbol();
 		sym.setInterpretation(S_LEAF);
 		sym.setName("LEAF");
@@ -346,10 +346,8 @@ public class TreeTurtle extends Turtle {
 		Vector3f middlePoint = new Vector3f((maxCoord.x - minCoord.x) / 2, 0,
 				(maxCoord.z - minCoord.z) / 2);
 		float diff = Math.max(maxCoord.x - minCoord.x, maxCoord.y - minCoord.y);
-		drawer.getCamera().setLocation(
-				new Vector3f(middlePoint.x, middlePoint.y, middlePoint.z - diff
-						* 2.5f));
-		drawer.getCamera().lookAt(middlePoint, new Vector3f(0, 1, 0));
+		cameraPosition = new Vector3f(middlePoint.x, middlePoint.y,
+				middlePoint.z - diff * 2.5f);
 		return returnNode;
 	}
 
@@ -378,10 +376,11 @@ public class TreeTurtle extends Turtle {
 	 *            The node to link the drawn leaf to
 	 */
 	private void drawLeaf(Node node) {
-		PQTorus flower = new PQTorus(3,8, widthLeaf, widthLeaf/2, 32, 32); // Flower torus
+		PQTorus flower = new PQTorus(3, 8, widthLeaf, widthLeaf / 2, 32, 32); // Flower
+																				// torus
 		Geometry geom = new Geometry("Leaf", flower);
 		geom.setMaterial(materialLeaf);
-		//geom.setLocalTranslation(0, 0, length / 2);
+		// geom.setLocalTranslation(0, 0, length / 2);
 		node.attachChild(geom);
 	}
 
