@@ -248,7 +248,7 @@ public abstract class Turtle {
 	 * Resets the position of the camera to the attribute cameraPosition. This
 	 * attribute should be modified within the turtles to have a proper value.
 	 */
-	public void ResetCameraPosition() {
+	public void resetCameraPosition() {
 		drawer.enqueue(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
