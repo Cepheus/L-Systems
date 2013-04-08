@@ -24,15 +24,14 @@ import parser.BadSymbolException;
 import parser.GeneratorPseudoListener;
 import parser.ListSymbols;
 
-
 /**
- * Default class of a turtle interpretation. This class factorise the differents turtle interpretation. If you wish to create a new turtle
- * interpretation you should extends this class and implements its methods.
+ * Default class of a turtle interpretation. This class factorise the differents
+ * turtle interpretation. If you wish to create a new turtle interpretation you
+ * should extends this class and implements its methods.
  * 
  * @author Caelum
  */
-public abstract class Turtle
-{
+public abstract class Turtle {
 	/** Type of the turtle is unknown */
 	public final static int TYPE_UNKNOWN = 0;
 	/** The turtle is a TubeTurtle */
@@ -64,17 +63,16 @@ public abstract class Turtle
 	/**
 	 * Default constructor.
 	 */
-	public Turtle ()
-	{
+	public Turtle() {
 	}
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer The object drawer of the scene
+	 * @param drawer
+	 *            The object drawer of the scene
 	 */
-	public Turtle (Drawer drawer)
-	{
+	public Turtle(Drawer drawer) {
 		this.drawer = drawer;
 		cameraPosition = drawer.getCamera().getLocation();
 	}
@@ -82,11 +80,12 @@ public abstract class Turtle
 	/**
 	 * Constructor.
 	 * 
-	 * @param drawer The object drawer of the scene
-	 * @param symbols The symbols to represent
+	 * @param drawer
+	 *            The object drawer of the scene
+	 * @param symbols
+	 *            The symbols to represent
 	 */
-	public Turtle (Drawer drawer, ListSymbols symbols)
-	{
+	public Turtle(Drawer drawer, ListSymbols symbols) {
 		this(drawer);
 		this.symbols = symbols;
 	}
@@ -96,35 +95,37 @@ public abstract class Turtle
 	 * 
 	 * @return true if all is ok, false if all symbols can't be interpreted
 	 */
-	public abstract boolean checkSymbols ();
+	public abstract boolean checkSymbols();
 
 	/**
 	 * Draws the list of symbols depending of the turtle's interpretation.
-	 * @param listener the listener to tell the advencement
+	 * 
+	 * @param listener
+	 *            the listener to tell the advencement
 	 * 
 	 * @throws BadSymbolException
 	 */
-	public void drawSymbols (final GeneratorPseudoListener listener) throws BadSymbolException
-	{
+	public void drawSymbols(final GeneratorPseudoListener listener)
+			throws BadSymbolException {
 		final Node root = drawer.getRootNode(), nodeTmp;
 		listener.begin();
 		nodeTmp = drawScene();
 
-		drawer.enqueue(new Callable<Void>()
-		{
+		drawer.enqueue(new Callable<Void>() {
 			@Override
-			public Void call () throws Exception
-			{
+			public Void call() throws Exception {
 				root.detachAllChildren();
 				rootNode.detachAllChildren();
 				rootNode.attachChild(nodeTmp);
 				root.attachChild(rootNode);
-				if (nodeTmp.getChildren().size() > 0)
-				{
+				if (nodeTmp.getChildren().size() > 0) {
 					root.center();
 					root.setLocalRotation(Quaternion.DIRECTION_Z);
 					root.center();
-					root.setLocalRotation(Quaternion.DIRECTION_Z); // on le fait 2 fois pour plus de sûreté
+					root.setLocalRotation(Quaternion.DIRECTION_Z); // on le fait
+																	// 2 fois
+																	// pour plus
+																	// de sûreté
 				}
 				listener.finished();
 				return null;
@@ -135,16 +136,13 @@ public abstract class Turtle
 	/**
 	 * clear the scene: remove all the objects
 	 */
-	public void clearScene ()
-	{
+	public void clearScene() {
 		final Node root = drawer.getRootNode();
 		symbols.clear();
 
-		drawer.enqueue(new Callable<Void>()
-		{
+		drawer.enqueue(new Callable<Void>() {
 			@Override
-			public Void call () throws Exception
-			{
+			public Void call() throws Exception {
 				root.detachAllChildren();
 				return null;
 			}
@@ -157,20 +155,21 @@ public abstract class Turtle
 	 * @return the node to attach to the Root Node to display all the elements.
 	 * @throws BadSymbolException
 	 */
-	protected abstract Node drawScene () throws BadSymbolException;
-	
+	protected abstract Node drawScene() throws BadSymbolException;
+
 	/**
 	 * Initiation of the paramters of the turtle
 	 */
 	protected abstract void initParameters();
 
 	/**
-	 * Update the max and min coordinates of the drawing. This is used to position de camera at the center of the drawing.
+	 * Update the max and min coordinates of the drawing. This is used to
+	 * position de camera at the center of the drawing.
 	 * 
-	 * @param position the last position drawn
+	 * @param position
+	 *            the last position drawn
 	 */
-	protected void updateBoundsCoordinates (Vector3f position)
-	{
+	protected void updateBoundsCoordinates(Vector3f position) {
 		if (position.x < minCoord.x)
 			minCoord.x = position.x;
 		if (position.y < minCoord.y)
@@ -186,50 +185,46 @@ public abstract class Turtle
 	}
 
 	/**
-	 * @param drawer the drawer to set
+	 * @param drawer
+	 *            the drawer to set
 	 */
-	public void setDrawer (Drawer drawer)
-	{
+	public void setDrawer(Drawer drawer) {
 		this.drawer = drawer;
 	}
 
 	/**
-	 * @param symbols the symbols to set
+	 * @param symbols
+	 *            the symbols to set
 	 */
-	public void setSymbols (ListSymbols symbols)
-	{
+	public void setSymbols(ListSymbols symbols) {
 		this.symbols = symbols;
 	}
 
 	/**
 	 * @return the symbols
 	 */
-	public ListSymbols getSymbols ()
-	{
+	public ListSymbols getSymbols() {
 		return symbols;
 	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName ()
-	{
+	public String getName() {
 		return name;
 	}
 
 	/**
 	 * @return the type
 	 */
-	public int getType ()
-	{
+	public int getType() {
 		return type;
 	}
 
 	/**
 	 * @return the parameters
 	 */
-	public ArrayList<Parameter> getParameters ()
-	{
+	public ArrayList<Parameter> getParameters() {
 		return parameters;
 	}
 
@@ -238,22 +233,31 @@ public abstract class Turtle
 	 * 
 	 * @param params
 	 */
-	public abstract void setParameters (ArrayList<Parameter> params);
-	
+	public abstract void setParameters(ArrayList<Parameter> params);
+
 	/**
 	 * @brief the list of symbols that can be displayed by this turtle.
 	 * 
-	 * If you use a interpretation that is does not exists in this list, the turtle won't draw and will throw an exception.
+	 *        If you use a interpretation that is does not exists in this list,
+	 *        the turtle won't draw and will throw an exception.
 	 * @return the list of symbols that can be displayed by this turtle.
 	 */
-	public abstract ListSymbols getAuthorizedInterpretation ();
-	
+	public abstract ListSymbols getAuthorizedInterpretation();
+
 	/**
-	 * Sets the position of the camera to the attribute cameraPosition. This attribute should be modified
-	 * within the turtles to have a proper value
+	 * Resets the position of the camera to the attribute cameraPosition. This
+	 * attribute should be modified within the turtles to have a proper value.
 	 */
-	public void setCameraPosition() {
-		drawer.getCamera().setLocation(cameraPosition);
-		drawer.getCamera().lookAt(cameraPosition, new Vector3f(0, 1, 0));
+	public void ResetCameraPosition() {
+		drawer.enqueue(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				//System.out.println("Setting camera position!" + cameraPosition);
+				drawer.getCamera().setLocation(cameraPosition);
+				drawer.getCamera()
+						.lookAt(cameraPosition, new Vector3f(0, 1, 0));
+				return null;
+			}
+		});
 	}
 }
