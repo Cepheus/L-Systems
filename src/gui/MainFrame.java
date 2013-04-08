@@ -164,7 +164,7 @@ public class MainFrame extends JFrame
 					panelProgressBar.setVisible(true);
 				progressBar.setIndeterminate(true);
 				progressBar.setString(toBeDisplayed);
-				btnCancel.setEnabled(false);
+				btnCancel.setEnabled(controller.isInPlayingMode());
 			}
 			else if (percent < 100)
 			{
@@ -187,7 +187,7 @@ public class MainFrame extends JFrame
 			}
 			else
 			{
-				panelProgressBar.setVisible(false);
+				panelProgressBar.setVisible(controller.isInPlayingMode());
 				progressBar.setIndeterminate(false);
 				// btnApplyModifs.setEnabled(true);
 				btnCancel.setEnabled(false);
@@ -271,6 +271,21 @@ public class MainFrame extends JFrame
 	private void launchTurtle ()
 	{
 		controller.launchTurtle((int) spinnerNbIt.getValue());
+	}
+	
+	/**
+	 * called when click on play button. display all the iterations from 0
+	 */
+	private void playTurtle ()
+	{
+		try
+		{
+			controller.playTurtle((int) spinnerNbIt.getValue());
+		}
+		catch (BadSymbolException e)
+		{
+			showException(e, "Bad interpretation");
+		}
 	}
 
 	/**
@@ -508,6 +523,13 @@ public class MainFrame extends JFrame
 		toolBar.add(btnLaunch);
 		btnPlay.setToolTipText("Launch an animation drawing all the interpretations from 0");
 		btnPlay.setEnabled(false);
+		btnPlay.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				playTurtle();
+			}
+		});
 
 		toolBar.add(btnPlay);
 

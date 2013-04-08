@@ -56,12 +56,16 @@ public class Controller implements GeneratorPseudoListener
 	private TubeTurtle tubeTurtle = null;
 	/** The TreeTurtle if there is one */
 	private TreeTurtle treeTurtle = null;
-	
+
 	/** total nb iterations, used in play mode */
-	private int nbIterations = 0;
+	private int totalIterations = 0;
+	/** the actual iteration */
+	private int currentIteration = 1; // we begin at 1 because we want to display totalIterations - 1
 	/** the list of symbols for the current iteration, used in play mode */
 	private ListSymbols listGenerated = null;
-	
+	/** the initial axiom of the grammar, used in play mode */
+	private ListSymbols initialAxiom = null;
+
 	/** The generator for the current grammar */
 	private Generator generator = null;
 	/** if true we are currently displaying a turtle */
@@ -188,40 +192,6 @@ public class Controller implements GeneratorPseudoListener
 		};
 		t.start(); // from here, we wait for the generator to finish, it will call finished()
 	}
-	
-	/**
-	 * Launch the grammar generator, and then call the turtle to draw.
-	 * This display all the iterations from 0 to nbIteration so we see the tree grow.
-	 * 
-	 * @param nbIterations the number of iterations to make in the generetor
-	 */
-	public void playTurtle (int nbIterations)
-	{
-		generator = null;
-		// on nettoie la scène
-		isInPlayingMode = true;
-		isDisplaying = false;
-		// on génère les symboles
-		Grammar grammar = grammars.get(indexOfCurrentGrammar);
-		generator = new Generator(grammar);
-		generator.setTotalIteration(nbIterations);
-		Thread t = new Thread()
-		{
-			public void run ()
-			{
-				try
-				{
-					generator.generate(me);
-				}
-				catch (BadSymbolException e)
-				{
-					mainFrame.setProgressBar(100, null);
-					mainFrame.showException(e, "Error while generating symbols");
-				}
-			}
-		};
-		t.start(); // from here, we wait for the generator to finish, it will call finished()
-	}
 
 	/**
 	 * Launch the turtle with the given symols
@@ -240,6 +210,46 @@ public class Controller implements GeneratorPseudoListener
 		turtle.setSymbols(grammar.stringToListSymbols(salade));
 		isDisplaying = true;
 		turtle.drawSymbols(this);
+	}
+
+	/**
+	 * Launch the grammar generator, and then call the turtle to draw. This display all the iterations from 0 to nbIteration so we see the
+	 * tree grow.
+	 * 
+	 * @param nbIterations the number of iterations to make in the generetor
+	 * @throws BadSymbolException
+	 */
+	public void playTurtle (int nbIterations) throws BadSymbolException
+	{
+		generator = null;
+		totalIterations = nbIterations;
+		// on nettoie la scène
+		isInPlayingMode = true;
+		isDisplaying = false;
+		// on génère les symboles
+		Grammar grammar = grammars.get(indexOfCurrentGrammar);
+		if (initialAxiom == null)
+			initialAxiom = grammar.getAxiom();
+		if (listGenerated != null)
+			grammar.setAxiom(listGenerated);
+		generator = new Generator(grammar);
+		generator.setTotalIteration(1);
+		Thread t = new Thread()
+		{
+			public void run ()
+			{
+				try
+				{
+					generator.generate(me);
+				}
+				catch (BadSymbolException e)
+				{
+					mainFrame.setProgressBar(100, null);
+					mainFrame.showException(e, "Error while generating symbols");
+				}
+			}
+		};
+		t.start(); // from here, we wait for the generator to finish, it will call finished()
 	}
 
 	/**
@@ -292,12 +302,12 @@ public class Controller implements GeneratorPseudoListener
 		int index = 0;
 		String previousTurtle = null;
 		ArrayList<String> its = null;
-		
+
 		this.indexOfCurrentGrammar = indexOfCurrentGrammar;
 		if (!turtles.isEmpty())
 			previousTurtle = turtles.get(indexOfCurrentTurtle).getName();
 		its = chooseInterpretations();
-		
+
 		if (previousTurtle != null)
 		{
 			for (int i = 0; i < its.size(); i++)
@@ -373,12 +383,22 @@ public class Controller implements GeneratorPseudoListener
 		if (isDisplaying)
 			turtles.get(indexOfCurrentTurtle).drawSymbols(this);
 	}
-	
+
 	/**
-	 * stop the generation
+	 * @return the isInPlayingMode
+	 */
+	public boolean isInPlayingMode ()
+	{
+		return isInPlayingMode;
+	}
+
+	/**
+	 * stop the generation (of the grammar generator or of a playing mode)
 	 */
 	public void stopGeneration ()
 	{
+		if (isInPlayingMode)
+			currentIteration = totalIterations;
 		if (generator != null)
 			generator.stopGenerating();
 	}
@@ -481,27 +501,62 @@ public class Controller implements GeneratorPseudoListener
 	public void finished () throws BadSymbolException
 	{
 		Turtle turtle = turtles.get(indexOfCurrentTurtle);
-		mainFrame.setProgressBar(100, null);
-		if (!isDisplaying && generator.isCorrectlyFinished())
+		if (!isDisplaying && generator != null && generator.isCorrectlyFinished())
 		{
-			// on affiche le generated dans la mainwindow. As it takes long time, we do it in a thread.
-			Thread t = new Thread()
+			if (!isInPlayingMode)
 			{
-				public void run ()
+				// on affiche le generated dans la mainwindow. As it takes long time, we do it in a thread.
+				Thread t = new Thread()
 				{
-					mainFrame.setSymbolsGenerated(turtles.get(indexOfCurrentTurtle).getSymbols().toString());
-				}
-			};
-			t.start();
+					public void run ()
+					{
+						mainFrame.setSymbolsGenerated(turtles.get(indexOfCurrentTurtle).getSymbols().toString());
+					}
+				};
+				t.start();
+			}
 			// on donne la salade à la tortue
 			turtle.setSymbols(generator.getGenerated());
+			if (isInPlayingMode)
+				listGenerated = generator.getGenerated();
 			generator = null;
 
 			isDisplaying = true;
+			mainFrame.setProgressBar(100, null);
 			turtle.drawSymbols(this);
 		}
 		else if (isDisplaying && !isInPlayingMode)
+		{
 			turtle.resetCameraPosition();
+			mainFrame.setProgressBar(100, null);
+		}
+		else if (isDisplaying && isInPlayingMode)
+		{
+			if (currentIteration == totalIterations) // playmode finished
+			{
+				currentIteration = 1;
+				totalIterations = 0;
+				// on affiche le generated dans la mainwindow. As it takes long time, we do it in a thread.
+				Thread t = new Thread()
+				{
+					public void run ()
+					{
+						mainFrame.setSymbolsGenerated(turtles.get(indexOfCurrentTurtle).getSymbols().toString());
+					}
+				};
+				t.start();
+				listGenerated = null;
+				grammars.get(indexOfCurrentGrammar).setAxiom(initialAxiom);
+				initialAxiom = null;
+				isInPlayingMode = false;
+				mainFrame.setProgressBar(100, null);
+			}
+			else
+			{
+				currentIteration++;
+				playTurtle(totalIterations);
+			}
+		}
 	}
 
 	@Override
