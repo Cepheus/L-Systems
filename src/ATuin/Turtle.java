@@ -254,11 +254,14 @@ public abstract class Turtle
 				// System.out.println("Setting camera position!" + cameraPosition);
 				drawer.getCamera().setLocation(cameraPosition);
 				drawer.getCamera().lookAt(cameraPosition, new Vector3f(0, 1, 0));
-				drawer.getRootNode().center();
-				drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z);
-				// on le fait 2 fois pour plus de sûreté
-				drawer.getRootNode().center();
-				drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z);
+				if (drawer.getRootNode().getTriangleCount() > 0)
+				{
+					drawer.getRootNode().center();
+					drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z);
+					// on le fait 2 fois pour plus de sûreté
+					drawer.getRootNode().center();
+					drawer.getRootNode().setLocalRotation(Quaternion.DIRECTION_Z);
+				}
 				return null;
 			}
 		});
