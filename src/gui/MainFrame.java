@@ -190,7 +190,7 @@ public class MainFrame extends JFrame
 				panelProgressBar.setVisible(controller.isInPlayingMode());
 				progressBar.setIndeterminate(false);
 				// btnApplyModifs.setEnabled(true);
-				btnCancel.setEnabled(false);
+				btnCancel.setEnabled(controller.isInPlayingMode());
 				btnLaunch.setEnabled(true);
 				btnPlay.setEnabled(true);
 				btnClearScene.setEnabled(true);
@@ -280,7 +280,9 @@ public class MainFrame extends JFrame
 	{
 		try
 		{
-			controller.playTurtle((int) spinnerNbIt.getValue());
+			int nbIter = (int) spinnerNbIt.getValue();
+			if (nbIter > 0)
+				controller.playTurtle(nbIter);
 		}
 		catch (BadSymbolException e)
 		{
@@ -509,7 +511,7 @@ public class MainFrame extends JFrame
 
 		spinnerNbIt.setEnabled(false);
 		spinnerNbIt.setToolTipText("Number of iterations. Maximum is 999");
-		spinnerNbIt.setModel(new SpinnerNumberModel(2, 1, 999, 1));
+		spinnerNbIt.setModel(new SpinnerNumberModel(2, 0, 999, 1));
 		toolBar.add(spinnerNbIt);
 		btnLaunch.setEnabled(false);
 		btnLaunch.addActionListener(new ActionListener()
