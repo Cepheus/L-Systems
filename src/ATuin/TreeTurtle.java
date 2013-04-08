@@ -49,10 +49,13 @@ public class TreeTurtle extends Turtle {
 	private float lengthReduction = 1; // pour te faire plaisir
 
 	/** The width of the tubes */
-	float width = 1.5f;
+	private float width = 1.5f;
 	
 	/** The reduction of the width of the branches in % */
 	private float widthReduction = 13;
+	
+	/** The width of the PQTorus leaves */
+	private float widthLeaf = 1.5f;
 
 	/** The color of the branch */
 	private ColorRGBA colorBranch = ColorRGBA.Brown;
@@ -159,6 +162,8 @@ public class TreeTurtle extends Turtle {
 				ParameterType.TYPE_DOUBLE, new Double(widthReduction)));
 		parameters.add(new Parameter("Branch color", ParameterType.TYPE_COLOR,
 				colorBranch));
+		parameters.add(new Parameter("Width of the leaves",
+				ParameterType.TYPE_DOUBLE, new Double(widthLeaf)));
 		parameters.add(new Parameter("Leaf color", ParameterType.TYPE_COLOR,
 				colorLeaf));
 	}
@@ -373,7 +378,7 @@ public class TreeTurtle extends Turtle {
 	 *            The node to link the drawn leaf to
 	 */
 	private void drawLeaf(Node node) {
-		PQTorus flower = new PQTorus(3,8, 2f, 1f, 32, 32); // Flower torus
+		PQTorus flower = new PQTorus(3,8, widthLeaf, widthLeaf/2, 32, 32); // Flower torus
 		Geometry geom = new Geometry("Leaf", flower);
 		geom.setMaterial(materialLeaf);
 		//geom.setLocalTranslation(0, 0, length / 2);
@@ -390,7 +395,8 @@ public class TreeTurtle extends Turtle {
 		width = ((Double) parameters.get(3).getValue()).floatValue();
 		widthReduction = ((Double) parameters.get(4).getValue()).floatValue();
 		colorBranch = (ColorRGBA) parameters.get(5).getValue();
-		colorLeaf = (ColorRGBA) parameters.get(6).getValue();
+		widthLeaf = ((Double) parameters.get(6).getValue()).floatValue();
+		colorLeaf = (ColorRGBA) parameters.get(7).getValue();
 	}
 
 	@Override
