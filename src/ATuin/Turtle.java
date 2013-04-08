@@ -76,6 +76,7 @@ public abstract class Turtle
 	public Turtle (Drawer drawer)
 	{
 		this.drawer = drawer;
+		cameraPosition = drawer.getCamera().getLocation();
 	}
 
 	/**
