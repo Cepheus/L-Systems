@@ -292,7 +292,7 @@ public class TubeTurtle extends Turtle {
 				maxCoord.y - minCoord.y);
 		cameraPosition = new Vector3f(middlePoint.x, middlePoint.y,
 				middlePoint.z - diff * 2.5f);
-		setCameraPosition();
+		resetCameraPosition();
 		return returnNode;
 	}
 
