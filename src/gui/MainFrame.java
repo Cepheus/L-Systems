@@ -311,7 +311,7 @@ public class MainFrame extends JFrame
 	 */
 	private void openFileChooser ()
 	{
-		JFileChooser chooser = new JFileChooser();
+		JFileChooser chooser = new JFileChooser("./doc");
 		FileFilter filter = new FileNameExtensionFilter("L-SYSTEM files", "lsys");
 
 		chooser.setFileFilter(filter);

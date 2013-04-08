@@ -1,0 +1,90 @@
+# advanced and more beautifull trees #
+
+# 2D - Fire - example from http://magicgarden.sourceforge.net/ #
+# make 4 iterations on it #
+Fire
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		F : FORWARD
+		X
+	}
+	PHRASE: X-F+[X-X]+FF
+	ANGLE: 20
+	RULES
+	{
+		X -> F[X+F]+X[X+X]-X
+	}
+}
+
+# 2D - InBloom - example from http://magicgarden.sourceforge.net/ #
+# make 4 iterations on it #
+InBloom
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		F : FORWARD
+		X
+	}
+	AXIOM: X
+	ANGLE: 13
+	RULES
+	{
+		X -> XF[X][XFX]-F[-XFX][-X]
+	}
+}
+
+# 2D - Naiad - example from http://magicgarden.sourceforge.net/ #
+# make 5 iterations on it #
+Naiad
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		F : FORWARD
+		X
+	}
+	AXIOM: X
+	ANGLE: 21
+	RULES
+	{
+		X -> XF[+FX[X]-F[-FX]]
+		F -> XF
+	}
+}
+
+# 2D - Unique - example from http://magicgarden.sourceforge.net/ #
+# make 4 iterations on it #
+Unique
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		F : FORWARD
+		X
+	}
+	AXIOM: X
+	ANGLE: 21
+	RULES
+	{
+		X -> X[-X+F]+FX[X-F]+F[-F-XX]-X
+	}
+}
