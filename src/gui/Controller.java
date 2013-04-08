@@ -518,7 +518,17 @@ public class Controller implements GeneratorPseudoListener
 			// on donne la salade à la tortue
 			turtle.setSymbols(generator.getGenerated());
 			if (isInPlayingMode)
+			{
 				listGenerated = generator.getGenerated();
+				try
+				{
+					Thread.sleep(250);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+			}
 			generator = null;
 
 			isDisplaying = true;
