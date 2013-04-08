@@ -89,7 +89,7 @@ public class EditGrammarDialog extends JDialog
 
 		initDialog();
 		initInputs();
-		displayInterpretations(standardSymbols);
+		displayInterpretations(turtleSymbols);
 		pack();
 	}
 
@@ -128,23 +128,23 @@ public class EditGrammarDialog extends JDialog
 						}
 					}
 				});
-				rdbtnStandard.setSelected(true);
-				panelRadio.add(rdbtnStandard);
-			}
-			{
-				rdbtnTurtle.addActionListener(new ActionListener()
 				{
-					public void actionPerformed (ActionEvent arg0)
+					rdbtnTurtle.setSelected(true);
+					rdbtnTurtle.addActionListener(new ActionListener()
 					{
-						if (rdbtnTurtle != null && rdbtnStandard != null)
+						public void actionPerformed (ActionEvent arg0)
 						{
-							rdbtnStandard.setSelected(!rdbtnTurtle.isSelected());
-							if (rdbtnTurtle.isSelected())
-								displayInterpretations(turtleSymbols);
+							if (rdbtnTurtle != null && rdbtnStandard != null)
+							{
+								rdbtnStandard.setSelected(!rdbtnTurtle.isSelected());
+								if (rdbtnTurtle.isSelected())
+									displayInterpretations(turtleSymbols);
+							}
 						}
-					}
-				});
-				panelRadio.add(rdbtnTurtle);
+					});
+					panelRadio.add(rdbtnTurtle);
+				}
+				panelRadio.add(rdbtnStandard);
 			}
 		}
 		{

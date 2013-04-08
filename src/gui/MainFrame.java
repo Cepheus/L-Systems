@@ -196,13 +196,14 @@ public class MainFrame extends JFrame
 	 * Import the list of grammars in the combobox
 	 * 
 	 * @param grammars
+	 * @param selected the selected index
 	 */
-	public void setListGrammars (ArrayList<String> grammars)
+	public void setListGrammars (ArrayList<String> grammars, int selected)
 	{
 		comboBoxGrammars.removeAllItems();
 		for (String s : grammars)
 			comboBoxGrammars.addItem(s);
-		comboBoxGrammars.setSelectedIndex(0);
+		comboBoxGrammars.setSelectedIndex(selected);
 
 		// on active le bouzin
 		comboBoxGrammars.setEnabled(true);
@@ -215,8 +216,9 @@ public class MainFrame extends JFrame
 	 * Import the list of interpretations in the combobox
 	 * 
 	 * @param interpretations
+	 * @param selected the selected index
 	 */
-	public void setListInterpretations (ArrayList<String> interpretations)
+	public void setListInterpretations (ArrayList<String> interpretations, int selected)
 	{
 		if (interpretations.isEmpty())
 		{
@@ -234,7 +236,7 @@ public class MainFrame extends JFrame
 			comboBoxInterpretations.removeAllItems();
 			for (String s : interpretations)
 				comboBoxInterpretations.addItem(s);
-			comboBoxInterpretations.setSelectedIndex(0);
+			comboBoxInterpretations.setSelectedIndex(selected);
 			// on active le bouzin
 			setEnable(true);
 		}

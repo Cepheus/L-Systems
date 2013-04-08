@@ -123,7 +123,7 @@ public class Controller implements GeneratorPseudoListener
 				ArrayList<String> grs = new ArrayList<String>();
 				for (Grammar g : grammars)
 					grs.add(g.getName());
-				mainFrame.setListGrammars(grs);
+				mainFrame.setListGrammars(grs, 0);
 			}
 			catch (NumberFormatException e)
 			{
@@ -236,8 +236,24 @@ public class Controller implements GeneratorPseudoListener
 	 */
 	public void setIndexOfCurrentGrammar (int indexOfCurrentGrammar)
 	{
+		int index = 0;
+		String previousTurtle = null;
+		ArrayList<String> its = null;
+		
 		this.indexOfCurrentGrammar = indexOfCurrentGrammar;
-		mainFrame.setListInterpretations(chooseInterpretations());
+		if (!turtles.isEmpty())
+			previousTurtle = turtles.get(indexOfCurrentTurtle).getName();
+		its = chooseInterpretations();
+		
+		if (previousTurtle != null)
+		{
+			for (int i = 0; i < its.size(); i++)
+			{
+				if (previousTurtle.equals(its.get(i)))
+					index = i;
+			}
+		}
+		mainFrame.setListInterpretations(its, index);
 	}
 
 	/**
