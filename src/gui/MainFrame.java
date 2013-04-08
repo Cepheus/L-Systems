@@ -49,6 +49,7 @@ import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
+import java.awt.GridLayout;
 
 
 // important line : JPopupMenu.setDefaultLightWeightPopupEnabled(false);
@@ -96,6 +97,10 @@ public class MainFrame extends JFrame
 	private JProgressBar progressBar;
 	/** The panel containing the progress bar */
 	private JPanel panelProgressBar = new JPanel();
+	/** the button to launch the grow animation */
+	private final JButton btnPlay = new JButton("Play");
+	/** the button to reset the camera */
+	private final JButton btnResetCamera = new JButton("Reset camera");
 
 	/**
 	 * Create the frame.
@@ -172,7 +177,9 @@ public class MainFrame extends JFrame
 				txtrGeneratedSymbols.setEnabled(false);
 				btnApplyModifs.setEnabled(false);
 				btnLaunch.setEnabled(false);
+				btnPlay.setEnabled(false);
 				btnClearScene.setEnabled(false);
+				btnResetCamera.setEnabled(false);
 				spinnerNbIt.setEnabled(false);
 				if (toBeDisplayed != null && !toBeDisplayed.isEmpty())
 					progressBar.setString(toBeDisplayed + percent + " %");
@@ -185,7 +192,9 @@ public class MainFrame extends JFrame
 				// btnApplyModifs.setEnabled(true);
 				btnCancel.setEnabled(false);
 				btnLaunch.setEnabled(true);
+				btnPlay.setEnabled(true);
 				btnClearScene.setEnabled(true);
+				btnResetCamera.setEnabled(true);
 				spinnerNbIt.setEnabled(true);
 				progressBar.setValue(0);
 			}
@@ -226,7 +235,9 @@ public class MainFrame extends JFrame
 			lblNumberOfIterations.setEnabled(false);
 			spinnerNbIt.setEnabled(false);
 			btnLaunch.setEnabled(false);
+			btnPlay.setEnabled(false);
 			btnClearScene.setEnabled(false);
+			btnResetCamera.setEnabled(false);
 			spinnerNbIt.setEnabled(false);
 
 			comboBoxInterpretations.setToolTipText("No Interpretation fits with the current grammar. Change the symbols!");
@@ -291,7 +302,16 @@ public class MainFrame extends JFrame
 		mntmEditCurrentGrammar.setEnabled(enabled);
 		mntmEditCurrentTurtle.setEnabled(enabled);
 		btnLaunch.setEnabled(enabled);
+		btnPlay.setEnabled(enabled);
 		btnClearScene.setEnabled(enabled);
+		btnResetCamera.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				controller.getCurrentTurtle().setCameraPosition();
+			}
+		});
+		btnResetCamera.setEnabled(enabled);
 
 		if (enabled)
 		{
@@ -368,7 +388,7 @@ public class MainFrame extends JFrame
 				new EditGrammarDialog(me, "Edit " + controller.getCurrentGrammar().getName(), controller.getCurrentGrammar(),
 						controller.getCurrentTurtle());
 		dialog.setVisible(true);
-		
+
 		if (dialog.isValidated())
 			controller.setIndexOfCurrentGrammar(comboBoxGrammars.getSelectedIndex());
 	}
@@ -486,6 +506,10 @@ public class MainFrame extends JFrame
 		});
 
 		toolBar.add(btnLaunch);
+		btnPlay.setToolTipText("Launch an animation drawing all the interpretations from 0");
+		btnPlay.setEnabled(false);
+
+		toolBar.add(btnPlay);
 
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.SOUTH);
@@ -518,6 +542,10 @@ public class MainFrame extends JFrame
 		});
 		btnApplyModifs.setEnabled(false);
 
+		final JPanel panel_2 = new JPanel();
+		panel_2.setLayout(new GridLayout(1, 2, 0, 0));
+		panel_1.add(panel_2, BorderLayout.EAST);
+
 		btnClearScene.setEnabled(false);
 		btnClearScene.addActionListener(new ActionListener()
 		{
@@ -526,7 +554,10 @@ public class MainFrame extends JFrame
 				controller.getCurrentTurtle().clearScene();
 			}
 		});
-		panel_1.add(btnClearScene, BorderLayout.EAST);
+		panel_2.add(btnClearScene);
+		btnResetCamera.setEnabled(false);
+
+		panel_2.add(btnResetCamera);
 
 		panelProgressBar.setVisible(false);
 		panel.add(panelProgressBar, BorderLayout.NORTH);
