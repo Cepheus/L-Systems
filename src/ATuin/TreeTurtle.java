@@ -275,8 +275,7 @@ public class TreeTurtle extends Turtle {
 				tmp.setLocalTranslation(0, 0, length);
 				node.attachChild(tmp);
 				node = tmp;
-				updateBoundsCoordinates(node.localToWorld(
-						new Vector3f(0, 0, 0), null));
+				updateBoundsCoordinates(node.getWorldTranslation());
 				break;
 			case Symbol.S_TURNLEFT:
 				node.rotate(0, angle * FastMath.DEG_TO_RAD, 0);
