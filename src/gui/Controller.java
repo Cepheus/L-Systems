@@ -26,6 +26,7 @@ import parser.BadSymbolException;
 import parser.Generator;
 import parser.GeneratorPseudoListener;
 import parser.Grammar;
+import parser.ListSymbols;
 import parser.IOmanager.Analyzer;
 import parser.IOmanager.BadFileException;
 import parser.IOmanager.ParseException;
@@ -56,10 +57,17 @@ public class Controller implements GeneratorPseudoListener
 	/** The TreeTurtle if there is one */
 	private TreeTurtle treeTurtle = null;
 	
+	/** total nb iterations, used in play mode */
+	private int nbIterations = 0;
+	/** the list of symbols for the current iteration, used in play mode */
+	private ListSymbols listGenerated = null;
+	
 	/** The generator for the current grammar */
 	private Generator generator = null;
 	/** if true we are currently displaying a turtle */
 	private boolean isDisplaying = false;
+	/** if true, we display sequecently all the iterations from 0, otherwise we just display the given iteration */
+	private boolean isInPlayingMode = false;
 	/** index of the current grammar that we're working on */
 	private int indexOfCurrentGrammar = 0;
 	/** index of the current interpretation that we're working on */
@@ -156,6 +164,42 @@ public class Controller implements GeneratorPseudoListener
 	{
 		generator = null;
 		// on nettoie la scène
+		turtles.get(indexOfCurrentTurtle).clearScene();
+		isInPlayingMode = false;
+		isDisplaying = false;
+		// on génère les symboles
+		Grammar grammar = grammars.get(indexOfCurrentGrammar);
+		generator = new Generator(grammar);
+		generator.setTotalIteration(nbIterations);
+		Thread t = new Thread()
+		{
+			public void run ()
+			{
+				try
+				{
+					generator.generate(me);
+				}
+				catch (BadSymbolException e)
+				{
+					mainFrame.setProgressBar(100, null);
+					mainFrame.showException(e, "Error while generating symbols");
+				}
+			}
+		};
+		t.start(); // from here, we wait for the generator to finish, it will call finished()
+	}
+	
+	/**
+	 * Launch the grammar generator, and then call the turtle to draw.
+	 * This display all the iterations from 0 to nbIteration so we see the tree grow.
+	 * 
+	 * @param nbIterations the number of iterations to make in the generetor
+	 */
+	public void playTurtle (int nbIterations)
+	{
+		generator = null;
+		// on nettoie la scène
+		isInPlayingMode = true;
 		isDisplaying = false;
 		// on génère les symboles
 		Grammar grammar = grammars.get(indexOfCurrentGrammar);
@@ -436,6 +480,7 @@ public class Controller implements GeneratorPseudoListener
 	@Override
 	public void finished () throws BadSymbolException
 	{
+		Turtle turtle = turtles.get(indexOfCurrentTurtle);
 		mainFrame.setProgressBar(100, null);
 		if (!isDisplaying && generator.isCorrectlyFinished())
 		{
@@ -449,13 +494,14 @@ public class Controller implements GeneratorPseudoListener
 			};
 			t.start();
 			// on donne la salade à la tortue
-			Turtle turtle = turtles.get(indexOfCurrentTurtle);
 			turtle.setSymbols(generator.getGenerated());
 			generator = null;
 
 			isDisplaying = true;
 			turtle.drawSymbols(this);
 		}
+		else if (isDisplaying && !isInPlayingMode)
+			turtle.resetCameraPosition();
 	}
 
 	@Override
