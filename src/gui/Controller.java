@@ -51,6 +51,11 @@ public class Controller implements GeneratorPseudoListener
 	private ArrayList<Grammar> grammars = new ArrayList<Grammar>();
 	/** The list of the interpretations launched in the program */
 	private ArrayList<Turtle> turtles = new ArrayList<Turtle>();
+	/** the TubeTurtle if there is one */
+	private TubeTurtle tubeTurtle = null;
+	/** The TreeTurtle if there is one */
+	private TreeTurtle treeTurtle = null;
+	
 	/** The generator for the current grammar */
 	private Generator generator = null;
 	/** if true we are currently displaying a turtle */
@@ -123,7 +128,11 @@ public class Controller implements GeneratorPseudoListener
 				ArrayList<String> grs = new ArrayList<String>();
 				for (Grammar g : grammars)
 					grs.add(g.getName());
-				mainFrame.setListGrammars(grs, 0);
+				for (Turtle t : turtles)
+					t.clearScene(); // we release memory (java style)
+				tubeTurtle = null;
+				treeTurtle = null;
+				mainFrame.setListGrammars(grs, 0); // will call indirectly chooseInterpretation() to reload the turtles
 			}
 			catch (NumberFormatException e)
 			{
@@ -251,6 +260,8 @@ public class Controller implements GeneratorPseudoListener
 			{
 				if (previousTurtle.equals(its.get(i)))
 					index = i;
+				else
+					turtles.get(i).clearScene();
 			}
 		}
 		mainFrame.setListInterpretations(its, index);
@@ -281,11 +292,16 @@ public class Controller implements GeneratorPseudoListener
 	}
 
 	/**
-	 * @param indexOfCurrentTurtle the indexOfCurrentTurtle to set
+	 * @param index the indexOfCurrentTurtle to set
 	 */
-	public void setIndexOfCurrentTurtle (int indexOfCurrentTurtle)
+	public void setIndexOfCurrentTurtle (int index)
 	{
-		this.indexOfCurrentTurtle = indexOfCurrentTurtle;
+		indexOfCurrentTurtle = index;
+		for (int i = 0; i < turtles.size(); i++)
+		{
+			if (i != indexOfCurrentTurtle)
+				turtles.get(i).clearScene(); // we release the memory (java style)
+		}
 	}
 
 	/**
@@ -373,35 +389,36 @@ public class Controller implements GeneratorPseudoListener
 
 		if (indexOfCurrentGrammar >= 0 && !grammars.isEmpty())
 		{
-			Turtle turtle;
 			turtles.clear();
 			if (TubeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbolsWithoutNull()))
 			{
-				turtle = new TubeTurtle(application3d);
+				if (tubeTurtle == null)
+					tubeTurtle = new TubeTurtle(application3d);
 
-				for (Parameter p : turtle.getParameters())
+				for (Parameter p : tubeTurtle.getParameters())
 				{
 					if (p.getName().equals("Angle"))
 						p.setValue(new Integer(grammars.get(indexOfCurrentGrammar).getAngle()));
 				}
-				turtle.setParameters(turtle.getParameters());
+				tubeTurtle.setParameters(tubeTurtle.getParameters());
 
-				turtles.add(turtle);
-				its.add(turtle.getName());
+				turtles.add(tubeTurtle);
+				its.add(tubeTurtle.getName());
 			}
 			if (TreeTurtle.checkSymbols(grammars.get(indexOfCurrentGrammar).getUsableSymbolsWithoutNull()))
 			{
-				turtle = new TreeTurtle(application3d);
+				if (treeTurtle == null)
+					treeTurtle = new TreeTurtle(application3d);
 
-				for (Parameter p : turtle.getParameters())
+				for (Parameter p : treeTurtle.getParameters())
 				{
 					if (p.getName().equals("Angle"))
 						p.setValue(new Integer(grammars.get(indexOfCurrentGrammar).getAngle()));
 				}
-				turtle.setParameters(turtle.getParameters());
+				treeTurtle.setParameters(treeTurtle.getParameters());
 
-				turtles.add(turtle);
-				its.add(turtle.getName());
+				turtles.add(treeTurtle);
+				its.add(treeTurtle.getName());
 			}
 		}
 		return its;
