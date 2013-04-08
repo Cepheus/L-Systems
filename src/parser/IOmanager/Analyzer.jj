@@ -191,7 +191,7 @@ private void validationNameAndType ():
  * A symbol is a simple character eventually followed by an interpretation.
  * @throws ParseException en cas d'erreur de parsing
  */
-private void validationSymbols ():
+private void validationSymbols ()throws NumberFormatException, BadFileException:
 {
 	Token t;
 	Symbol sym;
@@ -240,6 +240,15 @@ private void validationSymbols ():
 			|
 				<RESTOREPOSITION>
 				{ sym.setInterpretation(Symbol.S_RESTOREPOSITION); }
+			|
+				t = <INTEGER>
+				{
+					int interpretation = Integer.parseInt(t.image);
+					if (interpretation <= 20)
+						throw new BadFileException("Bad integer intepretation: personalized interpretations must be" +
+								"strictly greater than 20: " + t.image);
+					sym.setInterpretation(interpretation);
+				}
 			)
 		)?
 		(<ENDL>)+

@@ -150,7 +150,7 @@
     }
   }
 
-  final private void validationSymbols() throws ParseException {
+  final private void validationSymbols() throws ParseException, NumberFormatException, BadFileException {
         Token t;
         Symbol sym;
     label_6:
@@ -238,6 +238,14 @@
         case RESTOREPOSITION:
           jj_consume_token(RESTOREPOSITION);
                                   sym.setInterpretation(Symbol.S_RESTOREPOSITION);
+          break;
+        case INTEGER:
+          t = jj_consume_token(INTEGER);
+                                        int interpretation = Integer.parseInt(t.image);
+                                        if (interpretation <= 20)
+                                                {if (true) throw new BadFileException("Bad integer intepretation: personalized interpretations must be" +
+                                                                "strictly greater than 20: " + t.image);}
+                                        sym.setInterpretation(interpretation);
           break;
         default:
           jj_la1[9] = jj_gen;
@@ -608,7 +616,7 @@
       jj_la1_0 = new int[] {0x2000000,0x0,0x2000000,0x2000000,0xf0000,0x2000000,0x2000000,0x2000000,0x2000000,0xffc0,0x8000000,0x2000000,0x0,0x2000000,0xc,0x2000000,0x2000000,0x20,0x2000000,0x2000000,0x0,0x80000000,0x0,0x0,0x0,0x8000000,0x2000000,0x0,0x2000000,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xc0,0x0,0xc0,0x1,0xc2,0x0,0x0,0x40,0x0,};
+      jj_la1_1 = new int[] {0x0,0x80,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x10,0x0,0x0,0x40,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xc0,0x0,0xc0,0x1,0xc2,0x0,0x0,0x40,0x0,};
    }
 
   /** Constructor with InputStream. */

@@ -170,6 +170,7 @@ INTERPRETATION must be one of the followings (basic order to the turtle interpre
 - ABOUTTURN (turn the orientation of the turtle by 180°)
 - SAVEPOSITION (save the current position and orientation of the turtle)
 - RESTOREPOSITION (restore the last saved position and orientation of the turtle)
+- Any numbers strictly greater than 20 (for personalized interpretations depending on the turtle)
 
 Here how to write it:
 

@@ -78,7 +78,7 @@ DOL
 		( : ROLLLEFT
 		) : ROLLRIGHT
 		f : FORWARD
-		l
+		l : 21 # LEAF #
 		A
 		B
 		C
@@ -109,7 +109,7 @@ DOL
 		( : ROLLLEFT
 		) : ROLLRIGHT
 		f : FORWARD
-		l
+		l : 21 # LEAF #
 		A
 		B
 		C
