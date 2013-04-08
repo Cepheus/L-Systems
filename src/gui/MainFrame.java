@@ -308,7 +308,7 @@ public class MainFrame extends JFrame
 		{
 			public void actionPerformed (ActionEvent arg0)
 			{
-				controller.getCurrentTurtle().setCameraPosition();
+				controller.getCurrentTurtle().resetCameraPosition();
 			}
 		});
 		btnResetCamera.setEnabled(enabled);
