@@ -15,6 +15,7 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -101,6 +103,7 @@ public class MainFrame extends JFrame
 	private final JButton btnPlay = new JButton("Play");
 	/** the button to reset the camera */
 	private final JButton btnResetCamera = new JButton("Reset camera");
+	private final JMenuItem mntmChangeTheBackground = new JMenuItem("Change the background color");
 
 	/**
 	 * Create the frame.
@@ -272,7 +275,7 @@ public class MainFrame extends JFrame
 	{
 		controller.launchTurtle((int) spinnerNbIt.getValue());
 	}
-	
+
 	/**
 	 * called when click on play button. display all the iterations from 0
 	 */
@@ -343,6 +346,15 @@ public class MainFrame extends JFrame
 			comboBoxInterpretations.setToolTipText("You have to import a file defining grammars first");
 			comboBoxGrammars.setToolTipText("You have to import a file defining grammars first");
 		}
+	}
+
+	/**
+	 * Open a color chooser for the background color
+	 */
+	private void openColorChooser ()
+	{
+		final Color couleur = JColorChooser.showDialog(me, "Choose a new color", controller.getBackgroundColor());
+		controller.setBackgroundColor(couleur);
 	}
 
 	/**
@@ -467,6 +479,15 @@ public class MainFrame extends JFrame
 		});
 		mnTools.add(mntmEditCurrentGrammar);
 		mnTools.add(mntmEditCurrentTurtle);
+		mntmChangeTheBackground.addActionListener(new ActionListener()
+		{
+			public void actionPerformed (ActionEvent arg0)
+			{
+				openColorChooser();
+			}
+		});
+
+		mnTools.add(mntmChangeTheBackground);
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);

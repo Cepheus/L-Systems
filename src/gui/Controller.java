@@ -14,6 +14,7 @@ package gui;
  * *****************************************************
  */
 
+import java.awt.Color;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -33,6 +34,7 @@ import parser.IOmanager.ParseException;
 
 import ATuin.*;
 
+import com.jme3.math.ColorRGBA;
 import com.jme3.system.AppSettings;
 
 
@@ -382,6 +384,34 @@ public class Controller implements GeneratorPseudoListener
 		}
 		if (isDisplaying)
 			turtles.get(indexOfCurrentTurtle).drawSymbols(this);
+	}
+	
+	/**
+	 * change the background color of the JME panel
+	 * @param color
+	 */
+	public void setBackgroundColor (final Color color)
+	{
+		final ColorRGBA c = new ColorRGBA(color.getRed() / 255.f, color.getGreen() / 255.f, color.getBlue() / 255.f, color.getAlpha() / 255.f);
+		
+		application3d.enqueue(new Callable<Void>()
+		{
+			public Void call ()
+			{
+				application3d.getViewPort().setBackgroundColor(c);
+				return null;
+			}
+		});
+	}
+	
+	/**
+	 * @return the color of the background of the JME panel
+	 */
+	public Color getBackgroundColor ()
+	{
+		ColorRGBA c = application3d.getViewPort().getBackgroundColor();
+		
+		return new Color(c.r, c.g, c.b, c.a);
 	}
 
 	/**
