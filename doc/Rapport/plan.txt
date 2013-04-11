@@ -1,0 +1,37 @@
+Description L-Système														R
+	Description générale (symbole(axiome...))-interpretation de la tortue)	R
+	Déterminisme															R
+	Dépendance du contexte													R
+	
+Parser et générateur														R
+	les fichiers de règles													R
+	la génération des symboles												R
+		chaines lourdes et long à calculer									R
+		
+Tortue																		T
+	Généralités -> Tortue mère : graphe de scène, liste des symboles		T
+	Tube																	T
+	Tree																	T
+	Avancées																T
+		Pb nb objets...														T
+			
+Configuration de moteur 3D													T
+	lumière : bloom+lumière directionelle									T
+	caméra (position initiale)												T
+	inputs(clavier/souris)													R
+	
+Archi/Evolutivité															R		
+	modèle MVC(schéma global des packages)									R
+		M Grammaires														R
+		V GUI-JME															R
+		C Controller														R
+	Nouvelles Interpretation												T
+		Gestion des paramètres												T
+		...																	T
+		
+Gestion de projet															T
+	Git																		T
+	Gantt																	T
+	
+Annexe Readme							
+	Completer le readme														T
