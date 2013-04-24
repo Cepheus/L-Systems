@@ -124,7 +124,13 @@ context-dependent rules are tested first (priority for the context-dependent):</
 
 <h2>2. Interpretations</h2>
 
-<p>TODO: Présentation des différentes interprétations (succinct)</p>
+<h3>Tube Turtle</h3>
+
+<p>This is the basic turtle interpretatation. It is able to draw all the basic interpretations. It uses basic cylinders with parametrable width, length and color. Ths only interpretation that actually draw something is FORWARD. If you do not have any FORWARD symbol in your list of symbol to draw you will not be able to see any result on the screen.</p>
+
+<h3>Tree Turtle</h3>
+
+<p>This is a turtle for drawing tree type grammar. It uses cylinders like the tube turtle but has more parameters such as width reduction and length reduction. These allow to have a trunk bigger than its branches. This interpretation can also draw the leaves with its specific symbol interpretation 21. The leaves' size and color can also be parametrable. </p>
 
 <h1>III. HOWTO (how to make the program work???)</h1>
 
@@ -326,11 +332,59 @@ determined.</p>
 
 <h3>2. In the program</h3>
 
+<p>NOT IMPLEMENTED YET</p>
+
 <h2>2. Choose an interpretation</h2>
 
-<h1>IV. Something</h1>
+<p>The tube turtle is the interpretable that you can choose to draw any grammar that uses only basic symbol interpretation. If you have any non-default symbol interpretation you can not use the tube turtle interpretation.</p>
 
-<p>TODO: write some things here</p>
+<p>For tree-type grammar the tree turtle is the best fitted. It implements width and length reduction. It can also draw leaves with the symbol interpretation 21.</p>
+
+<h2>3. Launch a grammar</h2>
+
+<p>Here we describe all the steps you have to do to display a grammar in the program.</p>
+
+<h3>Import grammar</h3>
+
+<p>First, you have to import a grammar in the program. You can do it openning a file (File -> Open).
+You will be able to choose the grammar you want in the first combo box (top-left of the window), only
+if your program contains more than one gramar.</p>
+
+<h3>Choose an interpretation</h3>
+
+<p>Then, you can chose the interpretation you want in the second combo box. This one contains all the
+interpretations that can draw your grammar. If an interpretation you want does not appear here, it
+is because you use in your symbols definition a symbol that this interpretation cannot display. You
+should refer to the documentation of this interpretation.</p>
+
+<p>You can edit your current grammar (the interpretation of each symbols) in "Tools -> Edit current grammar".
+Thus, you'll be able to remove the interpretations specific to an interpretation and the new interpretations
+may appear in the second combo box.</p>
+
+<h3>Choose a number of iterations</h3>
+
+<p>This is the number of steps the generator must do with the grammar. 0 display only the axiom. If you put to much
+here, the program may crash or take very long time to display the result.</p>
+
+<h3>Launch!</h3>
+
+<p>Clic the button "Launch!" to display the demanded iteration. If you clic on "Play", all the iterations from 0 to
+what you put in the spin box will be displayed sequentially. With this button, you can see the trees grow!</p>
+
+<p>You'll see the result of the generation in the text area at the bottom of the window. It contains the word generated
+while the main part display the interpretation of this word. It is possible to edit this word and apply your changes
+to see what it does in the interpretation.</p>
+
+<p>A bug exists in Windows for the change of the text. It is because of JMonkey with Swing...</p>
+
+<h3>Edit the turtle</h3>
+
+<p>Finally, you can edit the turtle (interpretation)'s configuration in "Tools -> Edit current Turtle". There, you can
+change the colors, the width... Refer to the documentation of the turtle for more.</p>
+
+<h1>IV. About turtles</h1>
+
+<p>It is possible to create your own turtle interpretation. For doing so it is advised to take example on the existing turtles.</p>
 
 <h1>V. License</h1>
 
