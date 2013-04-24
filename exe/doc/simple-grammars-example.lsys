@@ -1,0 +1,203 @@
+# Example of a conf file to load grammars in L-System program #
+
+# first simple example of a grammar with 2 symbols: "a" and "b" #
+# it is the same as the one discribed there: #
+# https://fr.wikipedia.org/wiki/L-System Exemple 1: l'algue de Lindenmayer #
+FIRST_EXAMPLE
+DOL
+{
+	SYMBOLS
+	{
+		F : FORWARD
+		a : TURNLEFT
+		b : TURNRIGHT
+	}
+
+	AXIOM: a
+
+	RULES
+	{
+		a -> aFbF
+		b -> a
+	}
+}
+
+# Another simple example with interpretations #
+# from: https://fr.wikipedia.org/wiki/L-System Exemple de la courbe de Koch #
+SECOND_EXAMPLE
+DOL
+{
+	SYMBOLS
+	{
+		# we precise the interpretation #
+		F: FORWARD
+		+: TURNRIGHT
+		-: TURNLEFT
+	}
+
+	AXIOM: F
+	# angle = 90°, same as default, we don't have to specify it #
+	ANGLE: 90
+
+	RULES
+	{
+		F -> F+F-F-F+F
+	}
+}
+
+# Based on the last one but in 3D #
+SECOND_EXAMPLE_2
+DOL
+{
+	SYMBOLS
+	{
+		# we precise the interpretation #
+		F: FORWARD
+		+: TURNRIGHT
+		-: TURNLEFT
+		^: TURNUP
+		v: TURNDOWN
+		A
+		B
+		C
+		D
+	}
+
+	AXIOM: A
+
+	RULES
+	{
+		A -> B-F+CFC+F-DvF^D-F+vvCFC+F+B
+		B -> AvF^CFB^F^D^^-F-D^--F^B--FC^F^A
+		C -> --D^--F^B-F+C^F^AvvFAvF^C+F+B^+^F^D
+		D -> --CFB-F+B--FAvF^AvvFB-F+B--FC
+	}
+}
+
+# a SOL example from http://www.techno-science.net/?onglet=glossaire&definition=11374 #
+SOL_Example
+SOL
+{
+	SYMBOLS
+	{
+		F : FORWARD
+		X
+		+ : TURNLEFT
+		- : TURNRIGHT
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+	}
+	AXIOM: X
+	ANGLE: 20
+	RULES
+	{
+		X -> F[++X]F[-X]+X: 0.2
+		X -> F[+X]F[-X]+X: 0.8
+		F -> FF
+	}
+}
+
+# example of DIL inspired by http://www.techno-science.net/?onglet=glossaire&definition=11374 #
+Dil_Example
+DIL
+{
+	SYMBOLS
+	{
+		A : FORWARD
+		B : FORWARD
+		C : FORWARD
+		+ : TURNRIGHT
+		- : TURNLEFT
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+	}
+	PHRASE: B[+C]A[-A]A[+C]A
+	RULES
+	{
+		A < B -> B
+		C -> B
+		C < A -> A
+		# this grammar is determinist: rule(2) is applied only if rule(3) can't be #
+	}
+}
+# the run of this grammar is: #
+# 0. B[+C]A[-A]A[+C]A #
+# 1. B[+B]B[-B]B[+A]B #
+# 2. B[+B]B[-B]B[+B]B and it stay stable on this state #
+
+# last example much more complicated #
+# we use a stochastic non context-free L-System #
+SCIOUSC
+SIL
+{
+	# we have 3 symbols: a, b and c #
+	SYMBOLS
+	{
+		a
+		# we don't precise an interpretation for b, the program will ask us for one #
+		b: FORWARD
+		c: ABOUTTURN
+	}
+
+	# here, we start with a sequence of symbols, so we don't use "AXIOM" #
+	PHRASE: aabacc
+
+	ANGLE: 20
+
+	RULES
+	{
+		a -> b
+		# the following rule has more priority than the first rule #
+		a < c -> c
+		# when "a" and "a", this rule has 50% probability to be applied, just like the previous one if there also were a "c" #
+		a < a > b -> bbb
+		c < aa -> acb: 0.8
+		# when we see "c", this rule has 20% to be applied, while the previous one has 80% #
+		c > aa -> ccc: 0.2
+		# when "b" and "bbb", we delete the "b" #
+		b > bbb -> ε
+	}
+}
+# an example of a run of this grammar is: #
+# 0. aabacc #
+# 1. bbbbbbacbacb #
+# 2. bbcbbbbacbb #
+# 3. cbcbb and it stay stable on this state #
+
+#RÉMI grammar fuck yeah! #
+RÉMI
+DOL
+{
+	SYMBOLS
+	{
+		[ : SAVEPOSITION
+		] : RESTOREPOSITION
+		+ : TURNRIGHT
+		- : TURNLEFT
+		^ : TURNUP
+		v : TURNDOWN
+		F : FORWARD
+		A
+		B
+		C
+	}
+
+	AXIOM: A
+	ANGLE: 45
+
+	RULES
+	{
+		# A -> BFFFF+++FFFFFF---FFFFF+F+F+F+FFFF+F+F+F+FFFF+F+F+F--F+F+F+FFFF+F+F+F+FFFF+F+F+F-FF++FFFFF----FFFFF++FF #
+		A -> BFF[--F]++F++F[F]--F[--F][++F]-F++F[++F++F][+F]---F+++F--F+++FF^^FFFFFFFFFF--F--FFFFFFFFFF^^F[++F]F++F++FF^^FFFFFFFFFF--F--FFFFFFFFFF^^++F--F--F++F++F
+		B -> CFFFFF++F+F+F+F+F---FFFF---[FF[FF[^^FFFFFFFFFvvFvvFFFFFFFFF^^+FF]++FFF]++FF]++FFF--FFF+++FF--FF+++FFF^^FFFFFFFFF--F--FFFFFFFFF^^FFFF^^FFFFFFFFFvvFvvFFFFFFFFF
+		C -> A++F++F+F[+F+F+FFF+F+F+F+F]---^^FFFFFFFFFFFvvFvvFFFFFFFFFFF^^--FF[++FF]F+F+F+F+FFF--^^FFFFFFFFFFFvvFvvFFFFFFFFFFF^^[--FF[++F]FF[^^FFFFFFFFFFvv+F[+FvvFFFFFFFFFF]vvFFFFFFFFFF]++FF]FF[--FFF]FF[--FFF]++F--FF[--FF[++F]FF++FF]FF
+		[ -> ε
+		] -> ε
+		+ -> ε
+		- -> ε
+		^ -> ε
+		v -> ε
+		F -> ε
+	}
+}
+

@@ -300,8 +300,52 @@ NOT IMPLEMENTED YET
 
 2. Choose an interpretation
 ---------------------------
-The tube turtle is the interpretable that you can choose to draw any grammar that uses only basic symbol interpretation. If you have any non-default symbol interpretation you can not use the tube turtle interpretation. 
+The tube turtle is the interpretable that you can choose to draw any grammar that uses only basic symbol interpretation. If you have any non-default symbol interpretation you can not use the tube turtle interpretation.
+
 For tree-type grammar the tree turtle is the best fitted. It implements width and length reduction. It can also draw leaves with the symbol interpretation 21.
+
+
+3. Launch a grammar
+-------------------
+
+Here we describe all the steps you have to do to display a grammar in the program.
+
+### Import grammar ###
+
+First, you have to import a grammar in the program. You can do it openning a file (File -> Open).
+You will be able to choose the grammar you want in the first combo box (top-left of the window), only
+if your program contains more than one gramar.
+
+### Choose an interpretation ###
+
+Then, you can chose the interpretation you want in the second combo box. This one contains all the
+interpretations that can draw your grammar. If an interpretation you want does not appear here, it
+is because you use in your symbols definition a symbol that this interpretation cannot display. You
+should refer to the documentation of this interpretation.
+
+You can edit your current grammar (the interpretation of each symbols) in "Tools -> Edit current grammar".
+Thus, you'll be able to remove the interpretations specific to an interpretation and the new interpretations
+may appear in the second combo box.
+
+### Choose a number of iterations ###
+
+This is the number of steps the generator must do with the grammar. 0 display only the axiom. If you put to much
+here, the program may crash or take very long time to display the result.
+
+### Launch! ###
+
+Clic the button "Launch!" to display the demanded iteration. If you clic on "Play", all the iterations from 0 to
+what you put in the spin box will be displayed sequentially. With this button, you can see the trees grow!
+
+You'll see the result of the generation in the text area at the bottom of the window. It contains the word generated
+while the main part display the interpretation of this word. It is possible to edit this word and apply your changes
+to see what it does in the interpretation.
+
+### Edit the turtle ###
+
+Finally, you can edit the turtle (interpretation)'s configuration in "Tools -> Edit current Turtle". There, you can
+change the colors, the width... Refer to the documentation of the turtle for more.
+
 
 IV. About turtles
 ===============
