@@ -105,13 +105,11 @@ We have seen that we can mix-up the 2 types of grammar. Here is how is identifie
 2. Interpretations
 ------------------
 
-1. Tube Turtle
---------------
+### Tube Turtle ###
 
 This is the basic turtle interpretatation. It is able to draw all the basic interpretations. It uses basic cylinders with parametrable width, length and color. Ths only interpretation that actually draw something is FORWARD. If you do not have any FORWARD symbol in your list of symbol to draw you will not be able to see any result on the screen.
 
-2. Tree Turtle
---------------
+### Tree Turtle ###
 
 This is a turtle for drawing tree type grammar. It uses cylinders like the tube turtle but has more parameters such as width reduction and length reduction. These allow to have a trunk bigger than its branches. This interpretation can also draw the leaves with its specific symbol interpretation 21. The leaves' size and color can also be parametrable. 
 
@@ -296,6 +294,8 @@ determined.
 
 
 ### 2. In the program ###
+
+NOT IMPLEMENTED YET
 
 
 2. Choose an interpretation
