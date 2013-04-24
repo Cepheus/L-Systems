@@ -20,7 +20,7 @@ Configuration de moteur 3D													T
 	caméra (position initiale)												T
 	inputs(clavier/souris)													R
 	
-Archi/Evolutivité															R		
+Archi/Evolutivité															R
 	modèle MVC(schéma global des packages)									R
 		M Grammaires														R
 		V GUI-JME															R
