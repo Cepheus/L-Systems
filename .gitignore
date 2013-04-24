@@ -24,6 +24,7 @@ master-application.jnlp
 
 # Windows files
 *.dll
+~*
 
 # Linux files
 *.so
