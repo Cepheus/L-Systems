@@ -450,7 +450,7 @@ public class Controller implements GeneratorPseudoListener
 				application3d.getFlyByCamera().setDragToRotate(true);
 				// we turn off the statistics
 				// application3d.setDisplayFps(false); // to hide the FPS
-				// application3d.setDisplayStatView(false); // to hide the statistics
+				application3d.setDisplayStatView(false); // to hide the statistics
 				// on initialise le bouzin
 				application3d.initScene();
 				return null;

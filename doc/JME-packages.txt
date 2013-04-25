@@ -1,0 +1,14 @@
+the following libraries are needed by the program. You can find them downloading JMonkey Engine
+	- JME3-core.jar
+	- JME3-effects.jar
+	- JME3-desktop.jar
+	- JME3-lwjgl.jar
+	- lwjgl.jar
+	- JME3-lwjgl-natives.jar
+	- JME3-plugins.jar
+
+the following are usefull only if you want to disable the error messages from JME (or for new features)
+	- JME3-blender.jar
+	- JME3-jogg.jar
+	- j-ogg-oggd.jar
+	- j-ogg-vorbisd.jar
